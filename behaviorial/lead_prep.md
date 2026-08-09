@@ -4,24 +4,6 @@
 
 # 1. Behavioral Interview Foundations for Software Engineering Team Leads
 
-## Why Behavioral Interviews Matter
-
-Technical competence gets candidates into the interview process.
-
-Behavioral interviews determine whether the candidate can:
-
-* Lead engineers effectively
-* Handle conflicts and disagreements
-* Deliver projects through uncertainty
-* Influence stakeholders without authority
-* Build healthy engineering culture
-* Scale teams and processes
-* Make difficult tradeoffs
-* Operate under pressure
-
-Interviewers often use past behavior as a predictor of future performance.
-
----
 
 ## Core Leadership Dimensions
 
