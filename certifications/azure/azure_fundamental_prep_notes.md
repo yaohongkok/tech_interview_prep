@@ -58,6 +58,7 @@ Shared responsibility: **security responsibility shifts to the provider** as you
 - **Region pairs** — each Azure region is paired with another region ≥300 miles away within the same geography (for disaster recovery; one region prioritized for recovery, updates rolled out to one region at a time).
 - **Availability Zones** — physically separate datacenters within a region, each with independent power, cooling, networking. Minimum of 3 per enabled region. Protects against datacenter-level failure.
 - **Geographies** — a defined area of the world containing ≥1 region; ensures data residency, sovereignty, compliance boundaries (e.g., data doesn't leave the geography).
+  - Hierarchy: **Geography** → **Region** (paired with another region) → **Availability Zone** (≥3 per enabled region) → **Datacenter**.
 - **Resource groups** — logical containers for resources sharing the same lifecycle; resources can belong to only **one** resource group.
 - **Subscriptions** — billing + access control boundary; groups resource groups; tied to an Azure AD (Entra ID) tenant. **Azure generates separate billing reports/invoices per subscription by default** — resource groups don't get their own invoice (though you can group costs by resource group/tag). Billing profiles can roll multiple subscriptions into invoice sections, but that requires custom setup.
 - **Management groups** — organize multiple subscriptions; apply governance (policy, RBAC) across subscriptions hierarchically.
