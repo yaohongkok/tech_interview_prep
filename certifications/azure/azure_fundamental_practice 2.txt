@@ -1,0 +1,928 @@
+
+Answer Summary
+Below is a summary of your answers.
+
+Question 1 of 50
+What are two basic services provided by all cloud providers? Each correct answer presents a complete solution.
+
+Your Answer
+compute
+
+This answer is correct.
+storage
+
+This answer is correct.
+Correct Answer
+compute
+
+This answer is correct.
+storage
+
+This answer is correct.
+All cloud providers provide compute and storage services. Colocation is when a business rents space in a shared physical datacenter. Application development is the responsibility of the customer and is typically done either in-house or through a third party.
+
+Describe cloud computing - Training | Microsoft Learn
+
+Question 2 of 50
+Why is cloud computing often less expensive than on-premises datacenters?
+
+Your Answer
+You are only billed for what you use.
+
+This answer is correct.
+Correct Answer
+You are only billed for what you use.
+
+This answer is correct.
+Renting compute and storage services and being billed for only what you use often lowers operating expenses. Depending on the service and the type of network bandwidth, charges can be incurred. Cloud service offerings often provide functionality that can be difficult or cost-prohibitive to deploy on-premises, especially for smaller organizations. Major cloud providers offer services around the world. Making it easy and relatively inexpensive to deploy services close to where your users reside.
+
+Describe cloud computing - Training | Microsoft Learn
+
+Question 3 of 50
+Which cloud deployment model are you using if you have servers physically located at your organization’s on-site datacenter, and you migrate a few of the servers to the cloud?
+
+Your Answer
+hybrid cloud
+
+This answer is correct.
+Correct Answer
+hybrid cloud
+
+This answer is correct.
+A hybrid cloud is a computing environment that combines a public cloud and a private cloud by allowing data and applications to be shared between them.
+
+Describe cloud computing - Training | Microsoft Learn
+
+Question 4 of 50
+Select the answer that correctly completes the sentence.
+
+Increasing compute capacity for an app by adding instances of resources such as virtual machines is called [answer choice].
+
+Your Answer
+horizontal scaling
+
+This answer is correct.
+Correct Answer
+horizontal scaling
+
+This answer is correct.
+Scaling horizontally increases compute capacity by adding instances of resources, such as adding virtual machines to the configuration. You scale vertically by adding RAM or CPUs to a virtual machine. Disaster recovery keeps data and other assets safe in the event of a disaster. High availability minimizes downtime when things go wrong.
+
+Describe the benefits of using cloud services - Training | Microsoft Learn
+
+Question 5 of 50
+Select the answer that correctly completes the sentence.
+
+An example of [answer choice] is automatically scaling an application to ensure that the application has the resources needed to meet customer demands.
+
+Your Answer
+elasticity
+
+This answer is correct.
+Correct Answer
+elasticity
+
+This answer is correct.
+Elasticity refers to the ability to scale resources as needed, such as during business hours, to ensure that an application can keep up with demand, and then reducing the available resources during off-peak hours. Agility refers to the ability to deploy new applications and services quickly. High availability refers to the ability to ensure that a service or application remains available in the event of a failure. Geo-distribution makes a service or application available in multiple geographic locations that are typically close to your users.
+
+Describe the benefits of using cloud services - Training | Microsoft Learn
+
+Question 6 of 50
+Select the answer that correctly completes the sentence.
+
+Increasing the capacity of an application by adding additional virtual machine is called [answer choice].
+
+Your Answer
+horizontal scaling
+
+This answer is correct.
+Correct Answer
+horizontal scaling
+
+This answer is correct.
+Scaling horizontally increases compute capacity by adding instances of resources, such as adding virtual machines to the configuration. You scale vertically to increase compute capacity by adding RAM or CPUs to a virtual machine. Agility refers to the ability to deploy new applications and services quickly. High availability minimizes downtime when things go wrong.
+
+Describe the benefits of using cloud services - Training | Microsoft Learn
+
+Question 7 of 50
+Which cloud benefit is achieved by distributing cloud resources across multiple Azure regions?
+
+Your Answer
+high availability
+
+This answer is correct.
+Correct Answer
+high availability
+
+This answer is correct.
+Objective:
+
+1.2 Describe the benefits of using cloud services
+
+What This Item Tests:
+
+Describe the benefits of reliability and predictability in the cloud
+
+Additional Reading:
+
+Describe the benefits of reliability and predictability in the cloud - Training | Microsoft Learn
+
+Rationale:
+
+Distributing cloud resources across multiple Azure regions improves high availability by reducing the impact of regional outages and increasing resiliency. Scalability relates to adjusting resource capacity, low latency depends on proximity to users, and economies of scale refer to cost benefits from shared infrastructure rather than geographic distribution.
+
+Question 8 of 50
+In which two deployment models are customers responsible for managing operating systems that host applications? Each correct answer presents a complete solution.
+
+Your Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+on-premises
+
+This answer is correct.
+Correct Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+on-premises
+
+This answer is correct.
+Operating systems are managed by customers when using IaaS or an on-premises deployments. The operating systems are not accessible in PaaS and SaaS deployments.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 9 of 50
+Which cloud service model provides you with the most control?
+
+Your Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+Correct Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+IaaS is the most flexible category of cloud services. It aims to give you complete control over the hardware that runs applications. Users do not control the operating system and do not configure the underlying servers in PaaS. With SaaS, you are using as-is software hosted in the cloud, instead of creating a platform to host a software yourself.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 10 of 50
+Which type of cloud service model is typically licensed through a monthly or annual subscription?
+
+Your Answer
+software as a service (SaaS)
+
+This answer is correct.
+Correct Answer
+software as a service (SaaS)
+
+This answer is correct.
+SaaS is software that is centrally hosted and managed for you and your users or customers. Usually, one version of the application is used for all customers, and it is licensed through a monthly or annual subscription. PaaS and IaaS use a consumption-based model, so you only pay for what you use.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 11 of 50
+Which cloud service model is used by Microsoft 365?
+
+Your Answer
+software as a service (SaaS)
+
+This answer is correct.
+Correct Answer
+software as a service (SaaS)
+
+This answer is correct.
+SaaS allows users to connect to and use cloud-based apps over the internet. Common examples are email, calendaring, and Office tools, such as Office 365.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 12 of 50
+Which cloud service model is used by Azure SQL Database?
+
+Your Answer
+platform as a service (PaaS)
+
+This answer is correct.
+Correct Answer
+platform as a service (PaaS)
+
+This answer is correct.
+Azure SQL Database is a PaaS database engine.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 13 of 50
+What uses the infrastructure as a service (IaaS) cloud service model?
+
+Your Answer
+Azure virtual machines
+
+This answer is correct.
+Correct Answer
+Azure virtual machines
+
+This answer is correct.
+Azure Virtual Machines is an IaaS offering. The customer is responsible for the configuration of the virtual machine as well as all operating system configurations. Azure App Services and Azure Cosmos DB are PaaS offerings. Microsoft Office 365 is a SaaS offering.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 14 of 50
+Which type of cloud service are virtual networks?
+
+Your Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+Correct Answer
+infrastructure as a service (IaaS)
+
+This answer is correct.
+IaaS helps you reduce the cost and complexity of maintaining a physical server and its datacenter infrastructure. Virtual networks are part of the IaaS cloud service.
+
+Describe cloud service types - Training | Microsoft Learn
+
+Question 15 of 50
+What is an Azure Storage account named storage001 an example of?
+
+Your Answer
+a resource
+
+This answer is correct.
+Correct Answer
+a resource
+
+This answer is correct.
+A resource is a manageable item that is available through Azure. Virtual machines, storage accounts, web apps, databases, and virtual networks are examples of resources.
+
+Describe the core architectural components of Azure - Training | Microsoft Learn
+
+Question 16 of 50
+For which resource does Azure generate separate billing reports and invoices by default?
+
+Your Answer
+subscriptions
+
+This answer is correct.
+Correct Answer
+subscriptions
+
+This answer is correct.
+Azure generates separate billing reports and invoices for each subscription so that you can organize and manage costs. Resource groups can be used to group costs, but you will not receive a separate invoice for each resource group. Management groups are used to efficiently manage access, policies, and compliance for subscriptions. You can set up billing profiles to roll up subscriptions into invoice sections, but this requires customization.
+
+Describe the core architectural components of Azure - Training | Microsoft Learn
+
+Question 17 of 50
+Which Azure resource is a software emulation of a physical computer that includes a virtual processor, memory, storage, and networking resources?
+
+Your Answer
+a virtual machine
+
+This answer is correct.
+Correct Answer
+a virtual machine
+
+This answer is correct.
+Virtual machines are software emulations of physical computers. They include a virtual processor, memory, storage, and networking resources. Virtual machines host an operating system, and you can install and run software just like on a physical computer.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 18 of 50
+Which Azure compute service can you use to deploy and manage a set of identical virtual machines?
+
+Your Answer
+Azure Virtual Machine Scale Sets
+
+This answer is correct.
+Correct Answer
+Azure Virtual Machine Scale Sets
+
+This answer is correct.
+Virtual Machine Scale Sets are an Azure compute resource that you can use to deploy and manage and scale a set of identical virtual machines.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 19 of 50
+Which scenario is a use case for a VPN gateway?
+
+Your Answer
+connecting an on-premises datacenter to an Azure virtual network
+
+This answer is correct.
+Correct Answer
+connecting an on-premises datacenter to an Azure virtual network
+
+This answer is correct.
+A VPN gateway is a type of virtual network gateway. Azure VPN Gateway instances are deployed to a dedicated subnet of a virtual network. You can use them to connect on-premises datacenters to virtual networks through a Site-to-Site (S2S) VPN connection.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 20 of 50
+You need to allow resources on two different Azure virtual networks to communicate with each other.
+
+What should you configure?
+
+Your Answer
+peering
+
+This answer is correct.
+Correct Answer
+peering
+
+This answer is correct.
+You can link virtual networks together by using virtual network peering. Peering enables resources in each virtual network to communicate with each other.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 21 of 50
+What can you use to provide Mac and Android users with access to a Windows environment that will run Windows-based applications?
+
+Your Answer
+Azure Virtual Desktop
+
+This answer is correct.
+Correct Answer
+Azure Virtual Desktop
+
+This answer is correct.
+Azure Virtual Desktop is a desktop and application virtualization service that runs in the cloud. It enables your users to use a cloud-hosted version of Windows from any location. Azure Virtual Desktop works across devices such as Windows, Mac, iOS, Android, and Linux. It works with apps that you can use to access Remote Desktops and apps. You can also use most modern browsers to access Azure Virtual Desktop-hosted experiences.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 22 of 50
+What are two services that allow you to run applications in containers? Each correct answer presents a complete solution.
+
+Your Answer
+Azure Container Instances
+
+This answer is correct.
+Azure Kubernetes Service (AKS)
+
+This answer is correct.
+Correct Answer
+Azure Container Instances
+
+This answer is correct.
+Azure Kubernetes Service (AKS)
+
+This answer is correct.
+Containers are a virtualization environment. Much like running multiple virtual machines on a single physical host, you can run multiple containers on a single physical or virtual host. Unlike virtual machines, you do not manage the operating system for a container.
+
+Describe Azure compute and networking services - Training | Microsoft Learn
+
+Question 23 of 50
+You need to connect an on-premises network to an Azure virtual network by using a Site-to-Site (S2S) VPN.
+
+Which Azure object represents the on-premises network?
+
+Your Answer
+a local network gateway
+
+This answer is correct.
+Correct Answer
+a local network gateway
+
+This answer is correct.
+Objective:
+
+2.2 Describe Azure compute and networking services
+
+What This Item Tests:
+
+Describe virtual networking, including the purpose of Azure virtual networks, Azure virtual subnets, peering, Azure DNS, Azure VPN Gateway, and ExpressRoute
+
+Additional Reading:
+
+What is Azure VPN Gateway? - Training | Microsoft Learn
+
+Rationale:
+
+A local network gateway is used to define the on-premises network details, such as IP address ranges and the VPN device public IP address, when configuring a Site-to-Site (S2S) VPN. Network security groups (NSGs) control traffic flow, route filters are used with ExpressRoute, and VNet-to-VNet connections connect Azure virtual networks rather than on-premises networks.
+
+Question 24 of 50
+Which Azure Blob storage tier stores data offline and offers the lowest storage costs and the highest costs to access data?
+
+Your Answer
+Archive
+
+This answer is correct.
+Correct Answer
+Archive
+
+This answer is correct.
+The Archive storage tier stores data offline and offers the lowest storage costs, but also the highest costs to rehydrate and access data. The Hot storage tier is optimized for storing data that is accessed frequently. Data in the Cool access tier can tolerate slightly lower availability, but still requires high durability, retrieval latency, and throughput characteristics similar to hot data.
+
+Describe Azure storage services - Training | Microsoft Learn
+
+Question 25 of 50
+Which storage service offers fully managed file shares in the cloud that are accessible by using Server Message Block (SMB) protocol?
+
+Your Answer
+Azure Files
+
+This answer is correct.
+Correct Answer
+Azure Files
+
+This answer is correct.
+Azure Files offers fully managed file shares in the cloud with shares that are accessible by using Server Message Block (SMB) protocol. Mounting Azure file shares is just like connecting to shares on a local network.
+
+Describe Azure storage services - Training | Microsoft Learn
+
+Question 26 of 50
+Which two scenarios are common use cases for Azure Blob storage? Each correct answer presents a complete solution.
+
+Your Answer
+serving images or documents directly to a browser
+
+This answer is correct.
+storing data for backup and restore
+
+This answer is correct.
+Correct Answer
+serving images or documents directly to a browser
+
+This answer is correct.
+storing data for backup and restore
+
+This answer is correct.
+Low storage costs and unlimited file formats make blob storage a good location to store backups and archives. Blob storage can be reached from anywhere by using an internet connection. Azure Disk Storage provides disks for Azure virtual machines. Azure Files supports mounting file storage shares.
+
+Describe Azure storage services - Training | Microsoft Learn
+
+Question 27 of 50
+Which Azure Blob storage service tier has the highest storage costs and the fastest access times for reading and writing data?
+
+Your Answer
+Hot
+
+This answer is correct.
+Correct Answer
+Hot
+
+This answer is correct.
+The Hot tier is optimized for storing data that is accessed frequently. The Cool access tier has a slightly lower availability SLA and higher access costs compared to hot data, which are acceptable trade-offs for lower storage costs. Archive storage stores data offline and offers the lowest storage costs, but also the highest costs to rehydrate and access data.
+
+Describe Azure storage services - Training | Microsoft Learn
+
+Question 28 of 50
+Which two protocols can be used to access Azure file shares? Each correct answer presents a complete solution.
+
+Your Answer
+Network File System (NFS)
+
+This answer is correct.
+Server Message Block (SMB)
+
+This answer is correct.
+Correct Answer
+Network File System (NFS)
+
+This answer is correct.
+Server Message Block (SMB)
+
+This answer is correct.
+Azure Files offers fully managed file shares in the cloud that are accessible via industry-standard SMB and NFS protocols.
+
+Describe Azure storage services - Training | Microsoft Learn
+
+Question 29 of 50
+Which type of strategy uses a series of mechanisms to slow the advancement of an attack that aims to gain unauthorized access to data?
+
+Your Answer
+defense in depth
+
+This answer is correct.
+Correct Answer
+defense in depth
+
+This answer is correct.
+A defense in depth strategy uses a series of mechanisms to slow the advancement of an attack that aims to gain unauthorized access to data. The principle of least privilege means restricting access to information to only the level that users need to perform their work. A DDoS attack attempts to overwhelm and exhaust an application's resources. The perimeter layer is about protecting an organization's resources from network-based attacks.
+
+Describe Azure identity, access, and security - Training | Microsoft Learn
+
+Question 30 of 50
+What Microsoft Entra feature can you use to configure security authentication that requires users to use their mobile phone to sign in?
+
+Your Answer
+multifactor authentication (MFA)
+
+This answer is correct.
+Correct Answer
+multifactor authentication (MFA)
+
+This answer is correct.
+MFA is the concept of requiring something more than only a password to sign in to an application. You can use the mobile phone to receive a phone call, text, or a code to get authenticated.
+
+Describe Azure identity, access, and security - Training | Microsoft Learn
+
+Question 31 of 50
+Which two services are provided by Microsoft Entra? Each correct answer presents a complete solution.
+
+Your Answer
+authentication
+
+This answer is correct.
+single sign-on (SSO)
+
+This answer is correct.
+Correct Answer
+authentication
+
+This answer is correct.
+single sign-on (SSO)
+
+This answer is correct.
+Azure ADMicrosoft Entra provides services for verifying identity and access to applications and resources. SSO enables you to remember a single username and password to access multiple applications and is available in Azure AD.
+
+Describe Azure identity, access, and security - Training | Microsoft Learn
+
+Question 32 of 50
+What can you use to ensure that users authenticate by using multifactor authentication (MFA) when they attempt to sign in from a specific location?
+
+Your Answer
+Conditional Access
+
+This answer is correct.
+Correct Answer
+Conditional Access
+
+This answer is correct.
+Conditional Access can use signals to determine information about authentication attempts, and then determine whether to block access or require additional verifications, such as MFA.
+
+Describe Azure identity, access, and security - Training | Microsoft Learn
+
+Question 33 of 50
+If applications need access to Active Directory Domain Services (AD DS) in Azure without deploying domain controllers, you use [Target_A].
+
+Your Answer
+Microsoft Entra Domain Services
+
+This answer is correct.
+Correct Answer
+Microsoft Entra Domain Services
+
+This answer is correct.
+2.4  Describe Azure identity, access, and security
+What This Item Tests
+Describe directory services in Azure, including Microsoft Entra ID and Microsoft Entra Domain Services
+Additional Reading:
+What is Microsoft Entra Domain Services? - Training | Microsoft Learn
+ 
+Rationale
+Microsoft Entra Domain Services provides managed Active Directory Domain Services (AD DS) capabilities without requiring customers to deploy or manage domain controllers. Microsoft Entra ID is a cloud identity service that does not provide AD DS functionality, managed identities are used for application authentication, and Azure App Service is an application-hosting platform.
+
+Question 34 of 50
+Which are two common scenarios for using resource tags? Each correct answer presents a complete solution.
+
+Your Answer
+associating costs with different environments
+
+This answer is correct.
+categorizing costs by department
+
+This answer is correct.
+Correct Answer
+associating costs with different environments
+
+This answer is correct.
+categorizing costs by department
+
+This answer is correct.
+You can use tags to categorize costs by department, such as human resources, marketing, or finance, or by environment, such as test or production. Resizing underutilized virtual machines is a good cost saving measure and provisioning resources in lower cost regions is a good practice, but resource tags do not help with this.
+
+https://learn.microsoft.com/training/modules/plan-manage-azure-costs/4-purchase-azure-servicesDescribe cost management in Azure - Training | Microsoft Learn
+
+Question 35 of 50
+Which two features are available by using Azure Cost Management + Billing? Each correct answer presents a complete solution.
+
+Your Answer
+Create and manage budgets.
+
+This answer is correct.
+Generate historical reports and forecast future usage.
+
+This answer is correct.
+Correct Answer
+Create and manage budgets.
+
+This answer is correct.
+Generate historical reports and forecast future usage.
+
+This answer is correct.
+Azure Cost Management allows you to create and manage cost and usage budgets by monitoring resource demand trends, consumption rates, and cost patterns. It also allows you to use historical data to generate reports and forecast future usage and expenditures.
+
+https://learn.microsoft.com/training/modules/plan-manage-azure-costs/4-purchase-azure-servicesDescribe cost management in Azure - Training | Microsoft Learn
+
+Question 36 of 50
+Your organization plans to deploy several production virtual machines that will have consistent resource usage throughout the year.
+
+What can you use to minimize the costs of the virtual machines without reducing the functionality of the virtual machines?
+
+Your Answer
+Azure Reservations
+
+This answer is correct.
+Correct Answer
+Azure Reservations
+
+This answer is correct.
+Azure Reservations offers discounted prices on certain Azure services. Azure Reservations can save you up to 72 percent compared to pay-as-you-go prices. To receive a discount, you can reserve services and resources by paying in advance. Spending limits can suspend a subscription when the spend limit is reached.
+
+https://learn.microsoft.com/training/modules/plan-manage-azure-costs/4-purchase-azure-servicesDescribe cost management in Azure - Training | Microsoft Learn
+
+Question 37 of 50
+You use [Target_A] to help organize Azure resources and track costs by department or project.
+
+Your Answer
+tags
+
+This answer is correct.
+Correct Answer
+tags
+
+This answer is correct.
+3.1 Describe cost management in Azure
+What This Item Tests
+Describe the purpose of tags
+Additional Reading:
+Common cost analysis uses - Training | Microsoft Learn
+Rationale
+Tags are name-value pairs that can be applied to Azure resources to logically organize them and track costs by department, project, or environment. Availability sets are used for resiliency, Azure Policy enforces governance rules, and administrative units are used to organize Microsoft Entra resources, not Azure resources.
+
+Question 38 of 50
+Which two factors affect Azure costs? Each correct answer presents part of the solution.
+
+Your Answer
+outbound data transfers
+
+This answer is correct.
+the location of a resource
+This answer is correct.
+Correct Answer
+outbound data transfers
+
+This answer is correct.
+the location of a resource
+This answer is correct.
+Objective:
+
+3.1 Describe cost management in Azure
+
+What This Item Tests:
+
+Describe factors that can affect costs in Azure
+
+Additional Reading:
+
+Design with a cost-efficiency mindset - Training | Microsoft Learn
+
+Design for usage optimization | Microsoft Learn
+
+Rationale:
+
+Azure pricing varies by region, so the location to which a resource is deployed affects cost, and outbound data transfers are billed based on type and destination. The number of resource groups in a subscription does not influence pricing, and using Azure Resource Manager (ARM) templates affects deployment consistency rather than costs.
+
+Question 39 of 50
+What can be applied to a resource to prevent accidental deletion?
+
+Your Answer
+a resource lock
+
+This answer is correct.
+Correct Answer
+a resource lock
+
+This answer is correct.
+A resource lock prevents resources from being accidentally deleted or changed. Resource tags offer the custom grouping of resources. Policies enforce different rules across all resource configurations so that the configurations stay compliant with corporate standards. An initiative is a way of grouping related policies together.
+
+Describe features and tools in Azure for governance and compliance - Training | Microsoft Learn
+
+Question 40 of 50
+You need to recommend a solution for Azure virtual machine deployments. The solution must enforce company standards on the virtual machines.
+
+What should you include in the recommendation?
+
+Your Answer
+Azure Policy
+
+This answer is correct.
+Correct Answer
+Azure Policy
+
+This answer is correct.
+Azure policies will allow you to enforce company standards on new virtual machines when combined with Azure VM Image Builder and Azure Compute Gallery. By using Azure Policy and role-based access control (RBAC) assignments, enterprises can enforce standards on Azure resources. But on virtual machines, these mechanisms only affect the control plane or the route to the virtual machine.
+
+Describe features and tools in Azure for governance and compliance - Training | Microsoft Learn
+
+Question 41 of 50
+Resource locks can be applied to a subscription, resource group, or [Target_A].
+
+Your Answer
+individual resource
+
+This answer is correct.
+Correct Answer
+individual resource
+
+This answer is correct.
+Objective: 3.2 Describe features and tools in Azure for governance and compliance
+What This Item Tests
+Describe the purpose of resource locks
+Additional Reading:
+Lock your Azure resources to protect your infrastructure - Training | Microsoft Learn
+ 
+Rationale
+Resource locks are used to prevent the accidental deletion or modification of Azure resources and can be applied at the subscription, resource group, or individual resource level. Azure regions and management groups do not support resource locks, and scripts are not a governance scope.
+
+Question 42 of 50
+Which two actions can be performed by using Azure portal? Each correct answer presents a complete solution.
+
+Your Answer
+Create new resources.
+
+This answer is correct.
+Create Microsoft Entra user
+
+This answer is correct.
+Correct Answer
+Create new resources.
+
+This answer is correct.
+Create Microsoft Entra user
+
+This answer is correct.
+The Azure portal provides a GUI to view all the services you are using, create new services, configure your services, and view reports.
+
+Describe features and tools for managing and deploying Azure resources - Training | Microsoft Learn
+
+Question 43 of 50
+Which two tools can you use to create a new Azure virtual machine from a mobile device that runs Android? Each correct answer presents complete solution.
+
+Your Answer
+PowerShell in Azure Cloud Shell
+
+This answer is correct.
+the Azure portal
+
+This answer is correct.
+Correct Answer
+PowerShell in Azure Cloud Shell
+
+This answer is correct.
+the Azure portal
+
+This answer is correct.
+The Azure portal can run on devices that have the Android operating system installed. The browser can be any type, such as Internet Explorer 11, Chrome, Firefox, or Safari (all the latest versions). When you visit the portal, you will see Cloud Shell. Users can then access Bash and PowerShell from within Cloud Shell. You can use Bash and PowerShell to create Azure virtual machines.
+
+Connect to Azure Virtual Desktop with the Remote Desktop client for Android and Chrome OS - Azure Virtual Desktop | Microsoft Learn
+
+Describe features and tools for managing and deploying Azure resources - Training | Microsoft Learn
+
+Question 44 of 50
+What can you use to manage servers across third party cloud platforms and on-premises environments?
+
+Your Answer
+Azure Arc
+
+This answer is correct.
+Correct Answer
+Azure Arc
+
+This answer is correct.
+Azure Arc simplifies governance and management by delivering a consistent multi-cloud and on-premises management platform.
+
+Describe features and tools for managing and deploying Azure resources - Training | Microsoft Learn
+
+Describe the purpose of Azure Arc - Training | Microsoft Learn
+
+Question 45 of 50
+You have a team of Linux administrators that need to manage the resources in Azure. The team wants to use the Bash shell to perform the administration.
+
+What should you recommend?
+
+Your Answer
+Azure CLI
+
+This answer is correct.
+Correct Answer
+Azure CLI
+
+This answer is correct.
+Azure CLI allows you to use the Bash shell to perform administrative tasks. Bash is used in Linux environments, so a Linux administrator will probably be more comfortable performing command-line administration from Azure CLI.
+
+Describe features and tools for managing and deploying Azure resources - Training | Microsoft Learn
+
+Question 46 of 50
+Which Azure service evaluates Azure resources and makes recommendations to help improve reliability, security, performance, and cost reduction?
+
+Your Answer
+Azure Advisor
+
+This answer is correct.
+Correct Answer
+Azure Advisor
+
+This answer is correct.
+Azure Advisor evaluates Azure resources and makes recommendations to help improve reliability, security, and performance, achieve operational excellence, and reduce costs.
+
+Describe monitoring tools in Azure - Training | Microsoft Learn
+
+Question 47 of 50
+You need to review the root cause analysis (RCA) report for a service outage that occurred last week.
+
+Where should you look for the report?
+
+Your Answer
+Azure Service Health
+
+This answer is correct.
+Correct Answer
+Azure Service Health
+
+This answer is correct.
+After an outage, Service Health provides official incident reports called root cause analysis (RCA), which you can share with stakeholders.
+
+Describe monitoring tools in Azure - Training | Microsoft Learn
+
+Question 48 of 50
+What can you use to automatically detect performance anomalies for web apps?
+
+Your Answer
+Azure Application Insights
+
+This answer is correct.
+Correct Answer
+Azure Application Insights
+
+This answer is correct.
+Application Insights is a feature of Azure Monitor that allows you to monitor running applications, automatically detect performance anomalies, and use built-in analytics tools to see what users do on an app.
+
+Describe monitoring tools in Azure - Training | Microsoft Learn
+
+Question 49 of 50
+What can you use to get notification about an outage in a specific Azure region?
+
+Your Answer
+Azure Service Health
+
+This answer is correct.
+Correct Answer
+Azure Service Health
+
+This answer is correct.
+Service Health notifies you of Azure-related service issues, such as region-wide downtime.
+
+Describe monitoring tools in Azure - Training | Microsoft Learn
+
+Question 50 of 50
+What can you use to find information about planned maintenance for Azure services that are critical to your organization?
+
+Your Answer
+Azure Service Health
+
+This answer is correct.
+Correct Answer
+Azure Service Health
+
+This answer is correct.
+You can drill down to the affected services, regions, and details to show how an event will affect you and what you must do. Most of these events occur without any impact to you and will not be shown. In a rare case that a reboot is required, Service Health allows you to choose when to perform the maintenance to minimize the downtime
+
+Describe monitoring tools in Azure - Training | Microsoft Learn
+
+Skip to main content
+Learn
+
+Credentials
+Practice Assessment Results: August 10, 2026
+
+Practice Assessment for Exam AZ-900: Microsoft Azure Fundamentals
+
+It took you 19 minutes to complete this assessment.
+
+Overall Results
+To be better prepared for the exam, aim to achieve a score of 80% or higher in multiple attempts.
+
+Score: 100%
+
+Performance by assessment section
+To further strengthen your skills in the following areas, refer to the Customized Learning Material section below.
+
+Describe cloud concepts
+
+Describe Azure architecture and services
+
+Describe Azure management and governance
+
+Ready to take the exam?
+Customized learning material to improve your skills
+Congratulations, you passed all the sections! If you have passed multiple attempts, consider scheduling an exam.
+AI Disclaimer
+Previous Versions
+Blog
+Contribute
+Privacy
+Consumer Health Privacy
+Terms of Use
+Trademarks
+© Microsoft 2026

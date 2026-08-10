@@ -12,10 +12,13 @@ Exam domains and weights (current AZ-900 skills outline):
 ### Benefits of cloud computing
 - **High availability** — service stays up and reachable, minimal downtime.
 - **Scalability** — add/remove resources to match load (do more of the same work).
-- **Elasticity** — automatically scale out/in in response to load (dynamic).
+  - **Vertical scaling ("scale up/down")** — add/remove RAM or CPU to an existing resource (e.g. resize a VM).
+  - **Horizontal scaling ("scale out/in")** — add/remove instances of a resource (e.g. add more VMs). This is the one exam questions usually mean by "scaling."
+- **Elasticity** — automatically scale out/in in response to load (dynamic, e.g. autoscaling to meet demand then scaling back down off-peak).
 - **Agility** — provision/deprovision resources quickly.
 - **Fault tolerance** — ability to continue operating despite failure (via redundancy).
 - **Disaster recovery** — restoring access/functionality after a disruptive event.
+- **Geo-distribution** — deploying resources/apps across multiple regions, typically close to users, for lower latency; distributing resources across regions is also what drives high availability (reduces impact of a regional outage).
 
 ### CapEx vs OpEx
 - **CapEx** (Capital Expenditure): upfront spending on physical infrastructure, depreciates over time. Traditional on-prem model.
@@ -36,6 +39,10 @@ Exam domains and weights (current AZ-900 skills outline):
 
 Shared responsibility: **security responsibility shifts to the provider** as you move IaaS → PaaS → SaaS. You *always* retain responsibility for data, endpoints, accounts, and access management, regardless of model.
 
+- **OS management**: only **IaaS** and **on-premises** give you access to manage the operating system. PaaS and SaaS abstract the OS away entirely — you can't touch it.
+- **Billing model**: **SaaS** is typically licensed via **subscription** (monthly/annual, one version for all customers — e.g. Microsoft 365). **IaaS and PaaS** are typically **consumption-based** (pay only for what you use).
+- **VNets are IaaS** — virtual networking falls under the IaaS category (you're still managing infrastructure-level constructs), same bucket as VMs.
+
 ### Cloud deployment models
 - **Public cloud** — resources owned/operated by third-party provider, over the internet, shared infra. No CapEx, high scalability.
 - **Private cloud** — dedicated to a single org, on-prem or hosted. More control, more responsibility for maintenance/security.
@@ -52,7 +59,7 @@ Shared responsibility: **security responsibility shifts to the provider** as you
 - **Availability Zones** — physically separate datacenters within a region, each with independent power, cooling, networking. Minimum of 3 per enabled region. Protects against datacenter-level failure.
 - **Geographies** — a defined area of the world containing ≥1 region; ensures data residency, sovereignty, compliance boundaries (e.g., data doesn't leave the geography).
 - **Resource groups** — logical containers for resources sharing the same lifecycle; resources can belong to only **one** resource group.
-- **Subscriptions** — billing + access control boundary; groups resource groups; tied to an Azure AD (Entra ID) tenant.
+- **Subscriptions** — billing + access control boundary; groups resource groups; tied to an Azure AD (Entra ID) tenant. **Azure generates separate billing reports/invoices per subscription by default** — resource groups don't get their own invoice (though you can group costs by resource group/tag). Billing profiles can roll multiple subscriptions into invoice sections, but that requires custom setup.
 - **Management groups** — organize multiple subscriptions; apply governance (policy, RBAC) across subscriptions hierarchically.
 - **Availability Sets** — logical grouping of VMs across fault domains (separate racks/power/network) and update domains (separate maintenance reboot groups) within a **single datacenter**. Protects against hardware/maintenance failure, but not datacenter-level failure — that's what Availability Zones are for.
 
@@ -65,7 +72,7 @@ Shared responsibility: **security responsibility shifts to the provider** as you
 - **Azure Container Instances (ACI)** — run containers without managing VMs/orchestration; fastest way to run a single container.
 - **Azure Kubernetes Service (AKS)** — managed Kubernetes for container orchestration at scale.
 - **Azure Batch** — large-scale parallel/batch compute jobs.
-- **Windows Virtual Desktop / Azure Virtual Desktop** — virtualized desktop/app experience.
+- **Windows Virtual Desktop / Azure Virtual Desktop** — virtualized desktop/app experience; cloud-hosted Windows accessible cross-platform (Windows, Mac, iOS, Android, Linux) via client apps or most modern browsers — useful for giving non-Windows devices access to Windows-only apps.
 
 Rule of thumb: **VMs** = most control; **App Service** = web apps without managing OS; **Functions** = event-driven small pieces of code; **AKS** = container orchestration; **ACI** = simplest single-container option.
 
@@ -73,6 +80,7 @@ Rule of thumb: **VMs** = most control; **App Service** = web apps without managi
 - **Virtual Network (VNet)** — private network in Azure; resources communicate securely. Used to logically isolate and control resources within Azure, and to control routing/traffic between them and the internet or on-prem.
 - **Subnets** — segment a VNet. Used to divide a VNet into smaller ranges (e.g., public vs private) so routing and security policies (NSGs) can be applied per segment, isolating resources like databases from public-facing tiers.
 - **VPN Gateway** — encrypted connection over public internet between VNet and on-prem.
+- **Local Network Gateway** — the Azure object that represents the **on-premises side** of a Site-to-Site (S2S) VPN connection: defines the on-prem IP address ranges and the public IP of the on-prem VPN device. Pairs with a VPN Gateway (the Azure side) to establish the S2S tunnel.
 - **ExpressRoute** — private, dedicated, high-bandwidth connection to Azure (does NOT go over public internet); more reliable/faster/more secure than VPN, but costlier.
 - **Azure DNS** — hosts DNS domains.
 - **Load Balancer** — distributes traffic at Layer 4 (transport) within a region.
@@ -195,10 +203,11 @@ NSGs can be attached at the subnet level, the NIC level, or both — traffic mus
 
 ### Identity services
 - **Microsoft Entra ID** (formerly Azure Active Directory) — cloud-based identity and access management; authentication + authorization.
+- **Active Directory Domain Services (AD DS)** — the classic Windows Server role for on-prem directory services: stores users/groups/computers in a domain and provides domain join, Group Policy, LDAP, and Kerberos/NTLM authentication. Traditionally requires standing up and patching your own domain controllers (VMs running Windows Server).
+
+  A domain here is a logical grouping of computers, users, and other resources that share a central directory database and security policy, managed by domain controllers.
 - **Microsoft Entra Domain Services** — provides **managed AD DS** (domain join, group policy, LDAP, Kerberos/NTLM) **without deploying/managing domain controllers**. Different from Entra ID, which is cloud identity only and has no classic AD DS functionality.
 - **Microsoft Entra Connect (Sync)** — syncs identities from an **on-prem** AD DS domain to Microsoft Entra ID, enabling **hybrid identity** (SSO, MFA, self-service password reset across both systems).
-- **Self-Service Password Reset (SSPR)** — lets users reset their own password without help desk; also blocks known-compromised passwords.
-- **Multi-factor authentication (MFA)** — requires 2+ verification methods.
 - **Conditional Access** — policies that grant/block access based on conditions (location, device, risk); e.g., only allow access from approved client apps, or require MFA from specific locations.
 - **Single Sign-On (SSO)** — one login for multiple apps.
 - Entra ID is **identity**, distinct from **Azure RBAC** which is **access management** for Azure resources.
@@ -227,8 +236,9 @@ NSGs can be attached at the subnet level, the NIC level, or both — traffic mus
 ### Cost management
 - **Pricing calculator** — estimate cost of Azure products before deploying.
 - **Total Cost of Ownership (TCO) calculator** — compare cost of on-prem vs Azure.
-- **Azure Cost Management + Billing** — monitor, allocate, optimize cloud spend; set budgets and alerts.
-- Factors affecting cost: resource type, region, bandwidth (egress costs money, ingress usually free), subscription type.
+- **Azure Cost Management + Billing** — monitor, allocate, optimize cloud spend; create/manage budgets; generate historical reports and forecast future usage.
+- **Azure Reservations** — pay in advance to reserve a service/resource (e.g. VMs with consistent, predictable usage) for 1 or 3 years; can save up to ~72% vs pay-as-you-go. Best fit when usage is steady, not variable. (Different from spending limits, which suspend a subscription once a cap is hit.)
+- Factors affecting cost: resource type, region/location (pricing varies by region), bandwidth (outbound/egress costs money, inbound/ingress usually free), subscription type. Resource group *count* and use of ARM templates do **not** affect pricing.
 
 ### Governance tools
 - **Azure Policy** — enforce organizational standards/rules on resources (e.g., "only allow specific VM SKUs", "require tags"). Evaluates existing + new resources; can deny, audit, or append.
@@ -303,6 +313,10 @@ NSGs can be attached at the subnet level, the NIC level, or both — traffic mus
 | Policy Initiative | Group of Azure Policies managed as one set |
 | Azure Arc | Manage on-prem/multi-cloud servers via Azure, no migration |
 | Application Insights | Azure Monitor feature — APM for web apps |
+| Horizontal vs vertical scaling | Horizontal = add instances (scale out); Vertical = add RAM/CPU to one resource (scale up) |
+| Local Network Gateway | Represents the **on-prem** side of a S2S VPN (IP ranges + on-prem device public IP) |
+| Azure Reservations | Prepay 1-3 yrs for steady workloads, up to ~72% savings |
+| Subscription billing | Azure invoices **per subscription** by default, not per resource group |
 
 ## Common gotchas / things practice tests like to trick you on
 - **ExpressRoute ≠ over the internet** — it's a private connection.
@@ -317,6 +331,8 @@ NSGs can be attached at the subnet level, the NIC level, or both — traffic mus
 - **Entra ID ≠ Entra Domain Services** — Entra ID is cloud identity only, no classic AD DS features (no domain join/group policy/LDAP); Entra Domain Services gives you managed AD DS without running your own domain controllers.
 - **NSG vs Azure Firewall vs Bastion** — NSG = allow/deny rules at subnet/NIC; Azure Firewall = managed stateful firewall protecting a whole VNet; Bastion = secure browser-based RDP/SSH to VMs (not a firewall, an access method).
 - **Resource locks apply at**: subscription, resource group, or individual resource — **not** at management group or region level.
+- **VPN Gateway vs Local Network Gateway** — VPN Gateway is the *Azure* side of a S2S connection; Local Network Gateway is the *on-prem* side (defines the on-prem IP ranges/device IP). Don't confuse Local Network Gateway with NSGs or route filters (those are unrelated to defining the on-prem endpoint).
+- **SaaS billing ≠ IaaS/PaaS billing** — SaaS = subscription (flat monthly/annual); IaaS/PaaS = consumption-based (pay for what you use).
 
 ## Study plan suggestion
 1. Re-review **Azure architecture and services** section above in depth (your weak area) — focus on networking (LB vs App Gateway vs Front Door) and storage redundancy tiers, these are common trip-ups.
