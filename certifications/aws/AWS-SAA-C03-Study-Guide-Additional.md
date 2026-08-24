@@ -245,6 +245,7 @@
 
 ### AWS Glue
 - Serverless, managed **ETL (Extract, Transform, Load)** service to prepare/transform data for analytics — e.g. extract from S3 + RDS, transform, load into a Redshift warehouse. A common pattern: an S3 PUT triggers a Lambda (or EventBridge) which fires a Glue ETL job to convert an input CSV into Parquet in an output bucket, ready for Athena to query cheaply.
+- Mainly for *batch* processing. If *streaming*, use Lambda or Glue Streaming ETL instead.
 - **Glue Data Catalog**: a catalog of dataset metadata (databases/tables), populated by **Glue Crawlers** scanning S3, RDS, DynamoDB, or JDBC sources; the catalog is used for data discovery by Athena, Redshift Spectrum, and EMR, and read/written by Glue Jobs.
 - **Other Glue features**: Job Bookmarks (prevent re-processing already-seen data), Glue DataBrew (clean/normalize data via pre-built, no-code transformations), Glue Studio (GUI for building/running/monitoring ETL jobs), Glue Streaming ETL (built on Apache Spark Structured Streaming, compatible with Kinesis Data Streams, Kafka, and MSK).
 

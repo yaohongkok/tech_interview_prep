@@ -78,7 +78,7 @@
 | Amazon OpenSearch Service | Managed search/analytics engine (search any field) | Full-text search, log analytics dashboards |
 | Amazon EMR | Managed Hadoop/Spark clusters for big data processing | Large-scale data processing, ML training |
 | Amazon QuickSight | Serverless, ML-powered BI dashboards | Business analytics, embeddable visualizations |
-| AWS Glue | Serverless ETL and data catalog service | Preparing/transforming data for analytics |
+| AWS Glue | Serverless *batch* ETL and data catalog service | Preparing/transforming in batch data for analytics |
 | AWS Lake Formation | Automates building a secure S3-based data lake | Centralized data lake with fine-grained access control |
 | Amazon Managed Service for Apache Flink | Managed stream processing with Apache Flink | Real-time stream analytics on Kinesis/MSK data |
 | Amazon MSK | Managed Apache Kafka | Kafka-based streaming pipelines |
@@ -117,6 +117,7 @@
 | Amazon SQS | Managed message queue | Decoupling producers/consumers, buffering load spikes |
 | Amazon SNS | Pub/sub notification service | Fan-out messaging, alerting |
 | Amazon Kinesis Data Streams | Real-time data streaming and processing | Clickstream/log ingestion, real-time analytics |
+| MS Apache Flink/Amazon Kinesis Data Analytics | Processes real-time streaming data using SQL or Apache Flink | Real-time analytics, live dashboards, time series analytics |
 | Amazon Data Firehose | Near-real-time streaming delivery to storage/analytics targets | Loading streaming data into S3/Redshift/OpenSearch |
 | Amazon EventBridge | Serverless event bus | Event-driven architectures, scheduled jobs |
 | AWS Step Functions | Visual workflow orchestration (state machines) | Multi-step business processes, order fulfillment |

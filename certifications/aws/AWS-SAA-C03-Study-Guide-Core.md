@@ -460,6 +460,10 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Moves ***large*** amounts of data to/from ***on-prem*** or ***another cloud*** (NFS, SMB, HDFS, S3 API — requires a DataSync Agent on-prem) or directly between ***AWS storage services*** (S3, EFS, FSx — no agent needed). 
   - **Preserves file permissions and metadata (NFS POSIX, SMB)**. This is the only service that can do this! 
   - Replication tasks can be ***scheduled hourly/daily/weekly***; one agent task can use up to 10 Gbps, with an optional bandwidth limit. 
+  - To quickly estimate time taken to move data, the formula is roughly:
+    - Days Taken =~ (Data Size / Effective Internet Speed)/10^5
+    - 10^5 =~ (3600s * 24hr / 8b)
+    - 8b is required to convert internet speed from `b/s` to `B/s`
   - Can sync to any S3 storage class including Glacier.
   - **DataSync vs. Storage Gateway vs. Snowball/DMS**: 
     - DataSync is for a ***one-time or scheduled bulk migration/sync*** of files (moves the data, then it's done) 
@@ -522,6 +526,8 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Managed **NoSQL** key-value/document store, fully managed with replication across multiple AZs, transaction support, scales to millions of requests/s and trillions of rows/100s of TB, single-digit millisecond latency at any scale, IAM-integrated security, no maintenance/patching/downtime. **Standard** and **Standard-Infrequent Access (IA)** table classes.
 - **Basics**: made of **Tables**, each with a **Primary Key** fixed at creation (either a simple Partition Key, or a composite Partition Key + Sort Key); unlimited items (rows) per table; each item has flexible **attributes** (can be added over time, can be null) up to 400KB/item. Data types: Scalar (String, Number, Binary, Boolean, Null), Document (List, Map), Set (String Set, Number Set, Binary Set) — schema evolves rapidly since only the key is fixed.
 - Great for **rapidly evolving schemas**.
+- **Standard-Infrequent Access (IA)** reduces cost by 60% but increase read/write cost by 25%. Performance is same as Standard.
+  - Use case: logs, archive, analytics or data that is not accessed frequently
 - **Capacity modes**: **Provisioned** (default) — you specify Read Capacity Units (RCU) and Write Capacity Units (WCU) up front, need to plan capacity, can add auto-scaling on top. **On-Demand** — reads/writes auto-scale with the workload, no capacity planning, pay-per-use (more expensive), best for unpredictable workloads/steep sudden spikes.
 - **DAX (DynamoDB Accelerator)**: fully managed, highly available, seamless in-memory cache sitting in front of DynamoDB — microsecond latency for cached data, no application logic changes needed (same DynamoDB API), 5-minute default TTL; caches individual objects and Query/Scan results. Different from ElastiCache in front of DynamoDB, which is typically used to cache computed/aggregated results rather than raw DynamoDB API calls.
 - **Streams**: an ordered stream of item-level create/update/delete events on a table. **DynamoDB Streams** (24h retention, limited consumers, processed via Lambda triggers or the DynamoDB Streams Kinesis Adapter) vs the newer **Kinesis Data Streams for DynamoDB** (up to 1 year retention, many more consumers, processed via Lambda, Kinesis Data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL). Use cases: react to changes in real time (e.g. welcome email), real-time usage analytics, populate derivative tables, cross-region replication, invoke Lambda on changes.
@@ -925,7 +931,10 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - most features need the **SSM Agent** installed and running (pre-installed on Amazon Linux 2 and some Ubuntu AMIs; must be manually installed elsewhere) and appropriate IAM permissions.
 - **Session Manager**: start a secure shell on an EC2 or on-prem server **without SSH access, a bastion host, or SSH keys**, and without opening port 22 — better security posture; supports Linux, macOS, and Windows; session log data can be sent to S3 or CloudWatch Logs.
 - **Run Command**: execute a script ("document") or a single command across multiple instances at once (targeted via resource groups), no SSH needed; output can show in the console or ship to S3/CloudWatch Logs; can notify SNS on command status (In Progress/Success/Failed); integrated with IAM and CloudTrail; can be invoked via EventBridge.
-- **Patch Manager**: automates OS/application/security patching across EC2 and on-prem servers (Linux, macOS, Windows); patch on-demand or on a schedule via **Maintenance Windows**; scans instances and generates a patch-compliance report of missing patches.
+- **Patch Manager**: automates OS/native-application/security patching across EC2 and on-prem servers (Linux, macOS, Windows) 
+  - cannot patch third-party app; usually only package manager related
+  - patch on-demand or on a schedule via **Maintenance Windows**; 
+  - scans instances and generates a patch-compliance report of missing patches.
 - **Maintenance Windows**: defines a schedule (+ duration, registered instances, registered tasks) for performing actions like patching, driver updates, or software installs — e.g. trigger Run Command every 24 hours to update a fleet.
 - **Automation**: simplifies common maintenance/deployment tasks (restart instances, create an AMI, take an EBS snapshot) via **Automation Runbooks** (pre-built or custom SSM documents); triggered manually (Console/CLI/SDK), via EventBridge, on a Maintenance Window schedule, or by AWS Config for rule remediations.
 
