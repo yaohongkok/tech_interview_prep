@@ -102,7 +102,7 @@
 | Amazon Route 53 | Managed DNS and domain registration | Traffic routing, health-check-based failover |
 | Amazon VPC | Isolated virtual network for AWS resources | Custom network topology, subnetting, security |
 | Amazon CloudFront | Global content delivery network (CDN) | Low-latency content delivery, DDoS mitigation |
-| AWS Global Accelerator | Static anycast IPs routing traffic over the AWS backbone | Non-HTTP global apps, fast regional failover |
+| AWS Global Accelerator | Static Anycast IPs routing traffic over the AWS backbone | Non-HTTP global apps, fast regional failover |
 | Amazon API Gateway | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
 | Amazon Cognito | User authentication for web/mobile apps | App login, temporary AWS credentials for end users |
 | AWS Direct Connect | Dedicated private network link to AWS | High-bandwidth, low-latency hybrid connectivity |
@@ -214,7 +214,7 @@
 29. VPC Peering is not transitive; Transit Gateway solves transitive routing across many VPCs at scale.
 30. Gateway VPC Endpoints (S3/DynamoDB) are free; Interface Endpoints cover other services via a priced ENI.
 31. CloudFront caches content globally at edge locations and secures private S3 origins with Origin Access Control.
-32. Global Accelerator proxies TCP/UDP traffic over AWS's private backbone using two static Anycast IPs, without caching.
+32. Global Accelerator proxies TCP/UDP traffic over AWS's private backbone using two static Anycast IPs (single IP behind multiple servers; traffic routed to closest), without caching.
 33. API Gateway fronts REST/HTTP/WebSocket APIs; Edge-Optimized routes through CloudFront, Regional and Private serve narrower audiences.
 34. Cognito User Pools handle sign-up/sign-in; Identity Pools exchange logins for temporary AWS credentials.
 
