@@ -193,7 +193,7 @@
 **Storage**
 
 16. S3 offers 11-nines durability across all storage classes; availability and retrieval cost vary by class.
-17. S3 replication (CRR/SRR) requires versioning on both buckets and only replicates new objects going forward.
+17. S3 replication (Cross Reg. Repl./Same Reg. Repl.) requires versioning on both buckets and only replicates new objects going forward.
 18. EBS is single-instance block storage; EFS is a shared NFS file system mountable by many instances across AZs.
 19. Snow Family devices move offline data faster than a network transfer when that transfer would take roughly a week or more.
 20. FSx offers managed third-party file systems: Windows File Server (SMB), Lustre (HPC), NetApp ONTAP, and OpenZFS.

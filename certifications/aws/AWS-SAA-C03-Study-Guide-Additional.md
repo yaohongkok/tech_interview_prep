@@ -16,9 +16,7 @@
    - [AWS Macie](#aws-macie)
 3. [Additional Storage Services](#3-additional-storage-services)
    - [Amazon FSx](#amazon-fsx)
-   - [AWS Storage Gateway](#aws-storage-gateway)
    - [AWS Transfer Family](#aws-transfer-family)
-   - [AWS DataSync](#aws-datasync)
 4. [Data & Analytics](#4-data--analytics)
    - [Amazon Athena](#amazon-athena)
    - [Amazon OpenSearch Service](#amazon-opensearch-service)
@@ -212,16 +210,6 @@
   - OpenZFS for migrating existing ZFS workloads or needing the highest IOPS at the lowest latency among the four.
 - **Native storage option summary**: Block = EBS, EC2 Instance Store. File = EFS, FSx. Object = S3, S3 Glacier.
 
-### AWS Storage Gateway
-- Bridges on-premises environments to AWS storage (since S3 is a proprietary API, not NFS-compatible, on its own)
-- deployed as a VM (VMware/Hyper-V/KVM) on-prem, encrypts data in transit over the internet or Direct Connect. 
-- Use cases: disaster recovery, backup & restore, tiered storage, low-latency on-prem cache of cloud data.
-- **S3 File Gateway**: exposes S3 buckets over NFS/SMB, caches most-recently-used data locally, supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (transition to Glacier via a lifecycle policy since Glacier/Deep Archive aren't directly supported), per-gateway IAM role for bucket access, SMB integrates with Active Directory for auth.
-- **Volume Gateway**: block storage over Internet Small Computer Systems Interface (iSCSI). Final artifacts are EBS snapshots (which can restore on-prem volumes) and they go thru S3. 
-  - **Cached volumes**: entire dataset in S3, only recently used data cached locally (low latency for hot data). 
-  - **Stored volumes**: entire dataset kept on-prem, scheduled/async backups to S3 as EBS snapshots.
-- **Tape Gateway**: Virtual Tape Library (VTL) backed by S3 and Glacier for companies with existing physical-tape backup processes/software — same workflow, iSCSI interface, "eject" a tape to archive it into S3/Glacier. Usually, final artifacts are in Glacier (going through S3).
-- Storage gateways provides hosting options. ***VMWare ESXi, Microsoft Hyper-V, Linux KVMs*** are options that users can host on-premise. Users can also choose EC2, which is on the cloud.
 
 ### AWS Transfer Family
 - Fully managed **FTP/FTPS/SFTP endpoints** for file transfer into and out of **S3 or EFS**. 

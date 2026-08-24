@@ -34,6 +34,8 @@
    - [EBS (Elastic Block Store)](#ebs-elastic-block-store)
    - [EFS (Elastic File System)](#efs-elastic-file-system)
    - [Snow Family](#snow-family)
+   - [AWS Storage Gateway](#aws-storage-gateway)
+   - [AWS DataSync](#aws-datasync)
 5. [Databases](#5-databases)
    - [RDS (Relational Database Service)](#rds-relational-database-service)
    - [Aurora](#aurora)
@@ -441,6 +443,17 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **Edge Computing with Snowball Edge**: process data right where it's created (a truck, a ship, an underground mine — limited internet/compute on site) by running EC2 instances or Lambda functions directly on the device; use cases: data preprocessing, machine learning, media transcoding at the edge.
 - **Snowcone / Snowmobile**: Snowcone is a smaller/lighter edge device for tighter spaces; Snowmobile is a shipping-container-scale truck for genuinely exabyte-scale migrations. Use case: petabyte(+)-scale migration where neither the network nor a single Snowball Edge suffices.
 
+### AWS Storage Gateway
+- Bridges on-premises environments to AWS storage (since S3 is a proprietary API, not NFS-compatible, on its own)
+- deployed as a VM (VMware/Hyper-V/KVM) on-prem, encrypts data in transit over the internet or Direct Connect. 
+- Use cases: disaster recovery, backup & restore, tiered storage, low-latency on-prem cache of cloud data.
+- **S3 File Gateway**: exposes S3 buckets over NFS/SMB, caches most-recently-used data locally, supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (transition to Glacier via a lifecycle policy since Glacier/Deep Archive aren't directly supported), per-gateway IAM role for bucket access, SMB integrates with Active Directory for auth.
+- **Volume Gateway**: block storage over Internet Small Computer Systems Interface (iSCSI). Final artifacts are EBS snapshots (which can restore on-prem volumes) and they go thru S3. 
+  - **Cached volumes**: entire dataset in S3, only recently used data cached locally (low latency for hot data). 
+  - **Stored volumes**: entire dataset kept on-prem, scheduled/async backups to S3 as EBS snapshots.
+- **Tape Gateway**: Virtual Tape Library (VTL) backed by S3 and Glacier for companies with existing physical-tape backup processes/software — same workflow, iSCSI interface, "eject" a tape to archive it into S3/Glacier. Usually, final artifacts are in Glacier (going through S3).
+- Storage gateways provides hosting options. ***VMWare ESXi, Microsoft Hyper-V, Linux KVMs*** are options that users can host on-premise. Users can also choose EC2, which is on the cloud.
+
 
 ### AWS DataSync
 - **!!Popular on Exam!!**
@@ -448,6 +461,11 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   - **Preserves file permissions and metadata (NFS POSIX, SMB)**. This is the only service that can do this! 
   - Replication tasks can be ***scheduled hourly/daily/weekly***; one agent task can use up to 10 Gbps, with an optional bandwidth limit. 
   - Can sync to any S3 storage class including Glacier.
+  - **DataSync vs. Storage Gateway vs. Snowball/DMS**: 
+    - DataSync is for a ***one-time or scheduled bulk migration/sync*** of files (moves the data, then it's done) 
+    - vs. **Storage Gateway**, which is for ***ongoing, transparent access*** to AWS storage from on-prem apps (presents S3/EBS/tape as a local NFS/SMB/iSCSI/VTL endpoint, with local caching). 
+    - Vs. **Snowball**, which is offline/physical transfer for when the transfer would take too long over the network (no live network path at all). 
+    - Vs. **DMS** (Database Migration Service), which is specifically for ***databases*** (homogeneous/heterogeneous, with CDC replication), not file/object data.
 
 ### Additional Topics
 
