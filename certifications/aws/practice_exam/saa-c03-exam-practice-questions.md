@@ -13,7 +13,12 @@ A company collects data for temperature, humidity, and atmospheric pressure in c
 - C. Schedule AWS Snowball Edge Storage Optimized device jobs daily to transfer data from each site to the closest Region. Use S3 Cross- Region Replication to copy objects to the destination S3 bucket.
 - D. Upload the data from each site to an Amazon EC2 instance in the closest Region. Store the data in an Amazon Elastic Block Store (Amazon EBS) volume. At regular intervals, take an EBS snapshot and copy it to the Region that contains the destination S3 bucket. Restore the EBS volume in that Region.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -26,7 +31,12 @@ A company needs the ability to analyze the log files of its proprietary applicat
 - C. Use Amazon Athena directly with Amazon S3 to run the queries as needed.
 - D. Use AWS Glue to catalog the logs. Use a transient Apache Spark cluster on Amazon EMR to run the SQL queries as needed.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -39,7 +49,12 @@ A company uses AWS Organizations to manage multiple AWS accounts for different d
 - C. Use AWS CloudTrail to monitor the CreateAccount, InviteAccountToOrganization, LeaveOrganization, and RemoveAccountFromOrganization events. Update the S3 bucket policy accordingly.
 - D. Tag each user that needs access to the S3 bucket. Add the aws:PrincipalTag global condition key to the S3 bucket policy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -52,7 +67,12 @@ An application runs on an Amazon EC2 instance in a VPC. The application processe
 - C. Create an instance profile on Amazon EC2 to allow S3 access.
 - D. Create an Amazon API Gateway API with a private link to access the S3 endpoint.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -65,7 +85,12 @@ A company is hosting a web application on AWS using a single Amazon EC2 instance
 - C. Copy the data from both EBS volumes to Amazon EFS. Modify the application to save new documents to Amazon EFS
 - D. Configure the Application Load Balancer to send the request to both servers. Return each document from the correct server
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -78,7 +103,12 @@ A company uses NFS to store large video files in on-premises network attached st
 - C. Deploy an S3 File Gateway on premises. Create a public service endpoint to connect to the S3 File Gateway. Create an S3 bucket. Create a new NFS file share on the S3 File Gateway. Point the new file share to the S3 bucket. Transfer the data from the existing NFS file share to the S3 File Gateway.
 - D. Set up an AWS Direct Connect connection between the on-premises network and AWS. Deploy an S3 File Gateway on premises. Create a public virtual interface (VIF) to connect to the S3 File Gateway. Create an S3 bucket. Create a new NFS file share on the S3 File Gateway. Point the new file share to the S3 bucket. Transfer the data from the existing NFS file share to the S3 File Gateway.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -91,7 +121,12 @@ A company has an application that ingests incoming messages. Dozens of other app
 - C. Write the messages to Amazon Kinesis Data Streams with a single shard. Use an AWS Lambda function to preprocess messages and store them in Amazon DynamoDB. Configure the consumer applications to read from DynamoDB to process the messages.
 - D. Publish the messages to an Amazon Simple Notification Service (Amazon SNS) topic with multiple Amazon Simple Queue Service (Amazon SOS) subscriptions. Configure the consumer applications to process the messages from the queues.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -104,7 +139,12 @@ A company is migrating a distributed application to AWS. The application serves 
 - C. Implement the primary server and the compute nodes with Amazon EC2 instances that are managed in an Auto Scaling group. Configure AWS CloudTrail as a destination for the jobs. Configure EC2 Auto Scaling based on the load on the primary server.
 - D. Implement the primary server and the compute nodes with Amazon EC2 instances that are managed in an Auto Scaling group. Configure Amazon EventBridge (Amazon CloudWatch Events) as a destination for the jobs. Configure EC2 Auto Scaling based on the load on the compute nodes.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -117,7 +157,12 @@ A company is running an SMB file server in its data center. The file server stor
 - C. Create an Amazon FSx for Windows File Server file system to extend the company's storage space.
 - D. Install a utility on each user's computer to access Amazon S3. Create an S3 Lifecycle policy to transition the data to S3 Glacier Flexible Retrieval after 7 days.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -130,7 +175,12 @@ A company is building an ecommerce web application on AWS. The application sends
 - C. Use an API Gateway authorizer to block any requests while the application processes an order.
 - D. Use an API Gateway integration to send a message to an Amazon Simple Queue Service (Amazon SQS) standard queue when the application receives an order. Configure the SQS standard queue to invoke an AWS Lambda function for processing.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -143,7 +193,12 @@ A company has an application that runs on Amazon EC2 instances and uses an Amazo
 - C. Create an Amazon S3 bucket to store objects that are encrypted with an AWS Key Management Service (AWS KMS) encryption key. Migrate the credential file to the S3 bucket. Point the application to the S3 bucket.
 - D. Create an encrypted Amazon Elastic Block Store (Amazon EBS) volume for each EC2 instance. Attach the new EBS volume to each EC2 instance. Migrate the credential file to the new EBS volume. Point the application to the new EBS volume.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -156,7 +211,12 @@ A global company hosts its web application on Amazon EC2 instances behind an App
 - C. Create an Amazon CloudFront distribution that has the S3 bucket as an origin. Create an AWS Global Accelerator standard accelerator that has the ALB and the CloudFront distribution as endpoints. Create a custom domain name that points to the accelerator DNS name. Use the custom domain name as an endpoint for the web application.
 - D. Create an Amazon CloudFront distribution that has the ALB as an origin. Create an AWS Global Accelerator standard accelerator that has the S3 bucket as an endpoint. Create two domain names. Point one domain name to the CloudFront DNS name for dynamic content. Point the other domain name to the accelerator DNS name for static content. Use the domain names as endpoints for the web application.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -169,7 +229,12 @@ A company performs monthly maintenance on its AWS infrastructure. During these m
 - C. Store the credentials in an Amazon S3 bucket that has server-side encryption (SSE) enabled. Use Amazon EventBridge (Amazon CloudWatch Events) to invoke an AWS Lambda function to rotate the credentials.
 - D. Encrypt the credentials as secrets by using AWS Key Management Service (AWS KMS) multi-Region customer managed keys. Store the secrets in an Amazon DynamoDB global table. Use an AWS Lambda function to retrieve the secrets from DynamoDB. Use the RDS API to rotate the secrets.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -182,7 +247,12 @@ A company runs an ecommerce application on Amazon EC2 instances behind an Applic
 - C. Use Amazon Aurora with a Multi-AZ deployment. Configure Aurora Auto Scaling with Aurora Replicas.
 - D. Use Amazon ElastiCache for Memcached with EC2 Spot Instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -195,7 +265,12 @@ A company recently migrated to AWS and wants to implement a solution to protect 
 - C. Use AWS Network Firewall to create the required rules for traffic inspection and traffic filtering for the production VPC.
 - D. Use AWS Firewall Manager to create the required rules for traffic inspection and traffic filtering for the production VPC.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -208,7 +283,12 @@ A company hosts a data lake on AWS. The data lake consists of data in Amazon S3 
 - C. Create an AWS Glue table and crawler for the data in Amazon S3. Create an AWS Glue extract, transform, and load (ETL) job to produce reports. Publish the reports to Amazon S3. Use S3 bucket policies to limit access to the reports.
 - D. Create an AWS Glue table and crawler for the data in Amazon S3. Use Amazon Athena Federated Query to access data within Amazon RDS for PostgreSQL. Generate reports by using Amazon Athena. Publish the reports to Amazon S3. Use S3 bucket policies to limit access to the reports.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -221,7 +301,12 @@ A company is implementing a new business application. The application runs on tw
 - C. Create an IAM group that grants access to the S3 bucket. Attach the group to the EC2 instances.
 - D. Create an IAM user that grants access to the S3 bucket. Attach the user account to the EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -235,7 +320,12 @@ An application development team is designing a microservice that will convert la
 - D. Launch an Amazon EC2 instance to monitor an Amazon Simple Queue Service (Amazon SQS) queue. When items are added to the queue, log the file name in a text file on the EC2 instance and invoke the Lambda function.
 - E. Configure an Amazon EventBridge (Amazon CloudWatch Events) event to monitor the S3 bucket. When an image is uploaded, send an alert to an Amazon ample Notification Service (Amazon SNS) topic with the application owner's email address for further processing.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -248,7 +338,12 @@ A company has a three-tier web application that is deployed on AWS. The web serv
 - C. Deploy a transit gateway in the inspection VPConfigure route tables to route the incoming packets through the transit gateway.
 - D. Deploy a Gateway Load Balancer in the inspection VPC. Create a Gateway Load Balancer endpoint to receive the incoming packets and forward the packets to the appliance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -261,7 +356,12 @@ A company wants to improve its ability to clone large amounts of production data
 - C. Take EBS snapshots of the production EBS volumes. Create and initialize new EBS volumes. Attach the new EBS volumes to EC2 instances in the test environment before restoring the volumes from the production EBS snapshots.
 - D. Take EBS snapshots of the production EBS volumes. Turn on the EBS fast snapshot restore feature on the EBS snapshots. Restore the snapshots into new EBS volumes. Attach the new EBS volumes to EC2 instances in the test environment.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -274,7 +374,12 @@ An ecommerce company wants to launch a one-deal-a-day website on AWS. Each day w
 - C. Migrate the full application to run in containers. Host the containers on Amazon Elastic Kubernetes Service (Amazon EKS). Use the Kubernetes Cluster Autoscaler to increase and decrease the number of pods to process bursts in traffic. Store the data in Amazon RDS for MySQL.
 - D. Use an Amazon S3 bucket to host the website's static content. Deploy an Amazon CloudFront distribution. Set the S3 bucket as the origin. Use Amazon API Gateway and AWS Lambda functions for the backend APIs. Store the data in Amazon DynamoDB.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -287,7 +392,12 @@ A solutions architect is using Amazon S3 to design the storage architecture of a
 - C. S3 Standard-Infrequent Access (S3 Standard-IA)
 - D. S3 One Zone-Infrequent Access (S3 One Zone-IA)
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -300,7 +410,12 @@ A company is storing backup files by using Amazon S3 Standard storage. The files
 - C. Create an S3 Lifecycle configuration to transition objects from S3 Standard to S3 Standard-Infrequent Access (S3 Standard-IA) after 1 month.
 - D. Create an S3 Lifecycle configuration to transition objects from S3 Standard to S3 One Zone-Infrequent Access (S3 One Zone-IA) after 1 month.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -313,7 +428,12 @@ A company observes an increase in Amazon EC2 costs in its most recent bill. The 
 - C. Use graphs from the AWS Billing and Cost Management dashboard to compare EC2 costs based on instance types for the last 2 months.
 - D. Use AWS Cost and Usage Reports to create a report and send it to an Amazon S3 bucket. Use Amazon QuickSight with Amazon S3 as a source to generate an interactive graph based on instance types.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -326,7 +446,12 @@ A company is designing an application. The application uses an AWS Lambda functi
 - C. Set up two Lambda functions. Configure one function to receive the information. Configure the other function to load the information into the database. Integrate the Lambda functions by using Amazon Simple Notification Service (Amazon SNS).
 - D. Set up two Lambda functions. Configure one function to receive the information. Configure the other function to load the information into the database. Integrate the Lambda functions by using an Amazon Simple Queue Service (Amazon SQS) queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -339,7 +464,12 @@ A company needs to review its AWS Cloud deployment to ensure that its Amazon S3 
 - C. Turn on Amazon Inspector with the appropriate assessment template.
 - D. Turn on Amazon S3 server access logging. Configure Amazon EventBridge (Amazon Cloud Watch Events).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -352,7 +482,12 @@ A company is launching a new application and will display application metrics on
 - C. Create an IAM user for the company's employees. Attach the ViewOnlyAccess AWS managed policy to the IAM user. Share the new login credentials with the product manager. Ask the product manager to navigate to the CloudWatch console and locate the dashboard by name in the Dashboards section.
 - D. Deploy a bastion server in a public subnet. When the product manager requires access to the dashboard, start the server and share the RDP credentials. On the bastion server, ensure that the browser is configured to open the dashboard URL with cached AWS credentials that have appropriate permissions to view the dashboard.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -365,7 +500,12 @@ A company is migrating applications to AWS. The applications are deployed in dif
 - C. Use AWS Directory Service. Create a two-way trust relationship with the company's self-managed Microsoft Active Directory.
 - D. Deploy an identity provider (IdP) on premises. Enable AWS Single Sign-On (AWS SSO) from the AWS SSO console.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -378,7 +518,12 @@ A company provides a Voice over Internet Protocol (VoIP) service that uses UDP c
 - C. Deploy a Network Load Balancer (NLB) and an associated target group. Associate the target group with the Auto Scaling group. Create an Amazon Route 53 latency record that points to aliases for each NLB. Create an Amazon CloudFront distribution that uses the latency record as an origin.
 - D. Deploy an Application Load Balancer (ALB) and an associated target group. Associate the target group with the Auto Scaling group. Create an Amazon Route 53 weighted record that points to aliases for each ALB. Deploy an Amazon CloudFront distribution that uses the weighted record as an origin.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -391,7 +536,12 @@ A development team runs monthly resource-intensive tests on its general purpose 
 - C. Create a snapshot when tests are completed. Terminate the DB instance and restore the snapshot when required.
 - D. Modify the DB instance to a low-capacity instance when tests are completed. Modify the DB instance again when required.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -404,7 +554,12 @@ A company that hosts its web application on AWS wants to ensure all Amazon EC2 i
 - C. Write API calls to check all resources for proper tag allocation. Periodically run the code on an EC2 instance.
 - D. Write API calls to check all resources for proper tag allocation. Schedule an AWS Lambda function through Amazon CloudWatch to periodically run the code.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -417,7 +572,12 @@ A development team needs to host a website that will be accessed by other teams.
 - C. Deploy a web server on an Amazon EC2 instance to host the website.
 - D. Configure an Application Load Balancer with an AWS Lambda target that uses the Express.js framework.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -430,7 +590,12 @@ A company runs an online marketplace web application on AWS. The application ser
 - C. Stream the transactions data into Amazon Kinesis Data Streams. Use AWS Lambda integration to remove sensitive data from every transaction and then store the transactions data in Amazon DynamoDB. Other applications can consume the transactions data off the Kinesis data stream.
 - D. Store the batched transactions data in Amazon S3 as files. Use AWS Lambda to process every file and remove sensitive data before updating the files in Amazon S3. The Lambda function then stores the data in Amazon DynamoDB. Other applications can consume transaction files stored in Amazon S3.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -443,7 +608,12 @@ A company hosts its multi-tier applications on AWS. For compliance, governance, 
 - C. Use AWS Config to track configuration changes and Amazon CloudWatch to record API calls.
 - D. Use AWS CloudTrail to track configuration changes and Amazon CloudWatch to record API calls.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -456,7 +626,12 @@ A company is preparing to launch a public-facing web application in the AWS Clou
 - C. Enable AWS Shield and assign Amazon Route 53 to it.
 - D. Enable AWS Shield Advanced and assign the ELB to it.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -469,7 +644,12 @@ A company is building an application in the AWS Cloud. The application will stor
 - C. Create a customer managed KMS key and an S3 bucket in each Region. Configure the S3 buckets to use server-side encryption with Amazon S3 managed encryption keys (SSE-S3). Configure replication between the S3 buckets.
 - D. Create a customer managed KMS key and an S3 bucket in each Region. Configure the S3 buckets to use server-side encryption with AWS KMS keys (SSE-KMS). Configure replication between the S3 buckets.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -482,7 +662,12 @@ A company recently launched a variety of new workloads on Amazon EC2 instances i
 - C. Create an administrative SSH key pair. Load the public key into each EC2 instance. Deploy a bastion host in a public subnet to provide a tunnel for administration of each instance.
 - D. Establish an AWS Site-to-Site VPN connection. Instruct administrators to use their local on-premises machines to connect directly to the instances by using SSH keys across the VPN tunnel.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -495,7 +680,12 @@ A company is hosting a static website on Amazon S3 and is using Amazon Route 53 
 - C. Add an Amazon CloudFront distribution in front of the S3 bucket. Edit the Route 53 entries to point to the CloudFront distribution.
 - D. Enable S3 Transfer Acceleration on the bucket. Edit the Route 53 entries to point to the new endpoint.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -508,7 +698,12 @@ A company maintains a searchable repository of items on its website. The data is
 - C. Change the DB instance to a burstable performance instance class.
 - D. Enable Multi-AZ RDS read replicas with MySQL native asynchronous replication.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -521,7 +716,12 @@ A company has thousands of edge devices that collectively generate 1 TB of statu
 - C. Create an Amazon Kinesis Data Firehose delivery stream to ingest the alerts. Configure the Kinesis Data Firehose stream to deliver the alerts to an Amazon OpenSearch Service (Amazon Elasticsearch Service) cluster. Set up the Amazon OpenSearch Service (Amazon Elasticsearch Service) cluster to take manual snapshots every day and delete data from the cluster that is older than 14 days.
 - D. Create an Amazon Simple Queue Service (Amazon SQS) standard queue to ingest the alerts, and set the message retention period to 14 days. Configure consumers to poll the SQS queue, check the age of the message, and analyze the message data as needed. If the message is 14 days old, the consumer should copy the message to an Amazon S3 bucket and delete the message from the SQS queue.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -534,7 +734,12 @@ A company's application integrates with multiple software-as-a-service (SaaS) so
 - C. Create an Amazon EventBridge (Amazon CloudWatch Events) rule for each SaaS source to send output data. Configure the S3 bucket as the rule's target. Create a second EventBridge (Cloud Watch Events) rule to send events when the upload to the S3 bucket is complete. Configure an Amazon Simple Notification Service (Amazon SNS) topic as the second rule's target.
 - D. Create a Docker container to use instead of an EC2 instance. Host the containerized application on Amazon Elastic Container Service (Amazon ECS). Configure Amazon CloudWatch Container Insights to send events to an Amazon Simple Notification Service (Amazon SNS) topic when the upload to the S3 bucket is complete.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -547,7 +752,12 @@ A company runs a highly available image-processing application on Amazon EC2 ins
 - C. Deploy a gateway VPC endpoint for Amazon S3.
 - D. Provision an EC2 Dedicated Host to run the EC2 instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -560,7 +770,12 @@ A company has an on-premises application that generates a large amount of time-s
 - C. Order daily AWS Snowball devices. Load the data onto the Snowball devices and return the devices to AWS each day.
 - D. Submit a support ticket through the AWS Management Console. Request the removal of S3 service limits from the account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -574,7 +789,12 @@ A company has an Amazon S3 bucket that contains critical data. The company must 
 - D. Enable default encryption on the S3 bucket.
 - E. Create a lifecycle policy for the objects in the S3 bucket.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -588,7 +808,12 @@ A company has a data ingestion workfiow that consists of the following: • An A
 - D. Increase provisioned throughput for the Lambda function.
 - E. Modify the Lambda function to read from an Amazon Simple Queue Service (Amazon SQS) queue.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -601,7 +826,12 @@ A company has an application that provides marketing services to stores. The ser
 - C. Implement custom scanning algorithms in an AWS Lambda function. Trigger the function when objects are loaded into the bucket. If objects contain PII, use Amazon Simple Notification Service (Amazon SNS) to trigger a notification to the administrators to remove the objects that contain PII.
 - D. Implement custom scanning algorithms in an AWS Lambda function. Trigger the function when objects are loaded into the bucket. If objects contain PII, use Amazon Simple Email Service (Amazon SES) to trigger a notification to the administrators and trigger an S3 Lifecycle policy to remove the meats that contain PII.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -614,7 +844,12 @@ A company needs guaranteed Amazon EC2 capacity in three specific Availability Zo
 - C. Purchase Reserved Instances that specify the Region and three Availability Zones needed.
 - D. Create an On-Demand Capacity Reservation that specifies the Region and three Availability Zones needed.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -627,7 +862,12 @@ A company's website uses an Amazon EC2 instance store for its catalog of items. 
 - C. Move the catalog from the instance store to Amazon S3 Glacier Deep Archive.
 - D. Move the catalog to an Amazon Elastic File System (Amazon EFS) file system.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -640,7 +880,12 @@ A company stores call transcript files on a monthly basis. Users access the file
 - C. Store individual files with tags in Amazon S3 Standard storage. Store search metadata for each archive in Amazon S3 Standard storage. Use S3 Lifecycle policies to move the files to S3 Glacier Instant Retrieval after 1 year. Query and retrieve the files by searching for metadata from Amazon S3.
 - D. Store individual files in Amazon S3 Standard storage. Use S3 Lifecycle policies to move the files to S3 Glacier Deep Archive after 1 year. Store search metadata in Amazon RDS. Query the files from Amazon RDS. Retrieve the files from S3 Glacier Deep Archive.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -653,7 +898,12 @@ A company has a production workload that runs on 1,000 Amazon EC2 Linux instance
 - C. Schedule an AWS Systems Manager maintenance window to apply the patch to all EC2 instances.
 - D. Use AWS Systems Manager Run Command to run a custom command that applies the patch to all EC2 instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -667,7 +917,12 @@ A company is developing an application that provides order shipping statistics f
 - D. Create an Amazon EventBridge (Amazon CloudWatch Events) scheduled event that invokes an AWS Lambda function to query the application's API for the data.
 - E. Store the application data in Amazon S3. Create an Amazon Simple Notification Service (Amazon SNS) topic as an S3 event destination to send the report by email.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -680,7 +935,12 @@ A company wants to migrate its on-premises application to AWS. The application p
 - C. Migrate the application to Amazon EC2 instances in a Multi-AZ Auto Scaling group. Use Amazon Elastic File System (Amazon EFS) for storage.
 - D. Migrate the application to Amazon EC2 instances in a Multi-AZ Auto Scaling group. Use Amazon Elastic Block Store (Amazon EBS) for storage.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -693,7 +953,12 @@ A company needs to store its accounting records in Amazon S3. The records must b
 - C. Use an S3 Lifecycle policy to transition the records from S3 Standard to S3 Glacier Deep Archive after 1 year. Use S3 Object Lock in compliance mode for a period of 10 years.
 - D. Use an S3 Lifecycle policy to transition the records from S3 Standard to S3 One Zone-Infrequent Access (S3 One Zone-IA) after 1 year. Use S3 Object Lock in governance mode for a period of 10 years.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -706,7 +971,12 @@ A company runs multiple Windows workloads on AWS. The company's employees use Wi
 - C. Extend the file share environment to Amazon FSx for Windows File Server with a Multi-AZ configuration. Migrate all the data to FSx for Windows File Server.
 - D. Extend the file share environment to Amazon Elastic File System (Amazon EFS) with a Multi-AZ configuration. Migrate all the data to Amazon EFS.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -719,7 +989,12 @@ A solutions architect is developing a VPC architecture that includes multiple su
 - C. Create a security group that allows inbound traffic from the security group that is assigned to instances in the private subnets. Attach the security group to the DB instances.
 - D. Create a new peering connection between the public subnets and the private subnets. Create a different peering connection between the private subnets and the database subnets.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -732,7 +1007,12 @@ A company has registered its domain name with Amazon Route 53. The company uses 
 - C. Create a Regional API Gateway endpoint. Associate the API Gateway endpoint with the company's domain name. Import the public certificate associated with the company's domain name into AWS Certificate Manager (ACM) in the same Region. Attach the certificate to the API Gateway endpoint. Configure Route 53 to route traffic to the API Gateway endpoint.
 - D. Create a Regional API Gateway endpoint. Associate the API Gateway endpoint with the company's domain name. Import the public certificate associated with the company's domain name into AWS Certificate Manager (ACM) in the us-east-1 Region. Attach the certificate to the API Gateway APIs. Create Route 53 DNS records with the company's domain name. Point an A record to the company's domain name.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -745,7 +1025,12 @@ A company is running a popular social media website. The website gives users the
 - C. Use Amazon SageMaker to detect inappropriate content. Use ground truth to label low-confidence predictions.
 - D. Use AWS Fargate to deploy a custom machine learning model to detect inappropriate content. Use ground truth to label low-confidence predictions.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -758,7 +1043,12 @@ A company wants to run its critical applications in containers to meet requireme
 - C. Use Amazon Elastic Container Service (Amazon ECS) on AWS Fargate.
 - D. Use Amazon EC2 instances from an Amazon Elastic Container Service (Amazon ECS)-optimized Amazon Machine Image (AMI).
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -771,7 +1061,12 @@ A company hosts more than 300 global websites and applications. The company requ
 - C. Cache the data to Amazon CloudFront. Store the data in an Amazon S3 bucket. When an object is added to the S3 bucket. run an AWS Lambda function to process the data for analysis.
 - D. Collect the data from Amazon Kinesis Data Streams. Use Amazon Kinesis Data Firehose to transmit the data to an Amazon S3 data lake. Load the data in Amazon Redshift for analysis.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -784,7 +1079,12 @@ A company has a website hosted on AWS. The website is behind an Application Load
 - C. Create a listener rule on the ALB to redirect HTTP traffic to HTTPS.
 - D. Replace the ALB with a Network Load Balancer configured to use Server Name Indication (SNI).
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -797,7 +1097,12 @@ A company is developing a two-tier web application on AWS. The company's develop
 - C. Store the database credentials as a secret in AWS Secrets Manager. Turn on automatic rotation for the secret. Attach the required permission to the EC2 role to grant access to the secret.
 - D. Store the database credentials as encrypted parameters in AWS Systems Manager Parameter Store. Turn on automatic rotation for the encrypted parameters. Attach the required permission to the EC2 role to grant access to the encrypted parameters.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -810,7 +1115,12 @@ A company is deploying a new public web application to AWS. The application will
 - C. Use AWS Certificate Manager (ACM) Private Certificate Authority to issue an SSL/TLS certificate from the root CA. Apply the certificate to the ALB. Use the managed renewal feature to automatically rotate the certificate.
 - D. Use AWS Certificate Manager (ACM) to import an SSL/TLS certificate. Apply the certificate to the ALB. Use Amazon EventBridge (Amazon CloudWatch Events) to send a notification when the certificate is nearing expiration. Rotate the certificate manually.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -823,7 +1133,12 @@ A company runs its infrastructure on AWS and has a registered base of 700,000 us
 - C. Upload the .pdf files to an AWS Elastic Beanstalk application that includes Amazon EC2 instances, Amazon Elastic Block Store (Amazon EBS) storage, and an Auto Scaling group. Use a program in the EC2 instances to convert the files to .jpg format. Save the .pdf files and the .jpg files in the EBS store.
 - D. Upload the .pdf files to an AWS Elastic Beanstalk application that includes Amazon EC2 instances, Amazon Elastic File System (Amazon EFS) storage, and an Auto Scaling group. Use a program in the EC2 instances to convert the file to .jpg format. Save the .pdf files and the .jpg files in the EBS store.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -836,7 +1151,12 @@ A company has more than 5 TB of file data on Windows file servers that run on pr
 - C. Deploy and configure an Amazon S3 File Gateway on premises. Move the on-premises file data to Amazon S3. Reconfigure the workloads to use either Amazon S3 directly or the S3 File Gateway. depending on each workload's location.
 - D. Deploy and configure Amazon FSx for Windows File Server on AWS. Deploy and configure an Amazon FSx File Gateway on premises. Move the on-premises file data to the FSx File Gateway. Configure the cloud workloads to use FSx for Windows File Server on AWS. Configure the on-premises workloads to use the FSx File Gateway.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -849,7 +1169,12 @@ A hospital recently deployed a RESTful API with Amazon API Gateway and AWS Lambd
 - C. Use Amazon Textract to extract the text from the reports. Use Amazon Comprehend Medical to identify the PHI from the extracted text.
 - D. Use Amazon Rekognition to extract the text from the reports. Use Amazon Comprehend Medical to identify the PHI from the extracted text.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -862,7 +1187,12 @@ A company has an application that generates a large number of files, each approx
 - C. Create an S3 bucket lifecycle policy to move files from S3 Standard to S3 Standard-Infrequent Access (S3 Standard-IA) 30 days from object creation. Delete the files 4 years after object creation.
 - D. Create an S3 bucket lifecycle policy to move files from S3 Standard to S3 Standard-Infrequent Access (S3 Standard-IA) 30 days from object creation. Move the files to S3 Glacier 4 years after object creation.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -875,7 +1205,12 @@ A company hosts an application on multiple Amazon EC2 instances. The application
 - C. Use the ReceiveMessage API call to set an appropriate wait time.
 - D. Use the ChangeMessageVisibility API call to increase the visibility timeout.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -888,7 +1223,12 @@ A solutions architect is designing a new hybrid architecture to extend a company
 - C. Provision an AWS Direct Connect connection to a Region. Provision a second Direct Connect connection to the same Region as a backup if the primary Direct Connect connection fails.
 - D. Provision an AWS Direct Connect connection to a Region. Use the Direct Connect failover attribute from the AWS CLI to automatically create a backup connection if the primary Direct Connect connection fails.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -901,7 +1241,12 @@ A company is running a business-critical web application on Amazon EC2 instances
 - C. Configure the Auto Scaling group to use one Availability Zone. Generate hourly snapshots of the database. Recover the database from the snapshots in the event of a failure.
 - D. Configure the Auto Scaling group to use multiple AWS Regions. Write the data from the application to Amazon S3. Use S3 Event Notifications to launch an AWS Lambda function to write the data to the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -914,7 +1259,12 @@ A company's HTTP application is behind a Network Load Balancer (NLB). The NLB's 
 - C. Replace the NLB with an Application Load Balancer. Enable HTTP health checks by supplying the URL of the company's application. Configure an Auto Scaling action to replace unhealthy instances.
 - D. Create an Amazon Cloud Watch alarm that monitors the UnhealthyHostCount metric for the NLB. Configure an Auto Scaling action to replace unhealthy instances when the alarm is in the ALARM state.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -927,7 +1277,12 @@ A company runs a shopping application that uses Amazon DynamoDB to store custome
 - C. Export the DynamoDB data to Amazon S3 Glacier on a daily basis. For RPO recovery, import the data from S3 Glacier to DynamoDB.
 - D. Schedule Amazon Elastic Block Store (Amazon EBS) snapshots for the DynamoDB table every 15 minutes. For RPO recovery, restore the DynamoDB table by using the EBS snapshot.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -940,7 +1295,12 @@ A company runs a photo processing application that needs to frequently upload an
 - C. Deploy the application into a public subnet and allow it to route through an internet gateway to access the S3 buckets.
 - D. Deploy an S3 VPC gateway endpoint into the VPC and attach an endpoint policy that allows access to the S3 buckets.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -954,7 +1314,12 @@ A company recently launched Linux-based application instances on Amazon EC2 in a
 - D. Replace the current security group of the application instances with one that allows inbound SSH access from only the private IP address of the bastion host.
 - E. Replace the current security group of the application instances with one that allows inbound SSH access from only the public IP address of the bastion host.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -968,7 +1333,12 @@ A solutions architect is designing a two-tier web application. The application c
 - D. Configure the security group for the database tier to allow outbound traffic on ports 443 and 1433 to the security group for the web tier.
 - E. Configure the security group for the database tier to allow inbound traffic on ports 443 and 1433 from the security group for the web tier.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -981,7 +1351,12 @@ A company wants to move a multi-tiered application from on premises to the AWS C
 - C. Use Amazon Simple Notification Service (Amazon SNS) to handle the messaging between application servers running on Amazon EC2 in an Auto Scaling group. Use Amazon CloudWatch to monitor the SNS queue length and scale up and down as required.
 - D. Use Amazon Simple Queue Service (Amazon SQS) to handle the messaging between application servers running on Amazon EC2 in an Auto Scaling group. Use Amazon CloudWatch to monitor the SQS queue length and scale up when communication failures are detected.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -994,7 +1369,12 @@ A company receives 10 TB of instrumentation data each day from several machines 
 - C. AWS Database Migration Service (AWS DMS) over public internet
 - D. AWS Database Migration Service (AWS DMS) over AWS Direct Connect
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1007,7 +1387,12 @@ A company needs to configure a real-time data ingestion architecture for its app
 - C. Configure an Amazon API Gateway API to send data to an Amazon Kinesis data stream. Create an Amazon Kinesis Data Firehose delivery stream that uses the Kinesis data stream as a data source. Use AWS Lambda functions to transform the data. Use the Kinesis Data Firehose delivery stream to send the data to Amazon S3.
 - D. Configure an Amazon API Gateway API to send data to AWS Glue. Use AWS Lambda functions to transform the data. Use AWS Glue to send the data to Amazon S3.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1020,7 +1405,12 @@ A company needs to keep user transaction data in an Amazon DynamoDB table. The c
 - C. Create an on-demand backup of the table by using the DynamoDB console. Store the backup in an Amazon S3 bucket. Set an S3 Lifecycle configuration for the S3 bucket.
 - D. Create an Amazon EventBridge (Amazon CloudWatch Events) rule to invoke an AWS Lambda function. Configure the Lambda function to back up the table and to store the backup in an Amazon S3 bucket. Set an S3 Lifecycle configuration for the S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1033,7 +1423,12 @@ A company is planning to use an Amazon DynamoDB table for data storage. The comp
 - C. Create a DynamoDB table with provisioned capacity and auto scaling.
 - D. Create a DynamoDB table in provisioned capacity mode, and configure it as a global table.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1046,7 +1441,12 @@ A company recently signed a contract with an AWS Managed Service Provider (MSP) 
 - C. Modify the launchPermission property of the AMI. Share the AMI with the MSP Partner's AWS account only. Modify the key policy to trust a new KMS key that is owned by the MSP Partner for encryption.
 - D. Export the AMI from the source account to an Amazon S3 bucket in the MSP Partner's AWS account, Encrypt the S3 bucket with a new KMS key that is owned by the MSP Partner. Copy and launch the AMI in the MSP Partner's AWS account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1059,7 +1459,12 @@ A solutions architect is designing the cloud architecture for a new application 
 - C. Create an Amazon SQS queue to hold the jobs that need to be processed. Create an Amazon Machine Image (AMI) that consists of the processor application. Create a launch template that uses the AMI. Create an Auto Scaling group using the launch template. Set the scaling policy for the Auto Scaling group to add and remove nodes based on the number of items in the SQS queue.
 - D. Create an Amazon SNS topic to send the jobs that need to be processed. Create an Amazon Machine Image (AMI) that consists of the processor application. Create a launch template that uses the AMI. Create an Auto Scaling group using the launch template. Set the scaling policy for the Auto Scaling group to add and remove nodes based on the number of messages published to the SNS topic.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1072,7 +1477,12 @@ A company hosts its web applications in the AWS Cloud. The company configures El
 - C. Use AWS Trusted Advisor to check for certificates that will expire within 30 days. Create an Amazon CloudWatch alarm that is based on Trusted Advisor metrics for check status changes. Configure the alarm to send a custom alert by way of Amazon Simple Notification Service (Amazon SNS).
 - D. Create an Amazon EventBridge (Amazon CloudWatch Events) rule to detect any certificates that will expire within 30 days. Configure the rule to invoke an AWS Lambda function. Configure the Lambda function to send a custom alert by way of Amazon Simple Notification Service (Amazon SNS).
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1085,7 +1495,12 @@ A company's dynamic website is hosted using on-premises servers in the United St
 - C. Use Amazon CloudFront with a custom origin pointing to the on-premises servers.
 - D. Use an Amazon Route 53 geoproximity routing policy pointing to on-premises servers.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1098,7 +1513,12 @@ A company wants to reduce the cost of its existing three-tier web architecture. 
 - C. Use Spot blocks for the production EC2 instances. Use Reserved Instances for the development and test EC2 instances.
 - D. Use On-Demand Instances for the production EC2 instances. Use Spot blocks for the development and test EC2 instances.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1111,7 +1531,12 @@ A company has a production web application in which users upload documents throu
 - C. Store the uploaded documents in an Amazon S3 bucket with S3 Versioning enabled. Configure an ACL to restrict all access to read-only.
 - D. Store the uploaded documents on an Amazon Elastic File System (Amazon EFS) volume. Access the data by mounting the volume in read-only mode.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1124,7 +1549,12 @@ A company has several web servers that need to frequently access a common Amazon
 - C. Store the database user credentials in a secure Amazon S3 bucket. Grant the necessary IAM permissions to allow the web servers to retrieve credentials and access the database.
 - D. Store the database user credentials in files encrypted with AWS Key Management Service (AWS KMS) on the web server file system. The web server should be able to decrypt the files and access the database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1137,7 +1567,12 @@ A company hosts an application on AWS Lambda functions that are invoked by an Am
 - C. Persist the customer data to Lambda local storage. Configure new Lambda functions to scan the local storage to save the customer data to the database.
 - D. Store the customer data in an Amazon Simple Queue Service (Amazon SQS) FIFO queue. Create a new Lambda function that polls the queue and stores the customer data in the database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1150,7 +1585,12 @@ A survey company has gathered data for several years from areas in the United St
 - C. Configure cross-account access for the marketing firm so that the marketing firm has access to the company's S3 bucket.
 - D. Configure the company's S3 bucket to use S3 Intelligent-Tiering. Sync the S3 bucket to one of the marketing firm's S3 buckets.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1163,7 +1603,12 @@ A company uses Amazon S3 to store its confidential audit documents. The S3 bucke
 - C. Add an S3 Lifecycle policy to the audit team's IAM user accounts to deny the s3:DeleteObject action during audit dates.
 - D. Use AWS Key Management Service (AWS KMS) to encrypt the S3 bucket and restrict audit team IAM user accounts from accessing the KMS key.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1176,7 +1621,12 @@ A company is using a SQL database to store movie data that is publicly accessibl
 - C. Instruct the development team to manually export the entries in the database at the end of each day.
 - D. Use Amazon ElastiCache to cache the common queries that the script runs against the database.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1189,7 +1639,12 @@ A company has applications that run on Amazon EC2 instances in a VPC. One of the
 - C. Create an S3 bucket in the same AWS Region as the EC2 instances.
 - D. Configure a NAT gateway in the same subnet as the EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1203,7 +1658,12 @@ A company is storing sensitive user information in an Amazon S3 bucket. The comp
 - D. Create an IAM user with an S3 access policy and copy the IAM credentials to the EC2 instance.
 - E. Create a NAT instance and have the EC2 instances use the NAT instance to access the S3 bucket.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -1216,7 +1676,12 @@ A company runs an on-premises application that is powered by a MySQL database. T
 - C. Use Amazon RDS for MySQL with a Multi-AZ deployment and read replicas for production. Use the standby instance for the staging database.
 - D. Use Amazon RDS for MySQL with a Multi-AZ deployment and read replicas for production. Populate the staging database by implementing a backup and restore process that uses the mysqldump utility.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1229,7 +1694,12 @@ A company is designing an application where users upload small files into Amazon
 - C. Configure Amazon S3 to send an event notification to an Amazon Simple Queue Service (Amazon SQS) queue. Use an AWS Lambda function to read from the queue and process the data. Store the resulting JSON file in Amazon DynamoDB.
 - D. Configure Amazon EventBridge (Amazon CloudWatch Events) to send an event to Amazon Kinesis Data Streams when a new file is uploaded. Use an AWS Lambda function to consume the event from the stream and process the data. Store the resulting JSON file in an Amazon Aurora DB cluster.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1242,7 +1712,12 @@ An application allows users at a company's headquarters to access product data. 
 - C. Create read replicas for the database. Configure the read replicas with half of the compute and storage resources as the source database.
 - D. Create read replicas for the database. Configure the read replicas with the same compute and storage resources as the source database.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1255,7 +1730,12 @@ An Amazon EC2 administrator created the following policy associated with an IAM 
 - C. Users can terminate an EC2 instance in the us-east-1 Region when the user's source IP is 10.100.100.254.
 - D. Users cannot terminate an EC2 instance in the us-east-1 Region when the user's source IP is 10.100.100.254.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1268,7 +1748,12 @@ A company has a large Microsoft SharePoint deployment running on-premises that r
 - C. Create an Amazon S3 bucket and configure Microsoft Windows Server to mount it as a volume.
 - D. Create an Amazon FSx for Windows File Server file system on AWS and set the Active Directory domain for authentication.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1281,7 +1766,12 @@ An image-processing company has a web application that users use to upload image
 - C. Increase the visibility timeout in the SQS queue to a value that is greater than the total of the function timeout and the batch window timeout.
 - D. Modify the Lambda function to delete each message from the SQS queue immediately after the message is read before processing.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1294,7 +1784,12 @@ A company is implementing a shared storage solution for a gaming application tha
 - C. Create an Amazon Elastic File System (Amazon EFS) file system, and configure it to support Lustre. Attach the file system to the origin server. Connect the application server to the file system.
 - D. Create an Amazon FSx for Lustre file system. Attach the file system to the origin server. Connect the application server to the file system.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1307,7 +1802,12 @@ A company's containerized application runs on an Amazon EC2 instance. The applic
 - C. Create an AWS Key Management Service (AWS KMS) customer managed key. Allow the EC2 role to use the KMS key for encryption operations. Store the encrypted data on Amazon S3.
 - D. Create an AWS Key Management Service (AWS KMS) customer managed key. Allow the EC2 role to use the KMS key for encryption operations. Store the encrypted data on Amazon Elastic Block Store (Amazon EBS) volumes.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1320,7 +1820,12 @@ A solutions architect is designing a VPC with public and private subnets. The VP
 - C. Create a second internet gateway on one of the private subnets. Update the route table for the private subnets that forward non-VPC traffic to the private internet gateway.
 - D. Create an egress-only internet gateway on one of the public subnets. Update the route table for the private subnets that forward non- VPC traffic to the egress-only Internet gateway.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1334,7 +1839,12 @@ A company wants to migrate an on-premises data center to AWS. The data center ho
 - D. Manually use an operating system copy command to push the data to the EC2 instance.
 - E. Use AWS DataSync to create a suitable location configuration for the on-premises SFTP server.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -1347,7 +1857,12 @@ A company has an AWS Glue extract, transform, and load (ETL) job that runs every
 - C. Edit the job by setting the NumberOfWorkers field to 1.
 - D. Use a FindMatches machine learning (ML) transform.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1361,7 +1876,12 @@ A solutions architect must design a highly available infrastructure for a websit
 - D. Use an AWS Lambda function to automatically add attacker IP addresses to VPC network ACLs.
 - E. Use EC2 Spot Instances in an Auto Scaling group with a target tracking scaling policy that is set to 80% CPU utilization.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -1374,7 +1894,12 @@ A company is preparing to deploy a new serverless workload. A solutions architec
 - C. Add a resource-based policy to the function with lambda:* as the action and Service: events.amazonaws.com as the principal.
 - D. Add a resource-based policy to the function with lambda:InvokeFunction as the action and Service: events.amazonaws.com as the principal.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1387,7 +1912,12 @@ A company is preparing to store confidential data in Amazon S3. For compliance r
 - C. Server-side encryption with AWS KMS keys (SSE-KMS) with manual rotation
 - D. Server-side encryption with AWS KMS keys (SSE-KMS) with automatic rotation
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1400,7 +1930,12 @@ A bicycle sharing company is developing a multi-tier architecture to track the l
 - C. Use Amazon QuickSight with Amazon Redshift.
 - D. Use Amazon API Gateway with Amazon Kinesis Data Analytics.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1413,7 +1948,12 @@ A company has an automobile sales website that stores its listings in a database
 - C. Subscribe to an RDS event notification and send an Amazon Simple Queue Service (Amazon SQS) queue fanned out to multiple Amazon Simple Notification Service (Amazon SNS) topics. Use AWS Lambda functions to update the targets.
 - D. Subscribe to an RDS event notification and send an Amazon Simple Notification Service (Amazon SNS) topic fanned out to multiple Amazon Simple Queue Service (Amazon SQS) queues. Use AWS Lambda functions to update the targets.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1426,7 +1966,12 @@ A company needs to store data in Amazon S3 and must prevent the data from being 
 - C. Create an S3 bucket. Use AWS CloudTrail to track any S3 API events that modify the objects. Upon notification, restore the modified objects from any backup versions that the company has.
 - D. Create an S3 bucket with S3 Object Lock enabled. Enable versioning. Add a legal hold to the objects. Add the s3:PutObjectLegalHold permission to the IAM policies of users who need to delete the objects.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1440,7 +1985,12 @@ A social media company allows users to upload images to its website. The website
 - D. Configure S3 Event Notifications to invoke an AWS Lambda function when an image is uploaded. Use the function to resize the image.
 - E. Create an Amazon EventBridge (Amazon CloudWatch Events) rule that invokes an AWS Lambda function on a schedule to resize uploaded images.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -1453,7 +2003,12 @@ A company recently migrated a message processing system to AWS. The system recei
 - C. Use Amazon MQ with active/standby brokers configured across two Availability Zones. Add an additional consumer EC2 instance in another Availability Zone. Use Amazon RDS for MySQL with Multi-AZ enabled.
 - D. Use Amazon MQ with active/standby brokers configured across two Availability Zones. Add an Auto Scaling group for the consumer EC2 instances across two Availability Zones. Use Amazon RDS for MySQL with Multi-AZ enabled.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1466,7 +2021,12 @@ A company hosts a containerized web application on a fieet of on-premises server
 - C. Use AWS Lambda with a new code that uses one of the supported languages. Create multiple Lambda functions to support the load. Use Amazon API Gateway as an entry point to the Lambda functions.
 - D. Use a high performance computing (HPC) solution such as AWS ParallelCluster to establish an HPC cluster that can process the incoming requests at the appropriate scale.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1479,7 +2039,12 @@ A company uses 50 TB of data for reporting. The company wants to move this data 
 - C. Order an AWS Snowball Edge Storage Optimized device. Copy the data to the device. Create a custom transformation job by using AWS Glue.
 - D. Order an AWS Snowball Edge Storage Optimized device that includes Amazon EC2 compute. Copy the data to the device. Create a new EC2 instance on AWS to run the transformation application.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1492,7 +2057,12 @@ A company has created an image analysis application in which users can upload ph
 - C. Use AWS Lambda to process the photos. Store the photos in Amazon S3. Retain DynamoDB to store the metadata.
 - D. Increase the number of EC2 instances to three. Use Provisioned IOPS SSD (io2) Amazon Elastic Block Store (Amazon EBS) volumes to store the photos and metadata.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1505,7 +2075,12 @@ A medical records company is hosting an application on Amazon EC2 instances. The
 - C. Move the EC2 instances to private subnets. Create a VPC endpoint for Amazon S3, and link the endpoint to the route table for the private subnets.
 - D. Remove the internet gateway from the VPC. Set up an AWS Direct Connect connection, and route traffic to Amazon S3 over the Direct Connect connection.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1519,7 +2094,12 @@ A company uses a popular content management system (CMS) for its corporate websi
 - D. Create the new website and an Amazon S3 bucket. Deploy the website on the S3 bucket with static website hosting enabled.
 - E. Create the new website. Deploy the website by using an Auto Scaling group of Amazon EC2 instances behind an Application Load Balancer.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -1532,7 +2112,12 @@ A company stores its application logs in an Amazon CloudWatch Logs log group. A 
 - C. Create an Amazon Kinesis Data Firehose delivery stream. Configure the log group as the delivery streams sources. Configure Amazon OpenSearch Service (Amazon Elasticsearch Service) as the delivery stream's destination.
 - D. Install and configure Amazon Kinesis Agent on each application server to deliver the logs to Amazon Kinesis Data Streams. Configure Kinesis Data Streams to deliver the logs to Amazon OpenSearch Service (Amazon Elasticsearch Service).
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1545,7 +2130,12 @@ A company is building a web-based application running on Amazon EC2 instances in
 - C. Amazon OpenSearch Service (Amazon Elasticsearch Service)
 - D. Amazon S3
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1558,7 +2148,12 @@ A global company is using Amazon API Gateway to design REST APIs for its loyalty
 - C. Set up AWS Shield in bath Regions. Associate Regional web ACLs with an API stage.
 - D. Set up AWS Shield in one of the Regions. Associate Regional web ACLs with an API stage.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1571,7 +2166,12 @@ A company has implemented a self-managed DNS solution on three Amazon EC2 instan
 - C. Attach Elastic IP addresses to the six EC2 instances. Create an Amazon Route 53 geolocation routing policy to route requests to one of the six EC2 instances. Create an Amazon CloudFront distribution. Use the Route 53 record as the distribution's origin.
 - D. Replace the two NLBs with two Application Load Balancers (ALBs). Create an Amazon Route 53 latency routing policy to route requests to one of the two ALBs. Create an Amazon CloudFront distribution. Use the Route 53 record as the distribution’s origin.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1584,7 +2184,12 @@ A company is running an online transaction processing (OLTP) workload on AWS. Th
 - C. Copy the snapshots and enable encryption using AWS Key Management Service (AWS KMS) Restore encrypted snapshot to an existing DB instance.
 - D. Copy the snapshots to an Amazon S3 bucket that is encrypted using server-side encryption with AWS Key Management Service (AWS KMS) managed keys (SSE-KMS).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1597,7 +2202,12 @@ A company wants to build a scalable key management infrastructure to support dev
 - C. Use AWS Certificate Manager (ACM) to create, store, and assign the encryption keys.
 - D. Use an IAM policy to limit the scope of users who have access permissions to protect the encryption keys.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1610,7 +2220,12 @@ A company has a dynamic web application hosted on two Amazon EC2 instances. The 
 - C. Create another EC2 instance as a proxy server. Migrate the SSL certificate to the new instance and configure it to direct connections to the existing EC2 instances.
 - D. Import the SSL certificate into AWS Certificate Manager (ACM). Create an Application Load Balancer with an HTTPS listener that uses the SSL certificate from ACM.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1623,7 +2238,12 @@ A company has a highly dynamic batch processing job that uses many Amazon EC2 in
 - C. Implement EC2 On-Demand Instances.
 - D. Implement the processing on AWS Lambda.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1637,7 +2257,12 @@ A company runs its two-tier ecommerce website on AWS. The web tier consists of a
 - D. Configure a VPC with one public subnet, one private subnet, and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the public subnet.
 - D. Configure a VPC with two public subnets, two private subnets, and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the public subnets.
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -1650,7 +2275,12 @@ A solutions architect needs to implement a solution to reduce a company's storag
 - C. Use S3 Intelligent-Tiering. Activate the archiving option to ensure that data is archived in S3 Glacier Deep Archive.
 - D. Set up an S3 Lifecycle policy to transition objects to S3 One Zone-Infrequent Access (S3 One Zone-IA) immediately and to S3 Glacier Deep Archive after 2 years.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1663,7 +2293,12 @@ A media company is evaluating the possibility of moving its systems to the AWS C
 - C. Amazon EC2 instance store for maximum performance, Amazon EFS for durable data storage, and Amazon S3 for archival storage
 - D. Amazon EC2 instance store for maximum performance, Amazon S3 for durable data storage, and Amazon S3 Glacier for archival storage
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1676,7 +2311,12 @@ A company wants to run applications in containers in the AWS Cloud. These applic
 - C. Use On-Demand Instances in an Amazon EC2 Auto Scaling group to run the application containers.
 - D. Use On-Demand Instances in an Amazon Elastic Kubernetes Service (Amazon EKS) managed node group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1690,7 +2330,12 @@ A company is running a multi-tier web application on premises. The web applicati
 - D. Set up Amazon ElastiCache between the web application and the PostgreSQL database.
 - E. Migrate the web application to be hosted on AWS Fargate with Amazon Elastic Container Service (Amazon ECS).
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -1703,7 +2348,12 @@ An application runs on Amazon EC2 instances across multiple Availability Zonas. 
 - C. Use an AWS Lambda function ta update the desired Auto Scaling group capacity.
 - D. Use scheduled scaling actions to scale up and scale down the Auto Scaling group.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1716,7 +2366,12 @@ A company is developing a file-sharing application that will use an Amazon S3 bu
 - C. Write an S3 bucket policy that assigns the CloudFront distribution ID as the Principal and assigns the target S3 bucket as the Amazon Resource Name (ARN).
 - D. Create an origin access identity (OAI). Assign the OAI to the CloudFront distribution. Configure the S3 bucket permissions so that only the OAI has read permission.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1729,7 +2384,12 @@ A company’s website provides users with downloadable historical performance re
 - C. Application Load Balancer with Amazon EC2 Auto Scaling
 - D. Amazon Route 53 with internal Application Load Balancers
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1742,7 +2402,12 @@ A company runs an Oracle database on premises. As part of the company’s migrat
 - C. Migrate the Oracle database to Amazon RDS Custom for Oracle. Create a read replica for the database in another AWS Region.
 - D. Migrate the Oracle database to Amazon RDS for Oracle. Create a standby database in another Availability Zone.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1755,7 +2420,12 @@ A company wants to move its application to a serverless solution. The serverless
 - C. Load the data into the existing S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with Amazon S3 managed encryption keys (SSE-S3). Use Amazon Athena to query the data.
 - D. Load the data into the existing S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with Amazon S3 managed encryption keys (SSE-S3). Use Amazon RDS to query the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1768,7 +2438,12 @@ A company runs workloads on AWS. The company needs to connect to a service from 
 - C. Create a NAT gateway in a public subnet of the company’s VPUpdate the route table to connect to the target service.
 - D. Ask the provider to create a VPC endpoint for the target service. Use AWS PrivateLink to connect to the target service.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1782,7 +2457,12 @@ A company is migrating its on-premises PostgreSQL database to Amazon Aurora Post
 - D. Convert the database schema by using the AWS Schema Conversion Tool (AWS SCT).
 - E. Create an Amazon EventBridge (Amazon CloudWatch Events) rule to monitor the database synchronization.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -1795,7 +2475,12 @@ A company uses AWS Organizations to create dedicated AWS accounts for each busin
 - C. Configure all AWS account root user email messages to be sent to one administrator who is responsible for monitoring alerts and forwarding those alerts to the appropriate groups.
 - D. Configure all existing AWS accounts and all newly created accounts to use the same root user email address. Configure AWS account alternate contacts in the AWS Organizations console or programmatically.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1808,7 +2493,12 @@ A company runs its ecommerce application on AWS. Every new order is published as
 - C. Create a Multi-AZ Auto Scaling group for EC2 instances that host the RabbitMQ queue. Create another Multi-AZ Auto Scaling group for EC2 instances that host the application. Migrate the database to run on a Multi-AZ deployment of Amazon RDS for PostgreSQL.
 - D. Create a Multi-AZ Auto Scaling group for EC2 instances that host the RabbitMQ queue. Create another Multi-AZ Auto Scaling group for EC2 instances that host the application. Create a third Multi-AZ Auto Scaling group for EC2 instances that host the PostgreSQL database
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1821,7 +2511,12 @@ A reporting team receives files each day in an Amazon S3 bucket. The reporting t
 - C. Configure S3 replication between the S3 buckets. Create an S3 event notification for the analysis S3 bucket. Configure Lambda and SageMaker Pipelines as destinations of the event notification. Configure s3:ObjectCreated:Put as the event type.
 - D. Configure S3 replication between the S3 buckets. Configure the analysis S3 bucket to send event notifications to Amazon EventBridge (Amazon CloudWatch Events). Configure an ObjectCreated rule in EventBridge (CloudWatch Events). Configure Lambda and SageMaker Pipelines as targets for the rule.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1835,7 +2530,12 @@ A solutions architect needs to help a company optimize the cost of running an ap
 - D. Purchase 1-year All Upfront Reserved instances for the data ingestion layer.
 - E. Purchase a 1-year EC2 instance Savings Plan for the front end and API layer.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -1848,7 +2548,12 @@ A company runs a web-based portal that provides users with global breaking news,
 - C. Deploy the application stack in a single AWS Region. Use Amazon CloudFront to serve the static content. Serve the dynamic content directly from the ALB.
 - D. Deploy the application stack in two AWS Regions. Use an Amazon Route 53 geolocation routing policy to serve all content from the ALB in the closest Region.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1861,7 +2566,12 @@ A gaming company is designing a highly available architecture. The application r
 - C. Configure AWS Global Accelerator to forward requests to a Network Load Balancer. Use Amazon EC2 instances for the application in an EC2 Auto Scaling group.
 - D. Configure Amazon API Gateway to forward requests to an Application Load Balancer. Use Amazon EC2 instances for the application in an EC2 Auto Scaling group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -1874,7 +2584,12 @@ A company wants to migrate its existing on-premises monolithic application to AW
 - C. Host the application on Amazon EC2 instances. Set up an Application Load Balancer with EC2 instances in an Auto Scaling group as targets.
 - D. Host the application on Amazon Elastic Container Service (Amazon ECS). Set up an Application Load Balancer with Amazon ECS as the target.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1887,7 +2602,12 @@ A company recently started using Amazon Aurora as the data store for its global 
 - C. Migrate the Aurora database to a larger instance class.
 - D. Increase the Provisioned IOPS on the Aurora instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1900,7 +2620,12 @@ A company hosts a website analytics application on a single Amazon EC2 On-Demand
 - C. Migrate the database to an Amazon Aurora MySQL DB instance. Create an AWS Lambda function to stop the EC2 instance and change the instance type. Create an Amazon CloudWatch alarm to invoke the Lambda function when CPU utilization surpasses 75%.
 - D. Migrate the database to an Amazon Aurora MySQL DB instance. Create an AMI of the web application. Apply the AMI to a launch template. Create an Auto Scaling group with the launch template Configure the launch template to use a Spot Fleet. Attach an Application Load Balancer to the Auto Scaling group.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1913,7 +2638,12 @@ A company runs a stateless web application in production on a group of Amazon EC
 - C. Use On-Demand Instances for the baseline level of usage. Use Spot Instances for any additional capacity that the application needs.
 - D. Use Dedicated Instances for the baseline level of usage. Use On-Demand Instances for any additional capacity that the application needs.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1926,7 +2656,12 @@ A company needs to retain application log files for a critical application for 1
 - C. Store the logs in Amazon CloudWatch Logs. Use AWS Backup to move logs more than 1 month old to S3 Glacier Deep Archive.
 - D. Store the logs in Amazon CloudWatch Logs. Use Amazon S3 Lifecycle policies to move logs more than 1 month old to S3 Glacier Deep Archive.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -1939,7 +2674,12 @@ A company has a data ingestion workfiow that includes the following components: 
 - C. Configure the SNS topic’s retry strategy to increase both the number of retries and the wait time between retries.
 - D. Configure an Amazon Simple Queue Service (Amazon SQS) queue as the on-failure destination. Modify the Lambda function to process messages in the queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -1952,7 +2692,12 @@ A company has a service that produces event data. The company wants to use AWS t
 - C. Create an Amazon Simple Queue Service (Amazon SQS) standard queue to hold messages. Set up an AWS Lambda function to process messages from the queue independently.
 - D. Create an Amazon Simple Notification Service (Amazon SNS) topic to deliver notifications containing payloads to process. Configure an Amazon Simple Queue Service (Amazon SQS) queue as a subscriber.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1965,7 +2710,12 @@ A company is migrating an application from on-premises servers to Amazon EC2 ins
 - C. Create Amazon CloudWatch Synthetics canaries to monitor the application and raise an alarm.
 - D. Create single Amazon CloudWatch metric alarms with multiple metric thresholds where possible.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -1979,7 +2729,12 @@ A company wants to migrate its on-premises data center to AWS. According to the 
 - D. Create an outbound rule for the network ACL in each VPC to deny all traffic from 0.0.0.0/0. Create an IAM policy for each user to prevent the use of any AWS Region other than ap-northeast-3.
 - E. Use AWS Config to activate managed rules to detect and alert for internet gateways and to detect and alert for new resources deployed outside of ap-northeast-3.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -1992,7 +2747,12 @@ A company uses a three-tier web application to provide training to new employees
 - C. Launch an Amazon EC2 instance. Create an IAM role that grants access to Amazon RDS. Attach the role to the EC2 instance. Configure a cron job to start and stop the EC2 instance on the desired schedule.
 - D. Create AWS Lambda functions to start and stop the DB instance. Create Amazon EventBridge (Amazon CloudWatch Events) scheduled rules to invoke the Lambda functions. Configure the Lambda functions as event targets for the rules.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2005,7 +2765,12 @@ A company sells ringtones created from clips of popular songs. The files contain
 - C. Configure S3 inventory to manage objects and move them to S3 Standard-Infrequent Access (S3 Standard-1A) after 90 days.
 - D. Implement an S3 Lifecycle policy that moves the objects from S3 Standard to S3 Standard-Infrequent Access (S3 Standard-1A) after 90 days.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2018,7 +2783,12 @@ A company needs to save the results from a medical trial to an Amazon S3 reposit
 - C. Use an IAM role to restrict all users from deleting or changing objects in the S3 bucket. Use an S3 bucket policy to only allow the IAM role.
 - D. Configure the S3 bucket to invoke an AWS Lambda function every time an object is added. Configure the function to track the hash of the saved object so that modified objects can be marked accordingly.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2031,7 +2801,12 @@ A large media company hosts a web application on AWS. The company wants to start
 - C. Deploy Amazon CloudFront to connect the S3 buckets to CloudFront edge servers.
 - D. Use Amazon Simple Queue Service (Amazon SQS) to connect the S3 buckets to the web application.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2045,7 +2820,12 @@ A company produces batch data that comes from different databases. The company a
 - D. Use an AWS Glue extract, transform, and load (ETL) job to convert the data into JSON format. Load the data into multiple Amazon OpenSearch Service (Amazon Elasticsearch Service) clusters.
 - E. Use blueprints in AWS Lake Formation to identify the data that can be ingested into a data lake. Use AWS Glue to crawl the source, extract the data, and load the data into Amazon S3 in Apache Parquet format.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -2059,7 +2839,12 @@ A company stores data in an Amazon Aurora PostgreSQL DB cluster. The company mus
 - D. Configure an Amazon CloudWatch Logs export for the DB cluster.
 - E. Use AWS Backup to take the backups and to keep the backups for 5 years.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -2072,7 +2857,12 @@ A solutions architect is optimizing a website for an upcoming musical event. Vid
 - C. Amazon Route 53
 - D. Amazon S3 Transfer Acceleration
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2086,7 +2876,12 @@ A company is running a publicly accessible serverless application that uses Amaz
 - D. Convert the existing public API to a private API. Update the DNS records to redirect users to the new API endpoint.
 - E. Create an IAM role for each user attempting to access the API. A user will assume the role when making the API call.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -2099,7 +2894,12 @@ An ecommerce company hosts its analytics application in the AWS Cloud. The appli
 - C. Amazon S3 Standard
 - D. Amazon RDS for PostgreSQL
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2112,7 +2912,12 @@ A company has a small Python application that processes JSON documents and outpu
 - C. Place the JSON documents in an Amazon Elastic Block Store (Amazon EBS) volume. Use the EBS Multi-Attach feature to attach the volume to multiple Amazon EC2 instances. Run the Python code on the EC2 instances to process the documents. Store the results on an Amazon RDS DB instance.
 - D. Place the JSON documents in an Amazon Simple Queue Service (Amazon SQS) queue as messages. Deploy the Python code as a container on an Amazon Elastic Container Service (Amazon ECS) cluster that is configured with the Amazon EC2 launch type. Use the container to process the SQS messages. Store the results on an Amazon RDS DB instance.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2125,7 +2930,12 @@ A company wants to use high performance computing (HPC) infrastructure on AWS fo
 - C. Amazon S3 Glacier integrated with Amazon Elastic Block Store (Amazon EBS)
 - D. Amazon S3 bucket with a VPC endpoint integrated with an Amazon Elastic Block Store (Amazon EBS) General Purpose SSD (gp2) volume
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2138,7 +2948,12 @@ A company is building a containerized application on premises and decides to mov
 - C. Store container images in a repository that runs on an Amazon EC2 instance. Run the containers on EC2 instances that are spread across multiple Availability Zones. Monitor the average CPU utilization in Amazon CloudWatch. Launch new EC2 instances as needed.
 - D. Create an Amazon EC2 Amazon Machine Image (AMI) that contains the container image. Launch EC2 instances in an Auto Scaling group across multiple Availability Zones. Use an Amazon CloudWatch alarm to scale out EC2 instances when the average CPU utilization threshold is breached.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2151,7 +2966,12 @@ A company has two applications: a sender application that sends messages with pa
 - C. Integrate the sender and processor applications with an Amazon Simple Queue Service (Amazon SQS) queue. Configure a dead-letter queue to collect the messages that failed to process.
 - D. Subscribe the processing application to an Amazon Simple Notification Service (Amazon SNS) topic to receive notifications to process. Integrate the sender application to write to the SNS topic.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2164,7 +2984,12 @@ A solutions architect must design a solution that uses Amazon CloudFront with an
 - C. Configure a security group that allows Amazon CloudFront IP addresses to access Amazon S3 only. Associate AWS WAF to CloudFront.
 - D. Configure Amazon CloudFront and Amazon S3 to use an origin access identity (OAI) to restrict access to the S3 bucket. Enable AWS WAF on the distribution.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2177,7 +3002,12 @@ Organizers for a global event want to put daily reports online as static HTML pa
 - C. Use the geoproximity feature of Amazon Route 53.
 - D. Use Amazon CloudFront with the S3 bucket as its origin.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2190,7 +3020,12 @@ A company runs a production application on a fieet of Amazon EC2 instances. The 
 - C. Use Reserved Instances for the baseline capacity and use Spot Instances to handle additional capacity.
 - D. Use Reserved Instances for the baseline capacity and use On-Demand Instances to handle additional capacity.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2203,7 +3038,12 @@ A security team wants to limit access to specific services or actions in all of 
 - C. Create cross-account roles in each account to deny access to the services or actions.
 - D. Create a service control policy in the root organizational unit to deny access to the services or actions.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2216,7 +3056,12 @@ A company is concerned about the security of its public web application due to r
 - C. Enable AWS Shield Advanced to prevent attacks.
 - D. Configure Amazon GuardDuty to monitor the ALB.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2229,7 +3074,12 @@ A company’s web application is running on Amazon EC2 instances behind an Appli
 - C. Configure AWS WAF on the Application Load Balancer in a VPC.
 - D. Configure the network ACL for the subnet that contains the EC2 instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2242,7 +3092,12 @@ A company provides an API to its users that automates inquiries for tax computat
 - C. Create an Application Load Balancer that has two Amazon EC2 instances behind it. The EC2 instances will compute the tax on the received item names.
 - D. Design a REST API using Amazon API Gateway that connects with an API hosted on an Amazon EC2 instance. API Gateway accepts and passes the item names to the EC2 instance for tax computations.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2255,7 +3110,12 @@ A solutions architect is creating a new Amazon CloudFront distribution for an ap
 - C. Configure a CloudFront field-level encryption profile.
 - D. Configure CloudFront and set the Origin Protocol Policy setting to HTTPS Only for the Viewer Protocol Policy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2268,7 +3128,12 @@ A gaming company hosts a browser-based application on AWS. The users of the appl
 - C. Deploy an Amazon ElastiCache for Redis instance in front of the web servers.
 - D. Deploy an Amazon ElastiCache for Memcached instance in front of the web servers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2281,7 +3146,12 @@ A company has a multi-tier application that runs six front-end web servers in an
 - C. Create an Auto Scaling template that can be used to quickly create more instances in another Region.
 - D. Change the ALB in front of the Amazon EC2 instances in a round-robin configuration to balance traffic to the web tier.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2294,7 +3164,12 @@ An ecommerce company has an order-processing application that uses Amazon API Ga
 - C. Create a read replica for the database in a different AWS Region. Use query string parameters in API Gateway to route traffic to the read replica.
 - D. Migrate the data from Aurora PostgreSQL to Amazon DynamoDB by using AWS Database Migration Service (AWS DMS). Modify the Lambda function to use the DynamoDB table.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2307,7 +3182,12 @@ An application runs on Amazon EC2 instances in private subnets. The application 
 - C. Use a NAT instance in a private subnet.
 - D. Use the internet gateway attached to the VPC.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2320,7 +3200,12 @@ An entertainment company is using Amazon DynamoDB to store media metadata. The a
 - C. Replicate data by using DynamoDB global tables.
 - D. Use Amazon ElastiCache for Memcached with Auto Discovery enabled.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2333,7 +3218,12 @@ A company’s infrastructure consists of Amazon EC2 instances and an Amazon RDS 
 - C. Create Amazon Machine Images (AMIs) of the EC2 instances. Copy the AMIs to the separate Region. Create a read replica for the RDS DB instance in the separate Region.
 - D. Create Amazon Elastic Block Store (Amazon EBS) snapshots. Copy the EBS snapshots to the separate Region. Create RDS snapshots. Export the RDS snapshots to Amazon S3. Configure S3 Cross-Region Replication (CRR) to the separate Region.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2346,7 +3236,12 @@ A solutions architect needs to securely store a database user name and password 
 - C. Create an IAM trust relationship between the Parameter Store parameter and the EC2 instance. Specify Amazon RDS as a principal in the trust policy.
 - D. Create an IAM trust relationship between the DB instance and the EC2 instance. Specify Systems Manager as a principal in the trust policy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2360,7 +3255,12 @@ A company is designing a cloud communications platform that is driven by APIs. T
 - D. Use Amazon GuardDuty with AWS Shield Standard
 - E. Use AWS Shield Standard with Amazon API Gateway.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -2373,7 +3273,12 @@ A company has a legacy data processing application that runs on Amazon EC2 insta
 - C. Create an AWS Lambda function to pass messages. Add code to the data producers to call the Lambda function with a data object. Add code to the data consumers to receive a data object that is passed from the Lambda function.
 - D. Create an Amazon DynamoDB table. Enable DynamoDB Streams. Add code to the data producers to insert data into the table. Add code to the data consumers to use the DynamoDB Streams API to detect new table entries and retrieve the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2386,7 +3291,12 @@ A company wants to migrate its MySQL database from on premises to AWS. The compa
 - C. Create an Amazon RDS MySQL DB instance and then create a read replica in a separate AWS Region that synchronously replicates the data.
 - D. Create an Amazon EC2 instance with a MySQL engine installed that triggers an AWS Lambda function to synchronously replicate the data to an Amazon RDS MySQL DB instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2399,7 +3309,12 @@ A company is building a new dynamic ordering website. The company wants to minim
 - C. Host all the website content on Amazon EC2 instances. Create an Auto Scaling group to scale the EC2 instances. Use an Application Load Balancer to distribute traffic. Use Amazon DynamoDB with provisioned write capacity for the database.
 - D. Host all the website content on Amazon EC2 instances. Create an Auto Scaling group to scale the EC2 instances. Use an Application Load Balancer to distribute traffic. Use Amazon Aurora with Aurora Auto Scaling for the database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2412,7 +3327,12 @@ A company has an AWS account used for software engineering. The AWS account has 
 - C. Update the route tables in the VPC to allow the Lambda function to access the on-premises data center through Direct Connect.
 - D. Create an Elastic IP address. Configure the Lambda function to send traffic through the Elastic IP address without an elastic network interface.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2425,7 +3345,12 @@ A company runs an application using Amazon ECS. The application creates resized 
 - C. Create a security group that allows access from Amazon ECS to Amazon S3, and update the launch configuration used by the ECS cluster.
 - D. Create an IAM user with S3 permissions, and then relaunch the Amazon EC2 instances for the ECS cluster while logged in as this account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2438,7 +3363,12 @@ A company has a Windows-based application that must be migrated to AWS. The appl
 - C. Configure a file system by using Amazon Elastic File System (Amazon EFS). Mount the EFS file system to each Windows instance.
 - D. Configure an Amazon Elastic Block Store (Amazon EBS) volume with the required size. Attach each EC2 instance to the volume. Mount the file system within the volume to each Windows instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2452,7 +3382,12 @@ A company is developing an ecommerce application that will consist of a load-bal
 - D. Create an Amazon Elastic Container Service (Amazon ECS) cluster with a Fargate launch type to handle the dynamic application load.
 - E. Create an Amazon Elastic Container Service (Amazon ECS) cluster with an Amazon EC2 launch type to handle the dynamic application load.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -2465,7 +3400,12 @@ A company uses Amazon S3 as its data lake. The company has a new partner that mu
 - C. Launch an Amazon EC2 instance in a private subnet in a VPInstruct the new partner to upload files to the EC2 instance by using a VPN. Run a cron job script, on the EC2 instance to upload files to the S3 data lake.
 - D. Launch Amazon EC2 instances in a private subnet in a VPC. Place a Network Load Balancer (NLB) in front of the EC2 instances. Create an SFTP listener port for the NLB. Share the NLB hostname with the new partner. Run a cron job script on the EC2 instances to upload files to the S3 data lake.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2479,7 +3419,12 @@ A company needs to store contract documents. A contract lasts for 5 years. Durin
 - D. Use server-side encryption with AWS Key Management Service (AWS KMS) customer managed keys. Configure key rotation.
 - E. Use server-side encryption with AWS Key Management Service (AWS KMS) customer provided (imported) keys. Configure key rotation.
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -2492,7 +3437,12 @@ A company has a web application that is based on Java and PHP. The company plans
 - C. Deploy the web application to Amazon EC2 instances that are configured with Java and PHP. Use Auto Scaling groups and an Application Load Balancer to manage the website’s availability.
 - D. Containerize the web application. Deploy the web application to Amazon EC2 instances. Use the AWS Load Balancer Controller to dynamically route traffic between containers that contain the new site features for testing.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2505,7 +3455,12 @@ A company has an ordering application that stores customer information in Amazon
 - C. Migrate the ordering application to Amazon DynamoDB with on-demand capacity.
 - D. Schedule the reporting queries for non-peak hours.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2519,7 +3474,12 @@ A hospital wants to create digital copies for its large collection of historical
 - D. Create an AWS Lambda function that runs when new documents are uploaded. Use Amazon Rekognition to convert the documents to raw text. Use Amazon Transcribe Medical to detect and extract relevant medical information from the text.
 - E. Create an AWS Lambda function that runs when new documents are uploaded. Use Amazon Textract to convert the documents to raw text. Use Amazon Comprehend Medical to detect and extract relevant medical information from the text.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -2532,7 +3492,12 @@ A company is running a batch application on Amazon EC2 instances. The applicatio
 - C. Use Amazon Route 53 DNS caching
 - D. Use Amazon ElastiCache for Memcached.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2545,7 +3510,12 @@ A company needs to run a critical application on AWS. The company needs to use A
 - C. Launch two EC2 instances, each in a different AWS Region. Install the database on both EC2 instances. Set up database replication. Fail over the database to a second Region.
 - D. Launch an EC2 instance in an Availability Zone. Install the database on the EC2 instance. Use an Amazon Machine Image (AMI) to back up the data. Use EC2 automatic recovery to recover the instance if a disruptive event occurs.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2558,7 +3528,12 @@ A company’s order system sends requests from clients to Amazon EC2 instances. 
 - C. Move the EC2 instances into an Auto Scaling group. Configure the order system to send messages to an Amazon Simple Queue Service (Amazon SQS) queue. Configure the EC2 instances to consume messages from the queue.
 - D. Create an Amazon Simple Notification Service (Amazon SNS) topic. Create an AWS Lambda function, and subscribe the function to the SNS topic. Configure the order system to send messages to the SNS topic. Send a command to the EC2 instances to process the messages by using AWS Systems Manager Run Command.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2571,7 +3546,12 @@ A company runs an application on a large fieet of Amazon EC2 instances. The appl
 - C. Configure Amazon DynamoDB Streams to invoke an AWS Lambda function when a new item is created in the table. Configure the Lambda function to delete items in the table that are older than 30 days.
 - D. Extend the application to add an attribute that has a value of the current timestamp plus 30 days to each new item that is created in the table. Configure DynamoDB to use the attribute as the TTL attribute.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2585,7 +3565,12 @@ A company has a Microsoft .NET application that runs on an on-premises Windows S
 - D. Use AWS Database Migration Service (AWS DMS) to migrate from the Oracle database to Amazon DynamoDB in a Multi-AZ deployment.
 - E. Use AWS Database Migration Service (AWS DMS) to migrate from the Oracle database to Oracle on Amazon RDS in a Multi-AZ deployment.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -2598,7 +3583,12 @@ A company runs a containerized application on a Kubernetes cluster in an on-prem
 - C. Use Amazon Elastic Kubernetes Service (Amazon EKS) with Amazon EC2 worker nodes for compute and Amazon DynamoDB for data storage.
 - D. Use Amazon Elastic Kubernetes Service (Amazon EKS) with AWS Fargate for compute and Amazon DocumentDB (with MongoDB compatibility) for data storage.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2611,7 +3601,12 @@ A telemarketing company is designing its customer call center functionality on A
 - C. Use Amazon Translate for multiple speaker recognition. Store the transcript files in Amazon Redshift. Use SQL queries for transcript file analysis.
 - D. Use Amazon Rekognition for multiple speaker recognition. Store the transcript files in Amazon S3. Use Amazon Textract for transcript file analysis.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2624,7 +3619,12 @@ A company hosts its application on AWS. The company uses Amazon Cognito to manag
 - C. Send the user’s email address in the header with every request. Invoke an AWS Lambda function to validate that the user with that email address has proper access.
 - D. Configure an Amazon Cognito user pool authorizer in API Gateway to allow Amazon Cognito to validate each request.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2637,7 +3637,12 @@ A company is developing a marketing communications service that targets mobile a
 - C. Use Amazon Simple Queue Service (Amazon SQS) to distribute the SMS messages. Use AWS Lambda to process the responses.
 - D. Create an Amazon Simple Notification Service (Amazon SNS) FIFO topic. Subscribe an Amazon Kinesis data stream to the SNS topic for analysis and archiving.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2650,7 +3655,12 @@ A company is planning to move its data to an Amazon S3 bucket. The data must be 
 - C. Create an AWS Key Management Service (AWS KMS) customer managed key. Set the S3 bucket’s default encryption behavior to use the customer managed KMS key. Move the data to the S3 bucket. Manually rotate the KMS key every year.
 - D. Encrypt the data with customer key material before moving the data to the S3 bucket. Create an AWS Key Management Service (AWS KMS) key without key material. Import the customer key material into the KMS key. Enable automatic key rotation.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2663,7 +3673,12 @@ The customers of a finance company request appointments with financial advisors 
 - C. Add an Amazon CloudFront distribution. Set the origin as the web application that accepts the appointment requests.
 - D. Add an Auto Scaling group for the application that sends meeting invitations. Configure the Auto Scaling group to scale based on the depth of the SQS queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2676,7 +3691,12 @@ An online retail company has more than 50 million active customers and receives 
 - C. Create a data lake by using AWS Lake Formation. Create an AWS Glue JDBC connection to Amazon RDS. Register the S3 bucket in Lake Formation. Use Lake Formation access controls to limit access.
 - D. Create an Amazon Redshift cluster. Schedule an AWS Lambda function to periodically copy data from Amazon S3 and Amazon RDS to Amazon Redshift. Use Amazon Redshift access controls to limit access.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2689,7 +3709,12 @@ A company hosts a marketing website in an on-premises data center. The website c
 - C. Create a private Amazon S3 bucket. Use an S3 bucket policy to allow access from a CloudFront origin access identity (OAI). Upload website content by using the AWS CLI.
 - D. Create a public Amazon S3 bucket. Configure AWS Transfer for SFTP. Configure the S3 bucket for website hosting. Upload website content by using the SFTP client.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2702,7 +3727,12 @@ A company wants to manage Amazon Machine Images (AMIs). The company currently co
 - C. Create an Amazon EventBridge (Amazon CloudWatch Events) rule for the CreateImage API call. Configure the target as an Amazon Simple Notification Service (Amazon SNS) topic to send an alert when a CreateImage API call is detected.
 - D. Configure an Amazon Simple Queue Service (Amazon SQS) FIFO queue as a target for AWS CloudTrail logs. Create an AWS Lambda function to send an alert to an Amazon Simple Notification Service (Amazon SNS) topic when a CreateImage API call is detected.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2715,7 +3745,12 @@ A company owns an asynchronous API that is used to ingest user requests and, bas
 - C. Create a secondary index in DynamoDB for the table with the user requests.
 - D. Use the Amazon Simple Queue Service (Amazon SQS) queue and Lambda to buffer writes to DynamoDB.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2728,7 +3763,12 @@ A company needs to move data from an Amazon EC2 instance to an Amazon S3 bucket.
 - C. Run the nslookup tool from inside the EC2 instance to obtain the private IP address of the S3 bucket’s service API endpoint. Create a route in the VPC route table to provide the EC2 instance with access to the S3 bucket. Attach a resource policy to the S3 bucket to only allow the EC2 instance’s IAM role for access.
 - D. Use the AWS provided, publicly available ip-ranges.json file to obtain the private IP address of the S3 bucket’s service API endpoint. Create a route in the VPC route table to provide the EC2 instance with access to the S3 bucket. Attach a resource policy to the S3 bucket to only allow the EC2 instance’s IAM role for access.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2741,7 +3781,12 @@ A solutions architect is designing the architecture of a new application being d
 - C. Use Session Manager from AWS Systems Manager to manage the session.
 - D. Use the GetSessionToken API operation in AWS Security Token Service (AWS STS) to manage the session.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2754,7 +3799,12 @@ A company offers a food delivery service that is growing rapidly. Because of the
 - C. Provision two Amazon Simple Queue Service (Amazon SQS) queues: one for order collection and another for order fulfillment. Configure the EC2 instances to poll their respective queue. Scale the Auto Scaling groups based on notifications that the queues send.
 - D. Provision two Amazon Simple Queue Service (Amazon SQS) queues: one for order collection and another for order fulfillment. Configure the EC2 instances to poll their respective queue. Create a metric based on a backlog per instance calculation. Scale the Auto Scaling groups based on this metric.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -2767,7 +3817,12 @@ A company hosts multiple production applications. One of the applications consis
 - C. Run a query in Amazon CloudWatch Logs Insights to report on the components with the application tag.
 - D. Run a query with the AWS Resource Groups Tag Editor to report on the resources globally with the application tag.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2780,7 +3835,12 @@ A company needs to export its database once a day to Amazon S3 for other teams t
 - C. S3 Standard
 - D. S3 Standard-Infrequent Access (S3 Standard-IA)
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2793,7 +3853,12 @@ A company is developing a new mobile app. The company must implement proper traf
 - C. Deploy AWS Shield Advanced and add the ALB as a protected resource.
 - D. Create a new ALB that directs traffic to an Amazon EC2 instance running a third-party firewall, which then passes the traffic to the current ALB.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2806,7 +3871,12 @@ A company’s reporting system delivers hundreds of .csv files to an Amazon S3 b
 - C. Use AWS Batch to create a job definition with Bash syntax to transform the data and output the data to the transformed data bucket. Use the job definition to submit a job. Specify an array job as the job type.
 - D. Create an AWS Lambda function to transform the data and output the data to the transformed data bucket. Configure an event notification for the S3 bucket. Specify the Lambda function as the destination for the event notification.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2819,7 +3889,12 @@ A company has 700 TB of backup data stored in network attached storage (NAS) in 
 - C. Provision a 500 Mbps AWS Direct Connect connection and transfer the data to Amazon S3. Use a lifecycle policy to transition the files to Amazon S3 Glacier Deep Archive.
 - D. Use AWS DataSync to transfer the data and deploy a DataSync agent on premises. Use the DataSync task to copy files from the on- premises NAS storage to Amazon S3 Glacier.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2832,7 +3907,12 @@ A company has a serverless website with millions of objects in an Amazon S3 buck
 - C. Create a new encryption key by using AWS Key Management Service (AWS KMS). Change the settings on the S3 bucket to use server- side encryption with AWS KMS managed encryption keys (SSE-KMS). Turn on versioning for the S3 bucket.
 - D. Navigate to Amazon S3 in the AWS Management Console. Browse the S3 bucket’s objects. Sort by the encryption field. Select each unencrypted object. Use the Modify button to apply default encryption settings to every unencrypted object in the S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2845,7 +3925,12 @@ A company runs a global web application on Amazon EC2 instances behind an Applic
 - C. Replicate the primary infrastructure in a second AWS Region. Use Amazon Route 53 to configure active-active failover. Create an Aurora database that is restored from the latest snapshot.
 - D. Back up data with AWS Backup. Use the backup to create the required infrastructure in a second AWS Region. Use Amazon Route 53 to configure active-passive failover. Create an Aurora second primary instance in the second Region.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2859,7 +3944,12 @@ A company has a web server running on an Amazon EC2 instance in a public subnet 
 - D. Update the network ACL to allow inbound/outbound TCP port 443 from source 0.0.0.0/0 and to destination 0.0.0.0/0.
 - E. Update the network ACL to allow inbound TCP port 443 from source 0.0.0.0/0 and outbound TCP port 32768-65535 to destination 0.0.0.0/0.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -2872,7 +3962,12 @@ A company’s application is having performance issues. The application is state
 - C. Modify the CloudFormation templates. Replace the EC2 instances with R5 EC2 instances. Use Amazon CloudWatch built-in EC2 memory metrics to track the application performance for future capacity planning.
 - D. Modify the CloudFormation templates. Replace the EC2 instances with R5 EC2 instances. Deploy the Amazon CloudWatch agent on the EC2 instances to generate custom application latency metrics for future capacity planning.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2885,7 +3980,12 @@ A solutions architect is designing a new API using Amazon API Gateway that will 
 - C. A containerized service hosted in Amazon Elastic Kubernetes Service (Amazon EKS)
 - D. A containerized service hosted in Amazon ECS with Amazon EC2
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2898,7 +3998,12 @@ A company runs an application on a group of Amazon Linux EC2 instances. For comp
 - C. Amazon EC2 instance store
 - D. Amazon S3
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -2911,7 +4016,12 @@ A company has hired an external vendor to perform work in the company’s AWS ac
 - C. Create an IAM group in the company’s account. Add the tool’s IAM user from the vendor account to the group. Attach the appropriate IAM policies to the group for the permissions that the vendor requires.
 - D. Create a new identity provider by choosing “AWS account” as the provider type in the IAM console. Supply the vendor’s AWS account ID and user name. Attach the appropriate IAM policies to the new provider for the permissions that the vendor requires.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2925,7 +4035,12 @@ A company has deployed a Java Spring Boot application as a pod that runs on Amaz
 - D. Create a VPC endpoint for DynamoDB.
 - E. Embed the access keys in the Java Spring Boot code.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -2939,7 +4054,12 @@ A company recently migrated its web application to AWS by rehosting the applicat
 - D. Launch three EC2 instances: two instances in one Availability Zone and one instance in another Availability Zone.
 - E. Launch four EC2 instances: two instances in one Availability Zone and two instances in another Availability Zone.
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -2952,7 +4072,12 @@ A media company collects and analyzes user activity data on premises. The compan
 - C. Place activity data in an Amazon S3 bucket. Configure Amazon S3 to run an AWS Lambda function on the data as the data arrives in the S3 bucket.
 - D. Create an ingestion service on Amazon EC2 instances that are spread across multiple Availability Zones. Configure the service to forward data to an Amazon RDS Multi-AZ database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -2966,7 +4091,12 @@ A company collects data from thousands of remote devices by using a RESTful web 
 - D. Send the raw data to Amazon Simple Queue Service (Amazon SQS). Use EC2 instances to process the data.
 - E. Use Amazon API Gateway to send the raw data to an Amazon Kinesis data stream. Configure Amazon Kinesis Data Firehose to use the data stream as a source to deliver the data to Amazon S3.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -2979,7 +4109,12 @@ A company needs to retain its AWS CloudTrail logs for 3 years. The company is en
 - C. Create an AWS Lambda function to enumerate and delete objects from Amazon S3 that are older than 3 years.
 - D. Configure the parent account as the owner of all objects that are delivered to the S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -2992,7 +4127,12 @@ A company has an API that receives real-time data from a fieet of monitoring dev
 - C. Modify the API to write incoming data to an Amazon Simple Queue Service (Amazon SQS) queue. Use an AWS Lambda function that Amazon SQS invokes to write data from the queue to the database.
 - D. Modify the API to write incoming data to an Amazon Simple Notification Service (Amazon SNS) topic. Use an AWS Lambda function that Amazon SNS invokes to write data from the topic to the database.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3005,7 +4145,12 @@ A company manages its own Amazon EC2 instances that run MySQL databases. The com
 - C. Combine the databases into one larger MySQL database. Run the larger database on larger EC2 instances.
 - D. Create an EC2 Auto Scaling group for the database tier. Migrate the existing databases to the new environment.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3018,7 +4163,12 @@ A company is concerned that two NAT instances in use will no longer be able to s
 - C. Remove the two NAT instances and replace them with two NAT gateways in different Availability Zones.
 - D. Replace the two NAT instances with Spot Instances in different Availability Zones and deploy a Network Load Balancer.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3032,7 +4182,12 @@ An application runs on an Amazon EC2 instance that has an Elastic IP address in 
 - C. Make the DB instance publicly accessible. Assign a public IP address to the DB instance.
 - D. Launch an EC2 instance with an Elastic IP address into VPC B. Proxy all requests through the new EC2 instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3045,7 +4200,12 @@ A company runs demonstration environments for its customers on Amazon EC2 instan
 - C. Publish VPC fiow logs to Amazon CloudWatch Logs. Create required metric filters. Create an Amazon CloudWatch metric alarm with a notification action for when the alarm is in the ALARM state.
 - D. Configure an Amazon EventBridge rule to listen for events of type EC2 Instance State-change Notification. Configure an Amazon Simple Notification Service (Amazon SNS) topic as a target. Subscribe the operations team to the topic.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3059,7 +4219,12 @@ A solutions architect has created a new AWS account and must secure AWS account 
 - D. Add the root user to a group containing administrative permissions.
 - E. Apply the required permissions to the root user with an inline policy document.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -3072,7 +4237,12 @@ A company is building a new web-based customer relationship management applicati
 - C. Use AWS Key Management Service (AWS KMS) to encrypt the EBS volumes and Aurora database storage at rest. Attach an AWS Certificate Manager (ACM) certificate to the ALB to encrypt data in transit.
 - D. Use BitLocker to encrypt all data at rest. Import the company’s TLS certificate keys to AWS Key Management Service (AWS KMS) Attach the KMS keys to the ALB to encrypt data in transit.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3085,7 +4255,12 @@ A company is moving its on-premises Oracle database to Amazon Aurora PostgreSQL.
 - C. Use the AWS Schema Conversion Tool with AWS Database Migration Service (AWS DMS) using a memory optimized replication instance. Create a full load plus change data capture (CDC) replication task and a table mapping to select all tables.
 - D. Use the AWS Schema Conversion Tool with AWS Database Migration Service (AWS DMS) using a compute optimized replication instance. Create a full load plus change data capture (CDC) replication task and a table mapping to select the largest tables.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3098,7 +4273,12 @@ A company has a three-tier application for image sharing. The application uses a
 - C. Use Amazon S3 to host the front-end layer. Use a fieet of EC2 instances in an Auto Scaling group for the application layer. Move the database to a memory optimized instance type to store and serve users’ images.
 - D. Use load-balanced Multi-AZ AWS Elastic Beanstalk environments for the front-end layer and the application layer. Move the database to an Amazon RDS Multi-AZ DB instance. Use Amazon S3 to store and serve users’ images.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3112,7 +4292,12 @@ An application running on an Amazon EC2 instance in VPC-A needs to access files 
 - C. Attach a virtual private gateway to VPC-B and set up routing from VPC-A.
 - D. Create a private virtual interface (VIF) for the EC2 instance running in VPC-B and add appropriate routes from VPC-A.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3125,7 +4310,12 @@ A company wants to experiment with individual AWS accounts for its engineer team
 - C. Use AWS Budgets to create a cost budget for each account. Set the period to monthly. Set the scope to EC2 instances. Set an alert threshold for the budget. Configure an Amazon Simple Notification Service (Amazon SNS) topic to receive a notification when a threshold is exceeded.
 - D. Use AWS Cost and Usage Reports to create a report with hourly granularity. Integrate the report data with Amazon Athena. Use Amazon EventBridge to schedule an Athena query. Configure an Amazon Simple Notification Service (Amazon SNS) topic to receive a notification when a threshold is exceeded.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3138,7 +4328,12 @@ A solutions architect needs to design a new microservice for a company’s appli
 - C. Create an Amazon CloudFront distribution. Deploy the function to Lambda@Edge. Integrate IAM authentication logic into the Lambda@Edge function.
 - D. Create an Amazon CloudFront distribution. Deploy the function to CloudFront Functions. Specify AWS_IAM as the authentication type.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3151,7 +4346,12 @@ A company previously migrated its data warehouse solution to AWS. The company al
 - C. Host the visualization tool on premises and query the data warehouse directly over a Direct Connect connection at a location in the same AWS Region.
 - D. Host the visualization tool in the same AWS Region as the data warehouse and access it over a Direct Connect connection at a location in the same Region.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3164,7 +4364,12 @@ An online learning company is migrating to the AWS Cloud. The company maintains 
 - C. Migrate the PostgreSQL database to an Amazon RDS for PostgreSQL DB instance. Create a read replica in another Region.
 - D. Migrate the PostgreSQL database to an Amazon RDS for PostgreSQL DB instance. Set up DB snapshots to be copied to another Region.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3177,7 +4382,12 @@ A company hosts its web application on AWS using seven Amazon EC2 instances. The
 - C. Multivalue routing policy
 - D. Geolocation routing policy
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3190,7 +4400,12 @@ A medical research lab produces data that is related to a new study. The lab wan
 - C. Deploy an AWS Storage Gateway volume gateway as a virtual machine (VM) on premises at each clinic.
 - D. Attach an Amazon Elastic File System (Amazon EFS) file system to each clinic’s on-premises servers.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3203,7 +4418,12 @@ A company is using a content management system that runs on a single Amazon EC2 
 - C. Move the database to Amazon Aurora with a read replica in another Availability Zone. Create an Amazon Machine Image (AMI) from the EC2 instance. Configure an Application Load Balancer in two Availability Zones. Attach an Auto Scaling group that uses the AMI across two Availability Zones.
 - D. Move the database to a separate EC2 instance, and schedule backups to Amazon S3. Create an Amazon Machine Image (AMI) from the original EC2 instance. Configure an Application Load Balancer in two Availability Zones. Attach an Auto Scaling group that uses the AMI across two Availability Zones.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3216,7 +4436,12 @@ A company is launching an application on AWS. The application uses an Applicatio
 - C. Reduce the size of the EC2 instances in both environments.
 - D. Reduce the maximum number of EC2 instances in the development environment’s Auto Scaling group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3229,7 +4454,12 @@ A company runs a web application on Amazon EC2 instances in multiple Availabilit
 - C. Update the route tables for the EC2 instances’ subnets to send 0.0.0.0/0 traffic through the internet gateway route. Add a rule to the EC2 instances’ security groups to allow outbound traffic to 0.0.0.0/0.
 - D. Create public subnets in each Availability Zone. Associate the public subnets with the ALB. Update the route tables for the public subnets with a route to the private subnets.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3243,7 +4473,12 @@ A company has deployed a database in Amazon RDS for MySQL. Due to increased tran
 - D. Create a global table and specify the AWS Regions where the table will be available.
 - E. Enable automatic backups on the source instance by setting the backup retention period to a value other than 0.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -3256,7 +4491,12 @@ A company runs analytics software on Amazon EC2 instances. The software accepts 
 - C. Stop the EC2 instances. Modify the instance type to one with a more powerful CPU and more memory. Restart the instances.
 - D. Route incoming requests to Amazon Simple Queue Service (Amazon SQS). Configure an EC2 Auto Scaling group based on queue size. Update the software to read from the queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3269,7 +4509,12 @@ A company is implementing a shared storage solution for a media application that
 - C. Create an Amazon EC2 Windows instance. Install and configure a Windows file share role on the instance. Connect the application server to the file share.
 - D. Create an Amazon FSx for Windows File Server file system. Attach the file system to the origin server. Connect the application server to the file system.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3282,7 +4527,12 @@ A company’s security team requests that network traffic be captured in VPC Flo
 - C. Use AWS CloudTrail as the target. Configure CloudTrail to save to an Amazon S3 bucket, and enable S3 Intelligent-Tiering.
 - D. Use Amazon S3 as the target. Enable an S3 Lifecycle policy to transition the logs to S3 Standard-Infrequent Access (S3 Standard-IA) after 90 days.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3295,7 +4545,12 @@ An Amazon EC2 instance is located in a private subnet in a new VPC. This subnet 
 - C. Create a NAT instance, and place it in the same subnet where the EC2 instance is located. Configure the private subnet route table to use the NAT instance as the default route.
 - D. Create an internet gateway, and attach it to the VPC. Create a NAT instance, and place it in the same subnet where the EC2 instance is located. Configure the private subnet route table to use the internet gateway as the default route.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3308,7 +4563,12 @@ A solutions architect needs to design a system to store client case files. The f
 - C. Amazon S3 Glacier Deep Archive
 - D. AWS Backup
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3321,7 +4581,12 @@ A solutions architect has created two IAM policies: Policy1 and Policy2. Both po
 - C. Deleting Amazon EC2 instances
 - D. Deleting logs from Amazon CloudWatch Logs
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3334,7 +4599,12 @@ A company is reviewing a recent migration of a three-tier application to a VPC. 
 - C. Create security group rules using the VPC CIDR blocks as the source or destination.
 - D. Create security group rules using the subnet CIDR blocks as the source or destination.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3347,7 +4617,12 @@ A company has an ecommerce checkout workfiow that writes an order to a database 
 - C. Store the order in the database. Send a message that includes the order number to Amazon Simple Notification Service (Amazon SNS). Set the payment service to poll Amazon SNS, retrieve the message, and process the order.
 - D. Store the order in the database. Send a message that includes the order number to an Amazon Simple Queue Service (Amazon SQS) FIFO queue. Set the payment service to retrieve the message and process the order. Delete the message from the queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3361,7 +4636,12 @@ A solutions architect is implementing a document review application using an Ama
 - D. Enable MFA Delete on the bucket.
 - E. Encrypt the bucket using AWS KMS.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -3374,7 +4654,12 @@ A company is building a solution that will report Amazon EC2 Auto Scaling events
 - C. Create an Amazon EventBridge rule to invoke an AWS Lambda function on a schedule. Configure the Lambda function to send the EC2 Auto Scaling status data directly to Amazon S3.
 - D. Use a bootstrap script during the launch of an EC2 instance to install Amazon Kinesis Agent. Configure Kinesis Agent to collect the EC2 Auto Scaling status data and send the data to Amazon Kinesis Data Firehose. Store the data in Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3387,7 +4672,12 @@ A company has an application that places hundreds of .csv files into an Amazon S
 - C. Create an AWS Glue table and an AWS Glue crawler for the S3 bucket where the application places the .csv files. Schedule an AWS Lambda function to periodically use Amazon Athena to query the AWS Glue table, convert the query results into Parquet format, and place the output files into an S3 bucket.
 - D. Create an AWS Glue extract, transform, and load (ETL) job to convert the .csv files to Parquet format and place the output files into an S3 bucket. Create an AWS Lambda function for each S3 PUT event to invoke the ETL job.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3400,7 +4690,12 @@ A company is implementing new data retention policies for all databases that run
 - C. Configure database transaction logs to be automatically backed up to Amazon CloudWatch Logs with an expiration period of 2 years.
 - D. Configure an AWS Database Migration Service (AWS DMS) replication task. Deploy a replication instance, and configure a change data capture (CDC) task to stream database changes to Amazon S3 as the target. Configure S3 Lifecycle policies to delete the snapshots after 2 years.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3413,7 +4708,12 @@ A company’s compliance team needs to move its file shares to AWS. The shares r
 - C. Create an IAM service-linked role that is linked directly to FSx for Windows File Server to restrict access.
 - D. Join the file system to the Active Directory to restrict access.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3427,7 +4727,12 @@ A company recently announced the deployment of its retail website to a global au
 - D. Configure AWS Global Accelerator. Forward requests to a Network Load Balancer (NLB). Configure the NLB to set up host-based routing to different EC2 instances.
 - E. Configure AWS Global Accelerator. Forward requests to a Network Load Balancer (NLB). Configure the NLB to set up path-based routing to different EC2 instances.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -3440,7 +4745,12 @@ A company plans to use Amazon ElastiCache for its multi-tier web application. A 
 - C. Create a peering connection between the VPCs. Add a route table entry for the peering connection in both VPCs. Configure an inbound rule for the peering connection’s security group to allow inbound connection from the application’s security group.
 - D. Create a Transit VPC. Update the VPC route tables in the Cache VPC and the App VPC to route traffic through the Transit VPC. Configure an inbound rule for the Transit VPC’s security group to allow inbound connection from the application’s security group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3454,7 +4764,12 @@ A company is building an application that consists of several microservices. The
 - D. Deploy an Amazon Elastic Container Service (Amazon ECS) service with a Fargate launch type. Specify a desired task number level of greater than or equal to 2.
 - E. Deploy Kubernetes worker nodes on Amazon EC2 instances that span multiple Availability Zones. Create a deployment that specifies two or more replicas for each microservice.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -3467,7 +4782,12 @@ A company has a web application hosted over 10 Amazon EC2 instances with traffic
 - C. Create an Amazon CloudFront distribution with EC2 instances as its origin. Associate a health check with the EC2 instances.
 - D. Create an Application Load Balancer (ALB) with a health check in front of the EC2 instances. Route to the ALB from Route 53.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3480,7 +4800,12 @@ A solutions architect needs to design a highly available application consisting 
 - C. Configure a public Application Load Balancer (ALB) with multiple redundant Amazon EC2 instances in private subnets. Configure Amazon CloudFront to deliver HTTPS content using the public ALB as the origin.
 - D. Configure a public Application Load Balancer with multiple redundant Amazon EC2 instances in public subnets. Configure Amazon CloudFront to deliver HTTPS content using the EC2 instances as the origin.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3493,7 +4818,12 @@ A company has a popular gaming platform running on AWS. The application is sensi
 - C. Create an Amazon CloudFront distribution and specify Amazon S3 as the origin server. Configure the cache behavior to use origin cache headers. Use AWS Lambda functions to optimize the traffic.
 - D. Configure an Amazon DynamoDB database to serve as the data store for the application. Create a DynamoDB Accelerator (DAX) cluster to act as the in-memory cache for DynamoDB hosting the application data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3506,7 +4836,12 @@ A company has one million users that use its mobile app. The company must analyz
 - C. Create an Amazon Kinesis Data Firehose delivery stream to store the data in Amazon S3. Create an Amazon EMR cluster to analyze the data.
 - D. Create an Amazon Kinesis Data Firehose delivery stream to store the data in Amazon S3. Create an Amazon Kinesis Data Analytics application to analyze the data.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3519,7 +4854,12 @@ A gaming company has a web application that displays scores. The application run
 - C. Migrate the application from EC2 instances to AWS Lambda.
 - D. Migrate the database from Amazon RDS for MySQL to Amazon DynamoDB.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3532,7 +4872,12 @@ An ecommerce company has noticed performance degradation of its Amazon RDS based
 - C. Create a read replica of the primary database and have the business analysts run their queries.
 - D. Copy the data into an Amazon Redshift cluster and have the business analysts run their queries.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3545,7 +4890,12 @@ A company is using a centralized AWS account to store log data in various Amazon
 - C. Create bucket policies that require the use of server-side encryption with S3 managed encryption keys (SSE-S3) for S3 uploads.
 - D. Enable the security option to encrypt the S3 buckets through the use of a default AWS Key Management Service (AWS KMS) key.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3558,7 +4908,12 @@ A solutions architect observes that a nightly batch processing job is automatica
 - C. Configure scheduled scaling to scale up to the desired compute level.
 - D. Change the scaling policy to add more EC2 instances during each scaling operation.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3571,7 +4926,12 @@ A company serves a dynamic website from a fieet of Amazon EC2 instances behind a
 - C. Create an Amazon API Gateway API that is integrated with the ALB. Configure the API to use the HTTP integration type. Set up an API Gateway stage to enable the API cache based on the Accept-Language request header.
 - D. Launch an EC2 instance in each additional Region and configure NGINX to act as a cache server for that Region. Put all the EC2 instances and the ALB behind an Amazon Route 53 record set with a geolocation routing policy.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3584,7 +4944,12 @@ A rapidly growing ecommerce company is running its workloads in a single AWS Reg
 - C. Use an Amazon RDS Multi-AZ DB instance with a pilot light deployment.
 - D. Use an Amazon RDS Multi-AZ DB instance with a warm standby deployment.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3597,7 +4962,12 @@ A company runs an application on Amazon EC2 instances. The company needs to impl
 - C. Launch EC2 instances in a secondary AWS Region. Keep the EC2 instances in the secondary Region active at all times.
 - D. Launch EC2 instances in a secondary Availability Zone. Keep the EC2 instances in the secondary Availability Zone active at all times.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3610,7 +4980,12 @@ A company runs an internal browser-based application. The application runs on Am
 - C. Implement a target tracking action triggered at a lower CPU threshold, and decrease the cooldown period.
 - D. Implement a scheduled action that sets the minimum and maximum capacity to 20 shortly before the office opens.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3624,7 +4999,12 @@ A company has a multi-tier application deployed on several Amazon EC2 instances 
 - D. Configure the Auto Scaling group to use the average CPU as the scaling metric.
 - E. Configure the Auto Scaling group to use the average free memory as the scaling metric.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -3637,7 +5017,12 @@ A company provides an online service for posting video content and transcoding i
 - C. Use Amazon EFS for storing the video content. Once processing is complete, transfer the files to Amazon Elastic Block Store (Amazon EBS).
 - D. Use Amazon S3 for storing the video content. Move the files temporarily over to an Amazon Elastic Block Store (Amazon EBS) volume attached to the server for processing.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3651,7 +5036,12 @@ A company wants to create an application to store employee data in a hierarchica
 - D. Use Amazon Athena to analyze the employee data in Amazon S3. Integrate Athena with Amazon QuickSight to publish analysis dashboards and share the dashboards with users.
 - E. Configure Amazon Macie for the AWS account. Integrate Macie with Amazon EventBridge to send monthly notifications through an Amazon Simple Notification Service (Amazon SNS) subscription.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -3664,7 +5054,12 @@ A company has an application that is backed by an Amazon DynamoDB table. The com
 - C. Use the AWS SDK to develop a script that creates an on-demand backup of the DynamoDB table. Set up an Amazon EventBridge rule that runs the script on the first day of each month. Create a second script that will run on the second day of each month to transition DynamoDB backups that are older than 6 months to cold storage and to delete backups that are older than 7 years.
 - D. Use the AWS CLI to create an on-demand backup of the DynamoDB table. Set up an Amazon EventBridge rule that runs the command on the first day of each month with a cron expression. Specify in the command to transition the backups to cold storage after 6 months and to delete the backups after 7 years.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3677,7 +5072,12 @@ A company is using Amazon CloudFront with its website. The company has enabled l
 - C. Use standard SQL queries in Amazon DynamoDB to analyze the CloudFront logs in the S3 bucket. Visualize the results with AWS Glue.
 - D. Use standard SQL queries in Amazon DynamoDB to analyze the CloudFront logs in the S3 bucket. Visualize the results with Amazon QuickSight.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3690,7 +5090,12 @@ A company runs a fieet of web servers using an Amazon RDS for PostgreSQL DB inst
 - C. Configure the DB instance in one Availability Zone, and create multiple read replicas in a separate Availability Zone.
 - D. Configure the DB instance in one Availability Zone, and configure AWS Database Migration Service (AWS DMS) change data capture (CDC) tasks.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3703,7 +5108,12 @@ A company runs a web application that is deployed on Amazon EC2 instances in the
 - C. Move the EC2 instances into the public subnet. Give the EC2 instances a set of Elastic IP addresses.
 - D. Configure the security group for the ALB to allow any TCP traffic on any port.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3716,7 +5126,12 @@ A research company runs experiments that are powered by a simulation application
 - C. Migrate the simulation application to Linux Amazon EC2 instances. Migrate the visualization application to Windows EC2 instances. Configure Amazon Simple Queue Service (Amazon SQS) to exchange data between the applications.
 - D. Migrate the simulation application to Linux Amazon EC2 instances. Migrate the visualization application to Windows EC2 instances. Configure Amazon FSx for NetApp ONTAP for storage.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3729,7 +5144,12 @@ As part of budget planning, management wants a report of AWS billed items listed
 - C. Access the bill details from the billing dashboard and download the bill.
 - D. Modify a cost budget in AWS Budgets to alert with Amazon Simple Email Service (Amazon SES).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3742,7 +5162,12 @@ A company hosts its static website by using Amazon S3. The company wants to add 
 - C. Convert the static webpage to dynamic by deploying Amazon Lightsail. Use client-side scripting to build the contact form. Integrate the form with Amazon WorkMail.
 - D. Create a t2.micro Amazon EC2 instance. Deploy a LAMP (Linux, Apache, MySQL, PHP/Perl/Python) stack to host the webpage. Use client-side scripting to build the contact form. Integrate the form with Amazon WorkMail.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3755,7 +5180,12 @@ A company has a static website that is hosted on Amazon CloudFront in front of A
 - C. Invalidate the CloudFront cache.
 - D. Use AWS Certificate Manager (ACM) to validate the website’s SSL certificate.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3768,7 +5198,12 @@ A company wants to migrate a Windows-based application from on premises to the A
 - C. Host the application tier and the business tier on Amazon EC2 instances. Host the database tier on Amazon RDS. Use Amazon Elastic File System (Amazon EFS) for file sharing between the tiers.
 - D. Host the application tier and the business tier on Amazon EC2 instances. Host the database tier on Amazon RDS. Use a Provisioned IOPS SSD (io2) Amazon Elastic Block Store (Amazon EBS) volume for file sharing between the tiers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3781,7 +5216,12 @@ A company is migrating a Linux-based web server group to AWS. The web servers mu
 - C. Create an Amazon Elastic File System (Amazon EFS) file system. Mount the EFS file system on all web servers.
 - D. Configure a General Purpose SSD (gp3) Amazon Elastic Block Store (Amazon EBS) volume. Mount the EBS volume to all web servers.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3794,7 +5234,12 @@ A company has an AWS Lambda function that needs read access to an Amazon S3 buck
 - C. Embed an access key and a secret key in the Lambda function’s code to grant the required IAM permissions for read access to the S3 bucket.
 - D. Apply an IAM role to the Lambda function. Apply an IAM policy to the role to grant read access to all S3 buckets in the account.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3807,7 +5252,12 @@ A company hosts a web application on multiple Amazon EC2 instances. The EC2 inst
 - C. A mix of On-Demand Instances and Spot Instances
 - D. A mix of On-Demand Instances and Reserved Instances
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3821,7 +5271,12 @@ A media company uses Amazon CloudFront for its publicly available streaming vide
 - D. JSON Web Token (JWT)
 - E. AWS Secrets Manager
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -3835,7 +5290,12 @@ A company is preparing a new data platform that will ingest real-time streaming 
 - D. Use Amazon Managed Streaming for Apache Kafka (Amazon MSK) to stream the data. Use Amazon Kinesis Data Analytics to transform the data and to write the data to Amazon S3. Use the Amazon RDS query editor to query the transformed data from Amazon S3.
 - E. Use Amazon Kinesis Data Streams to stream the data. Use AWS Glue to transform the data. Use Amazon Kinesis Data Firehose to write the data to Amazon S3. Use the Amazon RDS query editor to query the transformed data from Amazon S3.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -3848,7 +5308,12 @@ A company has an on-premises volume backup solution that has reached its end of 
 - C. Use AWS Storage Gateway and configure a cached volume gateway. Run the Storage Gateway software appliance on premises and configure a percentage of data to cache locally. Mount the gateway storage volumes to provide local access to the data.
 - D. Use AWS Storage Gateway and configure a stored volume gateway. Run the Storage Gateway software appliance on premises and map the gateway storage volumes to on-premises storage. Mount the gateway storage volumes to provide local access to the data.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3861,7 +5326,12 @@ An application that is hosted on Amazon EC2 instances needs to access an Amazon 
 - C. Configure the EC2 instances to use a NAT gateway to access the S3 bucket.
 - D. Establish an AWS Site-to-Site VPN connection between the VPC and the S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3874,7 +5344,12 @@ An ecommerce company stores terabytes of customer data in the AWS Cloud. The dat
 - C. Process the data and store the transformed data in three separate Amazon S3 buckets so that each application has its own custom dataset. Point each application to its respective S3 bucket.
 - D. Process the data and store the transformed data in three separate Amazon DynamoDB tables so that each application has its own custom dataset. Point each application to its respective DynamoDB table.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3887,7 +5362,12 @@ A development team has launched a new application that is hosted on Amazon EC2 i
 - C. 192.168.1.0/32
 - D. 10.0.1.0/24
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -3900,7 +5380,12 @@ A company deploys an application on five Amazon EC2 instances. An Application Lo
 - C. Create an EC2 Auto Scaling group. Select the existing ALB as the load balancer and the existing target group as the target group. Set the minimum instances to 2, the desired capacity to 3, and the maximum instances to 6. Add the EC2 instances to the Auto Scaling group.
 - D. Create two Amazon CloudWatch alarms. Configure the first CloudWatch alarm to enter the ALARM state when the average CPUUtilization metric is below 20%. Configure the second CloudWatch alarm to enter the ALARM state when the average CPUUtilization matric is above 50%. Configure the alarms to publish to an Amazon Simple Notification Service (Amazon SNS) topic to send an email message. After receiving the message, log in to decrease or increase the number of EC2 instances that are running.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3913,7 +5398,12 @@ A company is running a critical business application on Amazon EC2 instances beh
 - C. Provision a subnet in each Availability Zone. Configure the Auto Scaling group to distribute the EC2 instances across both Availability Zones. Configure the DB instance for Multi-AZ deployment.
 - D. Provision a subnet that extends across both Availability Zones. Configure the Auto Scaling group to distribute the EC2 instances across both Availability Zones. Configure the DB instance for Multi-AZ deployment.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3926,7 +5416,12 @@ A research laboratory needs to process approximately 8 TB of data. The laborator
 - C. Create an Amazon S3 bucket to store the raw data. Create an Amazon FSx for Lustre file system that uses persistent HDD storage. Select the option to import data from and export data to Amazon S3. Mount the file system on the EC2 instances.
 - D. Create an Amazon FSx for NetApp ONTAP file system. Set each volume’s tiering policy to NONE. Import the raw data into the file system. Mount the file system on the EC2 instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3939,7 +5434,12 @@ A company needs to migrate a legacy application from an on-premises data center 
 - C. Migrate the application layer to Amazon EC2 Reserved Instances. Migrate the data storage layer to Amazon Aurora Reserved Instances.
 - D. Migrate the application layer to Amazon EC2 On-Demand Instances. Migrate the data storage layer to Amazon RDS Reserved Instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3952,7 +5452,12 @@ A university research laboratory needs to migrate 30 TB of data from an on-premi
 - C. AWS DataSync
 - D. AWS Transfer Family
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -3966,7 +5471,12 @@ A company wants to create a mobile app that allows users to stream slow-motion v
 - D. Deploy an Auto Sealing group of Amazon EC2 instances in Local Zones for content delivery and caching.
 - E. Deploy an Auto Scaling group of Amazon EC2 instances to convert the video files to more appropriate formats.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -3979,7 +5489,12 @@ A company is launching a new application deployed on an Amazon Elastic Container
 - C. Use Amazon EC2 Auto Scaling with simple scaling policies to scale when ECS metric breaches trigger an Amazon CloudWatch alarm.
 - D. Use AWS Application Auto Scaling with target tracking policies to scale when ECS metric breaches trigger an Amazon CloudWatch alarm.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -3992,7 +5507,12 @@ A company recently created a disaster recovery site in a different AWS Region. T
 - C. Set up an SFTP server on Amazon EC2.
 - D. Use AWS Database Migration Service (AWS DMS).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4005,7 +5525,12 @@ A company is designing a shared storage solution for a gaming application that i
 - C. Create an Amazon FSx for Windows File Server file system. Attach the file system to the origin server. Connect the application server to the file system.
 - D. Create an Amazon S3 bucket. Assign an IAM role to the application to grant access to the S3 bucket. Mount the S3 bucket to the application server.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4018,7 +5543,12 @@ A company wants to run an in-memory database for a latency-sensitive application
 - C. Deploy an Auto Scaling group to launch EC2 instances in different Availability Zones based on a network utilization target.
 - D. Deploy an Auto Scaling group with a step scaling policy to launch EC2 instances in different Availability Zones.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4031,7 +5561,12 @@ A company that primarily runs its application servers on premises has decided to
 - C. AWS Storage Gateway Volume Gateway stored volumes
 - D. AWS Storage Gateway Volume Gateway cached volumes
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4045,7 +5580,12 @@ A company has multiple AWS accounts that use consolidated billing. The company r
 - D. Review the Trusted Advisor check for Amazon RDS Idle DB Instances.
 - E. Review the Trusted Advisor check for Amazon Redshift Reserved Node Optimization.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -4058,7 +5598,12 @@ A solutions architect needs to optimize storage costs. The solutions architect m
 - C. Turn on the Amazon CloudWatch BucketSizeBytes metric for buckets. Analyze bucket access patterns by using the metrics data with Amazon Athena.
 - D. Turn on AWS CloudTrail for S3 object monitoring. Analyze bucket access patterns by using CloudTrail logs that are integrated with Amazon CloudWatch Logs.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4071,7 +5616,12 @@ A company sells datasets to customers who do research in artificial intelligence
 - C. Set up a second S3 bucket in the eu-central-1 Region with S3 Cross-Region Replication between the buckets. Direct customer requests to the closest Region. Continue to use S3 signed URLs for access control.
 - D. Modify the web application to enable streaming of the datasets to end users. Configure the web application to read the data from the existing S3 bucket. Implement access control directly in the application.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4084,7 +5634,12 @@ A company is using AWS to design a web application that will process insurance q
 - C. Create a single Amazon Simple Notification Service (Amazon SNS) topic. Subscribe Amazon Simple Queue Service (Amazon SQS) queues to the SNS topic. Configure SNS message filtering to publish messages to the proper SQS queue based on the quote type. Configure each backend application server to use its own SQS queue.
 - D. Create multiple Amazon Kinesis Data Firehose delivery streams based on the quote type to deliver data streams to an Amazon OpenSearch Service cluster. Configure the application to send messages to the proper delivery stream. Configure each backend group of application servers to search for the messages from OpenSearch Service and process them accordingly.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4097,7 +5652,12 @@ A company has an application that runs on several Amazon EC2 instances. Each EC2
 - C. Create a backup plan by using AWS Backup to perform nightly backups. Copy the backups to another Region. Add the application’s EBS volumes as resources.
 - D. Write an AWS Lambda function that schedules nightly snapshots of the application's EBS volumes and copies the snapshots to a different Availability Zone.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4110,7 +5670,12 @@ A company is building a mobile app on AWS. The company wants to expand its reach
 - C. Use Amazon CloudFront. Provide signed URLs to stream content.
 - D. Set up AWS Client VPN between the mobile app and the AWS environment to stream content.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4123,7 +5688,12 @@ A company has an on-premises MySQL database used by the global sales team with i
 - C. Amazon Redshift Spectrum
 - D. Amazon RDS for MySQL
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4136,7 +5706,12 @@ A company experienced a breach that affected several applications in its on-prem
 - C. Turn on Amazon GuardDuty. Deploy the GuardDuty agents to the EC2 instances. Configure an AWS Lambda function to automate the generation and distribution of reports that detail the findings.
 - D. Turn on Amazon Inspector. Deploy the Amazon Inspector agent to the EC2 instances. Configure an AWS Lambda function to automate the generation and distribution of reports that detail the findings.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4149,7 +5724,12 @@ A company uses an Amazon EC2 instance to run a script to poll for and process me
 - C. Migrate the script on the EC2 instance to an AWS Lambda function with the appropriate runtime.
 - D. Use AWS Systems Manager Run Command to run the script on demand.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4162,7 +5742,12 @@ A company uses a legacy application to produce data in CSV format. The legacy ap
 - C. Create an AWS Lambda function and an Amazon DynamoDB table. Use an S3 event to invoke the Lambda function. Configure the Lambda function to perform an extract, transform, and load (ETL) job to process the .csv files and store the processed data in the DynamoDB table.
 - D. Use Amazon EventBridge to launch an Amazon EMR cluster on a weekly schedule. Configure the EMR cluster to perform an extract, transform, and load (ETL) job to process the .csv files and store the processed data in an Amazon Redshift table.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4176,7 +5761,12 @@ A company recently migrated its entire IT environment to the AWS Cloud. The comp
 - D. Enable AWS Config and create rules for auditing and compliance purposes.
 - E. Restore previous resource configurations with an AWS CloudFormation template.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -4189,7 +5779,12 @@ A company has hundreds of Amazon EC2 Linux-based instances in the AWS Cloud. Sys
 - C. Allow shared SSH access to a set of bastion instances. Configure all other instances to allow only SSH access from the bastion instances.
 - D. Use an Amazon Cognito custom authorizer to authenticate users. Invoke an AWS Lambda function to generate a temporary SSH key.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4202,7 +5797,12 @@ A company is using a fieet of Amazon EC2 instances to ingest data from on-premis
 - C. Store ingested data in an EC2 instance store. Publish data to Amazon Kinesis Data Firehose with Amazon S3 as the destination. Use Amazon Athena to query the data.
 - D. Store ingested data in an Amazon Elastic Block Store (Amazon EBS) volume. Publish data to Amazon ElastiCache for Redis. Subscribe to the Redis channel to query the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4215,7 +5815,12 @@ What should a solutions architect do to ensure that all objects uploaded to an A
 - C. Update the bucket policy to deny if the PutObject does not have an aws:SecureTransport header set to true.
 - D. Update the bucket policy to deny if the PutObject does not have an x-amz-server-side-encryption header set.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4228,7 +5833,12 @@ A solutions architect is designing a multi-tier application for a company. The a
 - C. Create an Amazon Simple Queue Service (Amazon SQS) message queue. As images are uploaded, place a message on the SQS queue for thumbnail generation. Alert the user through an application message that the image was received.
 - D. Create Amazon Simple Notification Service (Amazon SNS) notification topics and subscriptions. Use one subscription with the application to generate the thumbnail after the image upload is complete. Use a second subscription to message the user's mobile app by way of a push notification after thumbnail generation is complete.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4241,7 +5851,12 @@ A company’s facility has badge readers at every entrance throughout the buildi
 - C. Use Amazon Route 53 to direct incoming sensor messages to an AWS Lambda function. Configure the Lambda function to process the messages and save the results to an Amazon DynamoDB table.
 - D. Create a gateway VPC endpoint for Amazon S3. Configure a Site-to-Site VPN connection from the facility network to the VPC so that sensor data can be written directly to an S3 bucket by way of the VPC endpoint.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4254,7 +5869,12 @@ A company wants to implement a disaster recovery plan for its primary on-premise
 - C. Provision an AWS Storage Gateway Volume Gateway cached volume. Set the local cache to 10 TB. Mount the Volume Gateway cached volume to the existing file server by using iSCSI, and copy all files to the storage volume. Configure scheduled snapshots of the storage volume. To recover from a disaster, restore a snapshot to an Amazon Elastic Block Store (Amazon EBS) volume and attach the EBS volume to an Amazon EC2 instance.
 - D. Provision an AWS Storage Gateway Volume Gateway stored volume with the same amount of disk space as the existing file storage volume. Mount the Volume Gateway stored volume to the existing file server by using iSCSI, and copy all files to the storage volume. Configure scheduled snapshots of the storage volume. To recover from a disaster, restore a snapshot to an Amazon Elastic Block Store (Amazon EBS) volume and attach the EBS volume to an Amazon EC2 instance.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4267,7 +5887,12 @@ A company is hosting a web application from an Amazon S3 bucket. The application
 - C. Redeploy the application to Amazon S3 to prevent eventually consistent reads in the S3 bucket from affecting the ability of users to access the protected content.
 - D. Update the Amazon Cognito pool to use custom attribute mappings within the identity pool and grant users the proper permissions to access the protected content.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4281,7 +5906,12 @@ An image hosting company uploads its large assets to Amazon S3 Standard buckets.
 - D. Move assets to S3 Standard-Infrequent Access (S3 Standard-IA) after 30 days.
 - E. Move assets to S3 One Zone-Infrequent Access (S3 One Zone-IA) after 30 days.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -4294,7 +5924,12 @@ A solutions architect must secure a VPC network that hosts Amazon EC2 instances.
 - C. Implement strict inbound security group rules. Configure an outbound rule that allows traffic only to the authorized software repositories on the internet by specifying the URLs.
 - D. Configure an Application Load Balancer (ALB) in front of the EC2 instances. Direct all outbound traffic to the ALB. Use a URL-based rule listener in the ALB’s target group for outbound access to the internet.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4307,7 +5942,12 @@ A company is hosting a three-tier ecommerce application in the AWS Cloud. The co
 - C. Add an Amazon CloudFront distribution for the dynamic content. Add an Amazon ElastiCache instance in front of the ALB to reduce traffic for the API to handle.
 - D. Add an Amazon CloudFront distribution for the static content. Add an Amazon Simple Queue Service (Amazon SQS) queue to receive requests from the website for later processing by the EC2 instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4320,7 +5960,12 @@ A security audit reveals that Amazon EC2 instances are not being patched regular
 - C. Set up Amazon Detective to scan the EC2 instances for software vulnerabilities. Set up an Amazon EventBridge scheduled rule to patch the EC2 instances on a regular schedule.
 - D. Turn on Amazon Inspector in the account. Configure Amazon Inspector to scan the EC2 instances for software vulnerabilities. Set up AWS Systems Manager Patch Manager to patch the EC2 instances on a regular schedule.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4333,7 +5978,12 @@ A company is planning to store data on Amazon RDS DB instances. The company must
 - C. Generate a certificate in AWS Certificate Manager (ACM). Enable SSL/TLS on the DB instances by using the certificate.
 - D. Generate a certificate in AWS Identity and Access Management (IAM). Enable SSL/TLS on the DB instances by using the certificate.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4346,7 +5996,12 @@ A company must migrate 20 TB of data from a data center to the AWS Cloud within 
 - C. Use a secure VPN connection.
 - D. Use Amazon S3 Transfer Acceleration.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4359,7 +6014,12 @@ A company needs to provide its employees with secure access to confidential and 
 - C. Migrate the files to Amazon S3, and create a private VPC endpoint. Create a signed URL to allow download.
 - D. Migrate the files to Amazon S3, and create a public VPC endpoint. Allow employees to sign on with AWS IAM Identity Center (AWS Single Sign-On).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4372,7 +6032,12 @@ A company’s application runs on Amazon EC2 instances behind an Application Loa
 - C. Configure an EC2 Auto Scaling scheduled scaling policy based on the monthly schedule.
 - D. Configure Amazon ElastiCache to remove some of the workload from the EC2 instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4385,7 +6050,12 @@ A company wants to give a customer the ability to use on-premises Microsoft Acti
 - C. Set up AWS DataSync to synchronize between the on-premises location and the S3 location by using AWS IAM Identity Center (AWS Single Sign-On).
 - D. Set up a Windows Amazon EC2 instance with SFTP to connect the on-premises client with Amazon S3. Integrate AWS Identity and Access Management (IAM).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4398,7 +6068,12 @@ A company is experiencing sudden increases in demand. The company needs to provi
 - C. Enable AMI creation and define lifecycle rules in Amazon Data Lifecycle Manager (Amazon DLM). Create an AWS Lambda function that modifies the AMI in the Auto Scaling group.
 - D. Use Amazon EventBridge to invoke AWS Backup lifecycle policies that provision AMIs. Configure Auto Scaling group capacity limits as an event source in EventBridge.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4411,7 +6086,12 @@ A company hosts a multi-tier web application that uses an Amazon Aurora MySQL DB
 - C. Store a file that contains the credentials in an AWS Key Management Service (AWS KMS) encrypted Amazon Elastic File System (Amazon EFS) file system. Mount the EFS file system in all EC2 instances of the application tier. Restrict the access to the file on the file system so that the application can read the file and that only super users can modify the file. Implement an AWS Lambda function that rotates the key in Aurora every 14 days and writes new credentials into the file.
 - D. Store a file that contains the credentials in an AWS Key Management Service (AWS KMS) encrypted Amazon S3 bucket that the application uses to load the credentials. Download the file to the application regularly to ensure that the correct credentials are used. Implement an AWS Lambda function that rotates the Aurora credentials every 14 days and uploads these credentials to the file in the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4424,7 +6104,12 @@ A company has deployed a web application on AWS. The company hosts the backend d
 - C. Migrate the database to a MySQL database that runs on Amazon EC2 instances. Choose large, compute optimized EC2 instances for all replica nodes. Maintain the stored procedures on the EC2 instances.
 - D. Migrate the database to Amazon DynamoDB. Provision a large number of read capacity units (RCUs) to support the required throughput, and configure on-demand capacity scaling. Replace the stored procedures with DynamoDB streams.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4437,7 +6122,12 @@ A solutions architect must create a disaster recovery (DR) plan for a high-volum
 - C. Use AWS Database Migration Service (AWS DMS) to continuously replicate data to an Aurora cluster in the secondary Region. Remove the DB instance from the secondary Region.
 - D. Set up an Aurora global database for the DB cluster. Specify a minimum of one DB instance in the secondary Region.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4450,7 +6140,12 @@ A company has a custom application with embedded credentials that retrieves info
 - C. Create credentials on the RDS for MySQL database for the application user and store the credentials in AWS Secrets Manager. Configure the application to load the database credentials from Secrets Manager. Set up a credentials rotation schedule for the application user in the RDS for MySQL database using Secrets Manager.
 - D. Create credentials on the RDS for MySQL database for the application user and store the credentials in AWS Systems Manager Parameter Store. Configure the application to load the database credentials from Parameter Store. Set up a credentials rotation schedule for the application user in the RDS for MySQL database using Parameter Store.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4463,7 +6158,12 @@ A media company hosts its website on AWS. The website application’s architectu
 - C. Subscribe to AWS Shield Advanced to block all SQL injection attempts automatically.
 - D. Set up Amazon Inspector to block all SQL injection attempts automatically.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4476,7 +6176,12 @@ A company has an Amazon S3 data lake that is governed by AWS Lake Formation. The
 - C. Use AWS Glue Elastic Views to create a materialized view for the database in Amazon S3. Create an S3 bucket policy to enforce column- level access control for the QuickSight users. Use Amazon S3 as the data source in QuickSight.
 - D. Use a Lake Formation blueprint to ingest the data from the database to the S3 data lake. Use Lake Formation to enforce column-level access control for the QuickSight users. Use Amazon Athena as the data source in QuickSight.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4489,7 +6194,12 @@ A transaction processing company has weekly scripted batch jobs that run on Amaz
 - C. Create a predictive scaling policy for the Auto Scaling group. Configure the policy to scale based on forecast. Set the scaling metric to CPU utilization. Set the target value for the metric to 60%. In the policy, set the instances to pre-launch 30 minutes before the jobs run.
 - D. Create an Amazon EventBridge event to invoke an AWS Lambda function when the CPU utilization metric value for the Auto Scaling group reaches 60%. Configure the Lambda function to increase the Auto Scaling group’s desired capacity and maximum capacity by 20%.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4502,7 +6212,12 @@ A solutions architect is designing a company’s disaster recovery (DR) architec
 - C. Migrate the MySQL database to an Amazon Aurora global database. Host the primary DB cluster in the primary Region. Host the secondary DB cluster in the DR Region.
 - D. Store the scheduled backup of the MySQL database in an Amazon S3 bucket that is configured for S3 Cross-Region Replication (CRR). Use the data backup to restore the database in the DR Region.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4515,7 +6230,12 @@ A company has a Java application that uses Amazon Simple Queue Service (Amazon S
 - C. Change the limit in Amazon SQS to handle messages that are larger than 256 KB.
 - D. Store messages that are larger than 256 KB in Amazon Elastic File System (Amazon EFS). Configure Amazon SQS to reference this location in the messages.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4528,7 +6248,12 @@ A company wants to restrict access to the content of one of its main web applica
 - C. Use Amazon Cognito for authentication. Use AWS Lambda for authorization. Use Amazon S3 Transfer Acceleration to serve the web application globally.
 - D. Use AWS Directory Service for Microsoft Active Directory for authentication. Use Lambda@Edge for authorization. Use AWS Elastic Beanstalk to serve the web application globally.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4541,7 +6266,12 @@ A company has an aging network-attached storage (NAS) array in its data center. 
 - C. Amazon FSx File Gateway
 - D. Amazon S3 File Gateway
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4554,7 +6284,12 @@ A company has an application that is running on Amazon EC2 instances. A solution
 - C. Zonal Reserved Instances
 - D. Standard Reserved Instances
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4567,7 +6302,12 @@ A company collects data from a large number of participants who use wearable dev
 - C. Use on-demand mode. Set the read capacity units (RCUs) and write capacity units (WCUs) high enough to accommodate changes in the workload.
 - D. Use on-demand mode. Specify the read capacity units (RCUs) and write capacity units (WCUs) with reserved capacity.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4580,7 +6320,12 @@ A company stores confidential data in an Amazon Aurora PostgreSQL database in th
 - C. Create a database snapshot that uses a different AWS managed KMS key. Add the acquiring company’s AWS account to the KMS key alias. Share the snapshot with the acquiring company's AWS account.
 - D. Create a database snapshot. Download the database snapshot. Upload the database snapshot to an Amazon S3 bucket. Update the S3 bucket policy to allow access from the acquiring company’s AWS account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4594,7 +6339,12 @@ A company uses a 100 GB Amazon RDS for Microsoft SQL Server Single-AZ DB instanc
 - D. Migrate the database to RDS Custom.
 - E. Use RDS Proxy to limit reporting requests to the maintenance window.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -4607,7 +6357,12 @@ A company is moving its data management application to AWS. The company wants to
 - C. Build out the workfiow in Amazon EventBridge. Use EventBridge to invoke AWS Lambda functions on a schedule to process the workfiow steps.
 - D. Build out the workfiow in AWS Step Functions. Use Step Functions to create a state machine. Use the state machine to invoke AWS Lambda functions to process the workfiow steps.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4620,7 +6375,12 @@ A company is designing the network for an online multi-player game. The game use
 - C. Set up Amazon CloudFront with UDP turned on. Configure an origin in each Region.
 - D. Set up a VPC peering mesh between each Region. Turn on UDP for each VPC.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4633,7 +6393,12 @@ A company hosts a three-tier web application on Amazon EC2 instances in a single
 - C. Use Amazon S3 Intelligent-Tiering access tiers.
 - D. Use two large EC2 instances to host the database in active-passive mode.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4646,7 +6411,12 @@ A company hosts a serverless application on AWS. The application uses Amazon API
 - C. Resize the RDS DB instance class to accept more connections.
 - D. Migrate the database to Amazon DynamoDB with on-demand scaling.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4659,7 +6429,12 @@ A company is migrating an old application to AWS. The application runs a batch j
 - C. Use Amazon Lightsail with AWS Auto Scaling.
 - D. Use AWS Batch on Amazon EC2.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4672,7 +6447,12 @@ A company stores its data objects in Amazon S3 Standard storage. A solutions arc
 - C. Move the data objects to S3 One Zone-Infrequent Access (S3 One Zone-IA) after 30 days.
 - D. Move the data objects to S3 One Zone-Infrequent Access (S3 One Zone-IA) immediately.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4686,7 +6466,12 @@ A gaming company is moving its public scoreboard from a data center to the AWS C
 - D. Store the server-side code on Amazon FSx for Windows File Server. Mount the FSx for Windows File Server volume on each EC2 instance to share the files.
 - E. Store the server-side code on a General Purpose SSD (gp2) Amazon Elastic Block Store (Amazon EBS) volume. Mount the EBS volume on each EC2 instance to share the files.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -4699,7 +6484,12 @@ A social media company runs its application on Amazon EC2 instances behind an Ap
 - C. Use a Lambda@Edge function with an external image management library. Associate the Lambda@Edge function with the CloudFront behaviors that serve the images.
 - D. Create a CloudFront response headers policy. Use the policy to automatically resize images and to serve the appropriate format based on the User-Agent HTTP header in the request.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4712,7 +6502,12 @@ A hospital needs to store patient records in an Amazon S3 bucket. The hospital�
 - C. Use the aws:SecureTransport condition on S3 bucket policies to allow only encrypted connections over HTTPS (TLS). Configure default encryption for each S3 bucket to use server-side encryption with AWS KMS keys (SSE-KMS). Assign the compliance team to manage the KMS keys.
 - D. Use the aws:SecureTransport condition on S3 bucket policies to allow only encrypted connections over HTTPS (TLS). Use Amazon Macie to protect the sensitive data that is stored in Amazon S3. Assign the compliance team to manage Macie.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4725,7 +6520,12 @@ A company uses Amazon API Gateway to run a private gateway with two REST APIs in
 - C. Use a gateway endpoint.
 - D. Add an Amazon Simple Queue Service (Amazon SQS) queue between the two REST APIs.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4738,7 +6538,12 @@ A company hosts a multiplayer gaming application on AWS. The company wants the a
 - C. Use Amazon DynamoDB with DynamoDB Accelerator (DAX) for data that is frequently accessed. Export the data to an Amazon S3 bucket by using DynamoDB table export. Run one-time queries on the data in Amazon S3 by using Amazon Athena.
 - D. Use Amazon DynamoDB for data that is frequently accessed. Turn on streaming to Amazon Kinesis Data Streams. Use Amazon Kinesis Data Firehose to read the data from Kinesis Data Streams. Store the records in an Amazon S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4752,7 +6557,12 @@ A company uses a payment processing system that requires messages for a particul
 - D. Write the messages to an Amazon Simple Queue Service (Amazon SQS) queue. Set the message attribute to use the payment ID.
 - E. Write the messages to an Amazon Simple Queue Service (Amazon SQS) FIFO queue. Set the message group to use the payment ID.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -4765,7 +6575,12 @@ A company is building a game system that needs to send unique events to separate
 - C. Amazon Simple Notification Service (Amazon SNS) standard topics
 - D. Amazon Simple Queue Service (Amazon SQS) FIFO queues
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4779,7 +6594,12 @@ A hospital is designing a new application that gathers symptoms from patients. T
 - D. Turn on server-side encryption on the SQS components by using an AWS Key Management Service (AWS KMS) customer managed key. Apply a key policy to restrict key usage to a set of authorized principals. Set a condition in the queue policy to allow only encrypted connections over TLS.
 - E. Turn on server-side encryption on the SQS components by using an AWS Key Management Service (AWS KMS) customer managed key. Apply an IAM policy to restrict key usage to a set of authorized principals. Set a condition in the queue policy to allow only encrypted connections over TLS.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -4792,7 +6612,12 @@ A company runs a web application that is backed by Amazon RDS. A new database ad
 - C. Automated backups
 - D. Multi-AZ deployments
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4805,7 +6630,12 @@ A company’s web application consists of an Amazon API Gateway API in front of 
 - C. Apply fine-grained IAM permissions to the premium content in the DynamoDB table.
 - D. Implement API usage plans and API keys to limit the access of users who do not have a subscription.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4818,7 +6648,12 @@ A company is using Amazon Route 53 latency-based routing to route requests to it
 - C. Configure three Network Load Balancers (NLBs) in the three AWS Regions to address the on-premises endpoints. In Route 53, create a latency-based record that points to the three NLBs, and use it as an origin for an Amazon CloudFront distribution. Provide access to the application by using a CNAME that points to the CloudFront DNS.
 - D. Configure three Application Load Balancers (ALBs) in the three AWS Regions to address the on-premises endpoints. In Route 53, create a latency-based record that points to the three ALBs, and use it as an origin for an Amazon CloudFront distribution. Provide access to the application by using a CNAME that points to the CloudFront DNS.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4831,7 +6666,12 @@ A solutions architect wants all new users to have specific complexity requiremen
 - C. Use third-party vendor software to set password requirements.
 - D. Attach an Amazon CloudWatch rule to the Create_newuser event to set the password with the appropriate requirements.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4844,7 +6684,12 @@ A company has migrated an application to Amazon EC2 Linux instances. One of thes
 - C. Copy the tasks into AWS Lambda functions. Schedule the Lambda functions by using Amazon EventBridge (Amazon CloudWatch Events).
 - D. Create an Amazon Machine Image (AMI) of the EC2 instance that runs the tasks. Create an Auto Scaling group with the AMI to run multiple copies of the instance.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4857,7 +6702,12 @@ A company runs a public three-tier web application in a VPC. The application run
 - C. Provision a NAT gateway in a public subnet. Modify each private subnet's route table with a default route that points to the NAT gateway.
 - D. Provision a NAT gateway in a private subnet. Modify each private subnet's route table with a default route that points to the NAT gateway.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4871,7 +6721,12 @@ A company needs to create an Amazon Elastic Kubernetes Service (Amazon EKS) clus
 - D. Create the EKS cluster. Create an IAM role that has a policy that grants permission to the customer managed key. Associate the role with the EKS cluster.
 - E. Store the customer managed key as a Kubernetes secret in the EKS cluster. Use the customer managed key to encrypt the EBS volumes.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -4884,7 +6739,12 @@ A company wants to migrate an Oracle database to AWS. The database consists of a
 - C. Store the images and geographic codes in an Amazon DynamoDB table. Configure DynamoDB Accelerator (DAX) during times of high load.
 - D. Store the images in Amazon S3 buckets. Store geographic codes and image S3 URLs in a database table. Use Oracle running on an Amazon RDS Multi-AZ DB instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4897,7 +6757,12 @@ A company has an application that collects data from IoT sensors on automobiles.
 - C. Use the S3 Standard-Infrequent Access (S3 Standard-IA) storage class. Create an S3 Lifecycle policy to transition objects to S3 Glacier Deep Archive after 1 year.
 - D. Use the S3 Standard storage class. Create an S3 Lifecycle policy to transition objects to S3 Standard-Infrequent Access (S3 Standard-IA) after 30 days, and then to S3 Glacier Deep Archive after 1 year.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4910,7 +6775,12 @@ A company is running several business applications in three separate VPCs within
 - C. Set up three AWS Direct Connect connections from the data center to a Direct Connect gateway in us-east-1. Establish connectivity by configuring each VPC to use one of the Direct Connect connections.
 - D. Set up one AWS Direct Connect connection from the data center to AWS. Create a transit gateway, and attach each VPC to the transit gateway. Establish connectivity between the Direct Connect connection and the transit gateway.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -4923,7 +6793,12 @@ An ecommerce company is building a distributed application that involves several
 - C. Use Amazon Simple Queue Service (Amazon SQS) to build the application.
 - D. Use AWS Lambda functions and Amazon EventBridge events to build the application.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4936,7 +6811,12 @@ A company has launched an Amazon RDS for MySQL DB instance. Most of the connecti
 - C. Migrate the DB instance to a different instance class that has higher I/O capacity. Configure the users’ applications to use the new DB instance.
 - D. Configure Multi-AZ for the DB instance. Configure the users’ applications to switch between the DB instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -4949,7 +6829,12 @@ A company recently deployed a new auditing system to centralize information abou
 - C. Use an EC2 Auto Scaling launch configuration to run a custom script through user data to send data to the audit system when instances are launched and terminated.
 - D. Run a custom script on the instance operating system to send data to the audit system. Configure the script to be invoked by the EC2 Auto Scaling group when the instance starts and is terminated.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4962,7 +6847,12 @@ A company is developing a real-time multiplayer game that uses UDP for communica
 - C. Use a Network Load Balancer for traffic distribution and Amazon Aurora Global Database for data storage.
 - D. Use an Application Load Balancer for traffic distribution and Amazon DynamoDB global tables for data storage.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -4975,7 +6865,12 @@ A company hosts a frontend application that uses an Amazon API Gateway API backe
 - C. Cache the results of the queries in Amazon S3 for faster retrieval of similar datasets.
 - D. Increase the size of the database to increase the number of connections Lambda can establish at one time.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -4988,7 +6883,12 @@ A company is migrating its on-premises workload to the AWS Cloud. The company al
 - C. Launch another EC2 instance. Configure a crontab schedule to run shell scripts that will start and stop the existing EC2 instances and DB instances on a schedule.
 - D. Create an AWS Lambda function that will start and stop the EC2 instances and DB instances. Configure Amazon EventBridge to invoke the Lambda function on a schedule.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5001,7 +6901,12 @@ A company hosts a three-tier web application that includes a PostgreSQL database
 - C. Set up a new Amazon RDS for PostgreSQL Multi-AZ DB instance. Configure the reporting module to query the secondary RDS node so that the reporting module does not affect the primary node.
 - D. Set up a new Amazon DynamoDB table to store the documents. Use a fixed write capacity to support new document entries. Automatically scale the read capacity to support the reports.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5014,7 +6919,12 @@ A company has a three-tier application on AWS that ingests sensor data from its 
 - C. Change the load balancer to an Application Load Balancer (ALB). Enable AWS WAF on the ALB.
 - D. Encrypt the Amazon Elastic Block Store (Amazon EBS) volume on the EC2 instances by using AWS Key Management Service (AWS KMS).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5027,7 +6937,12 @@ A company is planning to migrate a commercial off-the-shelf application from its
 - C. Dedicated Reserved Instances
 - D. Dedicated On-Demand Instances
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5040,7 +6955,12 @@ A company runs an application on Amazon EC2 Linux instances across multiple Avai
 - C. Use the Amazon Elastic File System (Amazon EFS) Standard storage class. Create a lifecycle management policy to move infrequently accessed data to EFS Standard-Infrequent Access (EFS Standard-IA).
 - D. Use the Amazon Elastic File System (Amazon EFS) One Zone storage class. Create a lifecycle management policy to move infrequently accessed data to EFS One Zone-Infrequent Access (EFS One Zone-IA).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5053,7 +6973,12 @@ A solutions architect is creating a new VPC design. There are two public subnets
 - C. Create a security group for the web servers and allow port 443 from the load balancer. Create a security group for the MySQL servers and allow port 3306 from the web servers security group.
 - D. Create a network ACL for the web servers and allow port 443 from the load balancer. Create a network ACL for the MySQL servers and allow port 3306 from the web servers security group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5066,7 +6991,12 @@ An ecommerce company is running a multi-tier application on AWS. The front-end a
 - C. Implement an RDS for MySQL read replica to cache database calls.
 - D. Implement Amazon Kinesis Data Firehose to stream the calls to the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5080,7 +7010,12 @@ A new employee has joined a company as a deployment engineer. The deployment eng
 - D. Create a new IAM user for the deployment engineer and add the IAM user to a group that has an IAM policy that allows AWS CloudFormation actions only.
 - E. Create an IAM role for the deployment engineer to explicitly define the permissions specific to the AWS CloudFormation stack and launch stacks using that IAM role.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -5093,7 +7028,12 @@ A company is deploying a two-tier web application in a VPC. The web tier is usin
 - C. Deploy the web tier's EC2 instances and the database tier’s RDS instance into two separate VPCs, and configure VPC peering.
 - D. Add an inbound rule to the security group of the database tier’s RDS instance to allow traffic from the web tiers security group.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5106,7 +7046,12 @@ A company has a large dataset for its online advertising business stored in an A
 - C. Scale up the DB instance to a larger instance type to handle write operations and queries.
 - D. Deploy the DB instance in multiple Availability Zones to process the business reporting queries.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5120,7 +7065,12 @@ A company hosts a three-tier ecommerce application on a fieet of Amazon EC2 inst
 - D. Deploy an Amazon ElastiCache for Redis cluster to store customer session information.
 - E. Use AWS Systems Manager Application Manager in the application to manage user session information.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -5133,7 +7083,12 @@ A company needs a backup strategy for its three-tier stateless web application. 
 - C. Retain the latest Amazon Machine Images (AMIs) of the web and application tiers. Enable automated backups in Amazon RDS and use point-in-time recovery to meet the RPO.
 - D. Take snapshots of Amazon Elastic Block Store (Amazon EBS) volumes of the EC2 instances every 2 hours. Enable automated backups in Amazon RDS and use point-in-time recovery to meet the RPO.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5146,7 +7101,12 @@ A company wants to deploy a new public web application on AWS. The application i
 - C. Configure the security group for the web servers to allow inbound traffic on port 443 from the IP addresses of the customers. Configure the security group for the DB instance to allow inbound traffic on port 3306 from the IP addresses of the customers.
 - D. Configure the security group for the web servers to allow inbound traffic on port 443 from 0.0.0.0/0. Configure the security group for the DB instance to allow inbound traffic on port 3306 from 0.0.0.0/0.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5159,7 +7119,12 @@ A payment processing company records all voice communication with its customers 
 - C. Configure an Amazon Transcribe transcription job with PII redaction turned on. When an audio file is uploaded to the S3 bucket, invoke an AWS Lambda function to start the transcription job. Store the output in a separate S3 bucket.
 - D. Create an Amazon Connect contact fiow that ingests the audio files with transcription turned on. Embed an AWS Lambda function to scan for known PII patterns. Use Amazon EventBridge to start the contact fiow when an audio file is uploaded to the S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5172,7 +7137,12 @@ A company is running a multi-tier ecommerce web application in the AWS Cloud. Th
 - C. Replace the volume with a Provisioned IOPS SSD (io2) volume.
 - D. Replace the 2,000 GB gp3 volume with two 1,000 GB gp3 volumes.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5185,7 +7155,12 @@ An IAM user made several configuration changes to AWS resources in their company
 - C. AWS CloudTrail
 - D. AWS Config
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5198,7 +7173,12 @@ A company has implemented a self-managed DNS service on AWS. The solution consis
 - C. Create an AWS WAF web ACL that includes a rate-based rule. Associate the web ACL with the accelerator.
 - D. Create an AWS WAF web ACL that includes a rate-based rule. Associate the web ACL with the EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5211,7 +7191,12 @@ An ecommerce company needs to run a scheduled daily job to aggregate and filter 
 - C. Create an Amazon Elastic Container Service (Amazon ECS) cluster with an AWS Fargate launch type. Create an Amazon EventBridge scheduled event that launches an ECS task on the cluster to run the job.
 - D. Create an Amazon Elastic Container Service (Amazon ECS) cluster with an Amazon EC2 launch type and an Auto Scaling group with at least one EC2 instance. Create an Amazon EventBridge scheduled event that launches an ECS task on the cluster to run the job.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5224,7 +7209,12 @@ A company needs to transfer 600 TB of data from its on-premises network-attached
 - C. Use the AWS Snow Family console to order several AWS Snowball Edge Storage Optimized devices. Use the devices to transfer the data to Amazon S3.
 - D. Set up a 10 Gbps AWS Direct Connect connection between the company location and the nearest AWS Region. Transfer the data over a VPN connection into the Region to store the data in Amazon S3.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5237,7 +7227,12 @@ A financial company hosts a web application on AWS. The application uses an Amaz
 - C. Use Amazon CloudWatch metrics to monitor the Count metric and alert the security team when the predefined rate is reached.
 - D. Create an Amazon CloudFront distribution with Lambda@Edge in front of the API Gateway Regional API endpoint. Create an AWS Lambda function to block requests from IP addresses that exceed the predefined rate.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5250,7 +7245,12 @@ A meteorological startup company has a custom web application to sell weather da
 - C. Enable Amazon DynamoDB Streams on the table. Use triggers to write to a single Amazon Simple Notification Service (Amazon SNS) topic to which the teams can subscribe.
 - D. Add a custom attribute to each record to fiag new items. Write a cron job that scans the table every minute for items that are new and notifies an Amazon Simple Queue Service (Amazon SQS) queue to which the teams can subscribe.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5263,7 +7263,12 @@ A company wants to use the AWS Cloud to make an existing application highly avai
 - C. Deploy the application servers by using Amazon EC2 instances in an Auto Scaling group across multiple Availability Zones. Use an Amazon RDS DB instance with a read replica in a single Availability Zone. Promote the read replica to replace the primary DB instance if the primary DB instance fails.
 - D. Deploy the application servers by using Amazon EC2 instances in an Auto Scaling group across multiple Availability Zones. Deploy the primary and secondary database servers on EC2 instances across multiple Availability Zones. Use Amazon Elastic Block Store (Amazon EBS) Multi-Attach to create shared storage between the instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5276,7 +7281,12 @@ A company needs to ingest and handle large amounts of streaming data that its ap
 - C. Update the number of Kinesis shards to handle the throughput of the data that is sent to Kinesis Data Streams.
 - D. Turn on S3 Versioning within the S3 bucket to preserve every version of every object that is ingested in the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5289,7 +7299,12 @@ A developer has an application that uses an AWS Lambda function to upload files 
 - C. Create a new IAM user and use the existing IAM credentials in the Lambda function.
 - D. Create an IAM execution role with the required permissions and attach the IAM role to the Lambda function.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5302,7 +7317,12 @@ A company has deployed a serverless application that invokes an AWS Lambda funct
 - C. Deploy an additional Lambda function. Load balance the processing of the documents across the two Lambda functions.
 - D. Create an Amazon Simple Queue Service (Amazon SQS) queue. Send the requests to the queue. Configure the queue as an event source for Lambda.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5316,7 +7336,12 @@ A solutions architect is designing the architecture for a software demonstration
 - D. Use a target tracking scaling policy to scale the Auto Scaling group based on instance CPU utilization.
 - E. Use scheduled scaling to change the Auto Scaling group minimum, maximum, and desired capacity to zero for weekends. Revert to the default values at the start of the week.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -5330,7 +7355,12 @@ A solutions architect is designing a two-tiered architecture that includes a pub
 - D. Create a security group for the DB instance. Add a rule to allow traffic from the web servers’ security group on port 3306.
 - E. Create a security group for the DB instance. Add a rule to deny all traffic except traffic from the web servers’ security group on port 3306.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -5343,7 +7373,12 @@ A company is implementing a shared storage solution for a gaming application tha
 - C. Create an Amazon Elastic File System (Amazon EFS) file system, and configure it to support Lustre. Attach the file system to the origin server. Connect the application server to the file system.
 - D. Create an Amazon FSx for Lustre file system. Attach the file system to the origin server. Connect the application server to the file system.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5356,7 +7391,12 @@ A company runs an application that receives data from thousands of geographicall
 - C. Use AWS Global Accelerator. Create an Application Load Balancer (ALB) in each of the two Regions as an endpoint. Create an Amazon Elastic Container Service (Amazon ECS) cluster with the Fargate launch type. Create an ECS service on the cluster. Set the ECS service as the target for the ALB. Process the data in Amazon ECS.
 - D. Configure an Amazon Route 53 failover routing policy. Create an Application Load Balancer (ALB) in each of the two Regions. Create an Amazon Elastic Container Service (Amazon ECS) cluster with the Fargate launch type. Create an ECS service on the cluster. Set the ECS service as the target for the ALB. Process the data in Amazon ECS.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5369,7 +7409,12 @@ A solutions architect must migrate a Windows Internet Information Services (IIS)
 - C. Migrate the file share to Amazon FSx for Windows File Server.
 - D. Migrate the file share to Amazon Elastic File System (Amazon EFS).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5382,7 +7427,12 @@ A company is deploying a new application on Amazon EC2 instances. The applicatio
 - C. Create an EC2 instance tag that has a key of Encrypt and a value of True. Tag all instances that require encryption at the EBS level.
 - D. Create an AWS Key Management Service (AWS KMS) key policy that enforces EBS encryption in the account. Ensure that the key policy is active.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5395,7 +7445,12 @@ A company has a web application with sporadic usage patterns. There is heavy usa
 - C. MySQL-compatible Amazon Aurora Serverless
 - D. MySQL deployed on Amazon EC2 in an Auto Scaling group
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5408,7 +7463,12 @@ An image-hosting company stores its objects in Amazon S3 buckets. The company wa
 - C. Use AWS Resource Access Manager to find publicly accessible S3 buckets. Use Amazon Simple Notification Service (Amazon SNS) to invoke an AWS Lambda function when a change is detected. Deploy a Lambda function that programmatically remediates the change.
 - D. Use the S3 Block Public Access feature on the account level. Use AWS Organizations to create a service control policy (SCP) that prevents IAM users from changing the setting. Apply the SCP to the account.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5421,7 +7481,12 @@ An ecommerce company is experiencing an increase in user traffic. The company’
 - C. Configure the web instance to send email through Amazon Simple Notification Service (Amazon SNS).
 - D. Create a separate application tier using EC2 instances dedicated to email processing. Place the instances in an Auto Scaling group.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5434,7 +7499,12 @@ A company has a business system that generates hundreds of reports each day. The
 - C. Use AWS DataSync to transfer the files to Amazon S3. Create an application that uses the DataSync API in the automation workfiow.
 - D. Deploy an AWS Transfer for SFTP endpoint. Create a script that checks for new files on the network share and uploads the new files by using SFTP.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5447,7 +7517,12 @@ A company is storing petabytes of data in Amazon S3 Standard. The data is stored
 - C. Create an S3 Lifecycle configuration with a rule to transition the objects in the S3 bucket to S3 Glacier Instant Retrieval.
 - D. Create an S3 Lifecycle configuration with a rule to transition the objects in the S3 bucket to S3 One Zone-Infrequent Access (S3 One Zone-IA).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5461,7 +7536,12 @@ A rapidly growing global ecommerce company is hosting its web application on AWS
 - D. Create a read replica for the RDS DB instance.
 - E. Configure a Multi-AZ deployment for the RDS DB instance.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -5474,7 +7554,12 @@ A company uses Amazon EC2 instances and AWS Lambda functions to run its applicat
 - C. Purchase a Compute Savings Plan. Optimize the Lambda functions’ duration and memory usage, the number of invocations, and the amount of data that is transferred. Connect the Lambda functions to the private subnet that contains the EC2 instances.
 - D. Purchase a Compute Savings Plan. Optimize the Lambda functions’ duration and memory usage, the number of invocations, and the amount of data that is transferred. Keep the Lambda functions in the Lambda service VPC.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5487,7 +7572,12 @@ A solutions architect needs to allow team members to access Amazon S3 buckets in
 - C. Turn off the S3 Block Public Access feature on the S3 bucket in the production account.
 - D. Create a user in the production account with unique credentials for each team member.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5501,7 +7591,12 @@ A company uses AWS Organizations with all features enabled and runs multiple Ama
 - D. Update the IAM policies for each account to deny the ec2:CreateVolume action when the ec2:Encrypted condition equals false.
 - E. In the Organizations management account, specify the Default EBS volume encryption setting.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -5514,7 +7609,12 @@ A company wants to use an Amazon RDS for PostgreSQL DB cluster to simplify time-
 - C. Use an Amazon RDS Multi-AZ DB instance deployment. Point the read workload to the secondary instances in the Multi-AZ pair.
 - D. Use an Amazon RDS Multi-AZ DB cluster deployment Point the read workload to the reader endpoint.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5527,7 +7627,12 @@ A company runs a highly available SFTP service. The SFTP service uses two Amazon
 - C. Create an Amazon S3 bucket with default encryption enabled. Create an AWS Transfer Family SFTP service with a public endpoint that allows only trusted IP addresses. Attach the S3 bucket to the SFTP service endpoint. Grant users access to the SFTP service.
 - D. Create an Amazon S3 bucket with default encryption enabled. Create an AWS Transfer Family SFTP service with a VPC endpoint that has internal access in a private subnet. Attach a security group that allows only trusted IP addresses. Attach the S3 bucket to the SFTP service endpoint. Grant users access to the SFTP service.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5540,7 +7645,12 @@ A company is developing a new machine learning (ML) model solution on AWS. The m
 - C. Direct the requests from the API into an Amazon Simple Queue Service (Amazon SQS) queue. Deploy the models as AWS Lambda functions that are invoked by SQS events. Use AWS Auto Scaling to increase the number of vCPUs for the Lambda functions based on the SQS queue size.
 - D. Direct the requests from the API into an Amazon Simple Queue Service (Amazon SQS) queue. Deploy the models as Amazon Elastic Container Service (Amazon ECS) services that read from the queue. Enable AWS Auto Scaling on Amazon ECS for both the cluster and copies of the service based on the queue size.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5554,7 +7664,12 @@ A solutions architect wants to use the following JSON text as an identity-based 
 - D. Amazon Elastic Container Service (Amazon ECS) resource
 - E. Amazon EC2 resource
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -5567,7 +7682,12 @@ A company is running a custom application on Amazon EC2 On-Demand Instances. The
 - C. Use Spot Instances for the frontend nodes. Use Reserved Instances for the backend nodes.
 - D. Use Spot Instances for the frontend nodes. Use AWS Fargate for the backend nodes.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5580,7 +7700,12 @@ A company uses high block storage capacity to runs its workloads on premises. Th
 - C. GP3 volume type
 - D. io1 volume type
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5593,7 +7718,12 @@ A company needs to store data from its healthcare application. The application�
 - C. Use Amazon S3 Transfer Acceleration to move the existing data to Amazon S3. Use AWS CloudTrail to log data events.
 - D. Use AWS Storage Gateway to move the existing data to Amazon S3. Use AWS CloudTrail to log management events.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5606,7 +7736,12 @@ A solutions architect is implementing a complex Java application with a MySQL da
 - C. Migrate the database to Amazon ElastiCache. Configure the ElastiCache security group to allow access from the application.
 - D. Launch an Amazon EC2 instance. Install a MySQL server on the EC2 instance. Configure the application on the server. Create an AMI. Use the AMI to create a launch template with an Auto Scaling group.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5619,7 +7754,12 @@ A serverless application uses Amazon API Gateway, AWS Lambda, and Amazon DynamoD
 - C. Create an IAM user with programmatic access to the Lambda function. Attach a policy to the user that allows read and write access to the DynamoDB table. Store the access_key_id and secret_access_key parameters in AWS Systems Manager Parameter Store as secure string parameters. Update the Lambda function code to retrieve the secure string parameters before connecting to the DynamoDB table.
 - D. Create an IAM role that includes DynamoDB as a trusted service. Attach a policy to the role that allows read and write access from the Lambda function. Update the code of the Lambda function to attach to the new role as an execution role.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5632,7 +7772,12 @@ The following IAM policy is attached to an IAM group. This is the only policy ap
 - C. Group members are allowed the ec2:StopInstances and ec2:TerminateInstances permissions for all Regions when logged in with multi- factor authentication (MFA). Group members are permitted any other Amazon EC2 action.
 - D. Group members are allowed the ec2:StopInstances and ec2:TerminateInstances permissions for the us-east-1 Region only when logged in with multi-factor authentication (MFA). Group members are permitted any other Amazon EC2 action within the us-east-1 Region.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5646,7 +7791,12 @@ A manufacturing company has machine sensors that upload .csv files to an Amazon 
 - D. Create S3 Lifecycle rules for .csv files and image files in the S3 bucket. Transition the .csv files from S3 Standard to S3 One Zone- Infrequent Access (S3 One Zone-IA) 1 day after they are uploaded. Expire the image files after 30 days.
 - E. Create S3 Lifecycle rules for .csv files and image files in the S3 bucket. Transition the .csv files from S3 Standard to S3 Standard- Infrequent Access (S3 Standard-IA) 1 day after they are uploaded. Keep the image files in Reduced Redundancy Storage (RRS).
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -5659,7 +7809,12 @@ A company has developed a new video game as a web application. The application i
 - C. Place an Amazon CloudFront distribution in front of the web application to cache the scoreboard in a section of the application.
 - D. Create a read replica on Amazon RDS for MySQL to run queries to compute the scoreboard and serve the read traffic to the web application.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5672,7 +7827,12 @@ An ecommerce company wants to use machine learning (ML) algorithms to build and 
 - C. Use a pre-built ML Amazon Machine Image (AMI) from the AWS Marketplace to build and train models. Use Amazon OpenSearch Service to visualize the data.
 - D. Use Amazon QuickSight to build and train models by using calculated fields. Use Amazon QuickSight to visualize the data.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5685,7 +7845,12 @@ A company is running its production and nonproduction environment workloads in m
 - C. Create a service control policy (SCP) to prevent tag modification except by authorized principals.
 - D. Create custom Amazon CloudWatch logs to prevent tag modification.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5698,7 +7863,12 @@ A company hosts its application in the AWS Cloud. The application runs on Amazon
 - C. Create an AWS CloudFormation template to create EC2 instances and a load balancer to be launched when needed. Configure the DynamoDB table as a global table. Configure DNS failover to point to the new disaster recovery Region's load balancer.
 - D. Create an Auto Scaling group and load balancer in the disaster recovery Region. Configure the DynamoDB table as a global table. Create an Amazon CloudWatch alarm to trigger an AWS Lambda function that updates Amazon Route 53 pointing to the disaster recovery load balancer.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5711,7 +7881,12 @@ A company needs to migrate a MySQL database from its on-premises data center to 
 - C. Order an AWS Snowball Edge Compute Optimized with GPU device. Use AWS Database Migration Service (AWS DMS) with AWS Schema Conversion Tool (AWS SCT) to migrate the database with ongoing changes. Send the Snowball device to AWS to finish the migration and continue the ongoing replication
 - D. Order a 1 GB dedicated AWS Direct Connect connection to establish a connection with the data center. Use AWS Database Migration Service (AWS DMS) with AWS Schema Conversion Tool (AWS SCT) to migrate the database with replication of ongoing changes.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5724,7 +7899,12 @@ A company moved its on-premises PostgreSQL database to an Amazon RDS for Postgre
 - C. Buy reserved DB instances for the total workload. Add another Amazon RDS for PostgreSQL DB instance.
 - D. Make the Amazon RDS for PostgreSQL DB instance an on-demand DB instance.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5737,7 +7917,12 @@ A company operates an ecommerce website on Amazon EC2 instances behind an Applic
 - C. Deploy rules to the network ACLs associated with the ALB to block the incomingtrafic.
 - D. Deploy Amazon GuardDuty and enable rate-limiting protection when configuring GuardDuty.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5750,7 +7935,12 @@ A company wants to share accounting data with an external auditor. The data is s
 - C. Copy a snapshot of the database to an Amazon S3 bucket. Create an IAM user. Share the user's keys with the auditor to grant access to the object in the S3 bucket.
 - D. Create an encrypted snapshot of the database. Share the snapshot with the auditor. Allow access to the AWS Key Management Service (AWS KMS) encryption key.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5763,7 +7953,12 @@ A solutions architect configured a VPC that has a small range of IP addresses. T
 - C. Use AWS Transit Gateway to add a transit gateway and connect a second VPC with the first VPUpdate the routes of the transit gateway and VPCs. Create new resources in the subnets of the second VPC.
 - D. Create a second VPC. Create a Site-to-Site VPN connection between the first VPC and the second VPC by using a VPN-hosted solution on Amazon EC2 and a virtual private gateway. Update the route between VPCs to the traffic through the VPN. Create new resources in the subnets of the second VPC.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5777,7 +7972,12 @@ A company used an Amazon RDS for MySQL DB instance during application testing. B
 - D. Use AWS Database Migration Service (AWS DMS) to import the RDS snapshot into Aurora.
 - E. Upload the database dump to Amazon S3. Then use AWS Database Migration Service (AWS DMS) to import the database dump into Aurora.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -5790,7 +7990,12 @@ A company hosts a multi-tier web application on Amazon Linux Amazon EC2 instance
 - C. Create an Amazon CloudFront distribution to host the static web contents from an Amazon S3 bucket.
 - D. Create an AWS Lambda function behind an Amazon API Gateway API to host the static website contents.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5803,7 +8008,12 @@ A company stores several petabytes of data across multiple AWS accounts. The com
 - C. Use AWS Data Exchange to privately publish the required data to the required engineering team accounts.
 - D. Use Lake Formation tag-based access control to authorize and grant cross-account permissions for the required data to the engineering team accounts.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -5816,7 +8026,12 @@ A company wants to host a scalable web application on AWS. The application will 
 - C. Use Amazon EC2 with Auto Scaling and Amazon CloudFront to host the application.
 - D. Use Amazon EC2 with Auto Scaling and Amazon ElastiCache to host the application.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5829,7 +8044,12 @@ A company has hired a solutions architect to design a reliable architecture for 
 - C. Create an additional DB instance along with an Amazon API Gateway and an AWS Lambda function. Configure the application to invoke the Lambda function through API Gateway. Have the Lambda function write the data to the two DB instances.
 - D. Place the EC2 instances in an EC2 Auto Scaling group that has multiple subnets located in multiple Availability Zones. Use Spot Instances instead of On-Demand Instances. Set up Amazon CloudWatch alarms to monitor the health of the instances Update the DB instance to be Multi-AZ, and enable deletion protection.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5842,7 +8062,12 @@ A company is storing 700 terabytes of data on a large network-attached storage (
 - C. Use rsync to copy the data directly from local storage to a designated Amazon S3 bucket over the Direct Connect connection.
 - D. Back up the data on tapes. Ship the tapes to an AWS data center. Mount a target Amazon S3 bucket on the on-premises file system.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5855,7 +8080,12 @@ A company stores data in PDF format in an Amazon S3 bucket. The company must fol
 - C. Turn on S3 Object Lock with compliance retention mode for the S3 bucket. Set the retention period to expire after 7 years. Recopy all existing objects to bring the existing data into compliance.
 - D. Turn on S3 Object Lock with compliance retention mode for the S3 bucket. Set the retention period to expire after 7 years. Use S3 Batch Operations to bring the existing data into compliance.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5868,7 +8098,12 @@ A company has a stateless web application that runs on AWS Lambda functions that
 - C. Create a transit gateway. Attach the transit gateway to the API Gateway endpoint in each Region. Configure the transit gateway to route requests.
 - D. Create an Application Load Balancer in the primary Region. Set the target group to point to the API Gateway endpoint hostnames in each Region.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5881,7 +8116,12 @@ A company has two VPCs named Management and Production. The Management VPC uses 
 - C. Add a second set of VPNs to the Management VPC from a second customer gateway device.
 - D. Add a second VPC peering connection between the Management VPC and the Production VPC.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5894,7 +8134,12 @@ A company runs its application on an Oracle database. The company plans to quick
 - C. Migrate the database to an Amazon EC2 Amazon Machine Image (AMI) for Oracle. Customize the database settings to support third- party features.
 - D. Migrate the database to Amazon RDS for PostgreSQL by rewriting the application code to remove dependency on Oracle APEX.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -5909,7 +8154,12 @@ A company has a three-tier web application that is in a single server. The compa
 - E. Use Elastic Load Balancers in front of the web tier. Control access by using security groups containing references to each layer's security groups.
 - F. Use an Amazon RDS database Multi-AZ cluster deployment in private subnets. Allow database access only from application tier security groups.
 
-<small>Answer: ACF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ACF
+
+</details>
 
 ---
 
@@ -5924,7 +8174,12 @@ A company is migrating its applications and databases to the AWS Cloud. The comp
 - E. Ensure the physical security of the Amazon RDS infrastructure in the data center
 - F. Encryption of the data that moves in transit through Direct Connect
 
-<small>Answer: BCF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BCF
+
+</details>
 
 ---
 
@@ -5937,7 +8192,12 @@ A company runs a Java-based job on an Amazon EC2 instance. The job runs every ho
 - C. Use AWS App2Container (A2C) to containerize the job. Install the container in the existing Amazon Machine Image (AMI). Ensure that the schedule stops the container when the task finishes.
 - D. Configure the existing schedule to stop the EC2 instance at the completion of the job and restart the EC2 instance when the next job starts.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -5950,7 +8210,12 @@ A company wants to implement a backup strategy for Amazon EC2 data and multiple 
 - C. Use Amazon S3 File Gateway to create the backup. Configure the appropriate S3 Lifecycle management.
 - D. Use AWS Backup to create a backup vault that has a vault lock in compliance mode. Create the required backup plan.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5963,7 +8228,12 @@ A company has resources across multiple AWS Regions and accounts. A newly hired 
 - C. Use Workload Discovery on AWS to generate architecture diagrams of the workloads.
 - D. Use AWS X-Ray to view the workload details. Build architecture diagrams with relationships.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -5978,7 +8248,12 @@ A company uses AWS Organizations. The company wants to operate some of its AWS a
 - E. Add an alert to notify the company when each account meets its budget threshold. Add a budget action that selects the IAM identity created with the appropriate config rule to prevent provisioning of additional resources.
 - F. Add an alert to notify the company when each account meets its budget threshold. Add a budget action that selects the IAM identity created with the appropriate service control policy (SCP) to prevent provisioning of additional resources.
 
-<small>Answer: BDF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BDF
+
+</details>
 
 ---
 
@@ -5991,7 +8266,12 @@ A company runs applications on Amazon EC2 instances in one AWS Region. The compa
 - C. Create a backup plan by using AWS Backup. Configure cross-Region backup to the second Region for the EC2 instances.
 - D. Deploy a similar number of EC2 instances in the second Region. Use AWS DataSync to transfer the data from the source Region to the second Region.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6004,7 +8284,12 @@ A company that uses AWS is building an application to transfer data to a product
 - C. Use AWS Transfer Family to transfer the data. Create an AWS Lambda function for IdP authentication.
 - D. Use AWS Storage Gateway to transfer the data. Create an Amazon Cognito identity pool for IdP authentication.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6018,7 +8303,12 @@ A solutions architect is designing a RESTAPI in Amazon API Gateway for a cash pa
 - D. Amazon DynamoDB
 - E. Amazon Elastic Kubernetes Services (Amazon EKS)
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -6031,7 +8321,12 @@ A company uses AWS Organizations to run workloads within multiple AWS accounts. 
 - C. From the Organizations member account billing console, activate a user-defined cost allocation tag named department. Create one cost report in Cost Explorer grouping by the tag name, and filter by EC2.
 - D. From the Organizations member account billing console, activate an AWS-defined cost allocation tag named department. Create one cost report in Cost Explorer grouping by tag name, and filter by EC2.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6044,7 +8339,12 @@ A company wants to securely exchange data between its software as a service (Saa
 - C. Create Amazon AppFlow fiows to transfer the data securely from Salesforce to Amazon S3.
 - D. Create a custom connector for Salesforce to transfer the data securely from Salesforce to Amazon S3.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6057,7 +8357,12 @@ A company is developing a mobile gaming app in a single AWS Region. The app runs
 - C. Create an Amazon CloudFront content delivery network (CDN) endpoint. Create a Network Load Balancer (NLB) behind the endpoint and listening on the TCP and UDP ports. Update the Auto Scaling group to register instances on the NLB. Update CloudFront to use the NLB as the origin.
 - D. Create an Amazon CloudFront content delivery network (CDN) endpoint. Create an Application Load Balancer (ALB) behind the endpoint and listening on the TCP and UDP ports. Update the Auto Scaling group to register instances on the ALB. Update CloudFront to use the ALB as the origin.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6070,7 +8375,12 @@ A company has an application that processes customer orders. The company hosts t
 - C. Write orders to Amazon Simple Notification Service (Amazon SNS). Subscribe the database endpoint to the SNS topic. Use EC2 instances in an Auto Scaling group behind an Application Load Balancer to read from the SNS topic.
 - D. Write orders to an Amazon Simple Queue Service (Amazon SQS) queue when the EC2 instance reaches CPU threshold limits. Use scheduled scaling of EC2 instances in an Auto Scaling group behind an Application Load Balancer to read from the SQS queue and process orders into the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6083,7 +8393,12 @@ An IoT company is releasing a mattress that has sensors to collect data about a 
 - C. Use AWS Lambda with a Python script
 - D. Use AWS Glue with a PySpark job
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6096,7 +8411,12 @@ A company hosts an online shopping application that stores all orders in an Amaz
 - C. Create a read-only replica of the PostgreSQL database in another Availability Zone. Use Amazon Route 53 weighted record sets to distribute requests across the databases.
 - D. Place the RDS for PostgreSQL database in an Amazon EC2 Auto Scaling group with a minimum group size of two. Use Amazon Route 53 weighted record sets to distribute requests across instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6109,7 +8429,12 @@ A company is developing an application to support customer demands. The company 
 - C. Use Provisioned IOPS SSD (io2) EBS volumes with Amazon Elastic Block Store (Amazon EBS) Multi-Attach
 - D. Use General Purpose SSD (gp2) EBS volumes with Amazon Elastic Block Store (Amazon EBS) Multi-Attach
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6122,7 +8447,12 @@ A company designed a stateless two-tier application that uses Amazon EC2 in a si
 - C. Configure the application to use Amazon Route 53 latency-based routing to feed requests to the application
 - D. Configure Amazon Route 53 rules to handle incoming requests and create a Multi-AZ Application Load Balancer
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6135,7 +8465,12 @@ A company uses AWS Organizations. A member account has purchased a Compute Savin
 - C. Migrate additional compute workloads from another AWS account to the account that has the Compute Savings Plan.
 - D. Sell the excess Savings Plan commitment in the Reserved Instance Marketplace.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6148,7 +8483,12 @@ A company is developing a microservices application that will provide a search c
 - C. Design a WebSocket API by using Amazon API Gateway. Host the application in Amazon Elastic Container Service (Amazon ECS) in a private subnet. Create a security group for API Gateway to access Amazon ECS.
 - D. Design a REST API by using Amazon API Gateway. Host the application in Amazon Elastic Container Service (Amazon ECS) in a private subnet. Create a security group for API Gateway to access Amazon ECS.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6161,7 +8501,12 @@ A company stores raw collected data in an Amazon S3 bucket. The data is used for
 - C. Use S3 Lifecycle rules to transition objects from S3 Standard to S3 Intelligent-Tiering
 - D. Use S3 Inventory to identify and transition objects that have not been accessed from S3 Standard to S3 Intelligent-Tiering
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6174,7 +8519,12 @@ A company has applications hosted on Amazon EC2 instances with IPv6 addresses. T
 - C. Create a virtual private gateway and make it the destination of the subnet's route table
 - D. Create an egress-only internet gateway and make it the destination of the subnet's route table
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6187,7 +8537,12 @@ A company is creating an application that runs on containers in a VPC. The appli
 - C. Create a gateway VPC endpoint for Amazon S3. Associate this endpoint with all route tables in the VPC
 - D. Create an interface endpoint for Amazon S3 in the VPC. Associate this endpoint with all route tables in the VPC
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6200,7 +8555,12 @@ A company has a mobile chat application with a data store based in Amazon Dynamo
 - C. Double the number of read capacity units for the new messages table in DynamoDB. Continue to use the existing DynamoDB endpoint.
 - D. Add an Amazon ElastiCache for Redis cache to the application stack. Update the application to point to the Redis cache endpoint instead of DynamoDB.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6213,7 +8573,12 @@ A company hosts a website on Amazon EC2 instances behind an Application Load Bal
 - C. Create an AWS WAF web ACL and associate it with the ALB. Add a rule to the web ACL to cache static files
 - D. Create a second ALB in an alternative AWS Region. Route user traffic to the closest Region to minimize data transfer costs
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6226,7 +8591,12 @@ A company has multiple VPCs across AWS Regions to support and run workloads that
 - C. Use AWS Transit Gateway to manage VPC communication in a single Region and Transit Gateway peering across Regions to manage VPC communications.
 - D. Use AWS PrivateLink across all Regions to connect VPCs across Regions and manage VPC communications
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6239,7 +8609,12 @@ A company is designing a containerized application that will use Amazon Elastic 
 - C. Amazon Elastic File System (Amazon EFS) with the Standard storage class
 - D. Amazon FSx for OpenZFS
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6252,7 +8627,12 @@ A company is expecting rapid growth in the near future. A solutions architect ne
 - C. Create an IAM policy that grants least privilege permission. Attach the policy to the IAM groups
 - D. Create IAM roles. Associate the roles with a permissions boundary that defines the maximum permissions
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6265,7 +8645,12 @@ A group requires permissions to list an Amazon S3 bucket and delete objects from
 - C. 
 - D. 
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6278,7 +8663,12 @@ A law firm needs to share information with the public. The information includes 
 - C. Create a new Amazon S3 bucket with S3 Versioning enabled. Configure an event trigger to run an AWS Lambda function in case of object modification or deletion. Configure the Lambda function to replace the objects with the original versions from a private S3 bucket.
 - D. Upload all files to an Amazon S3 bucket that is configured for static website hosting. Select the folder that contains the files. Use S3 Object Lock with a retention period in accordance with the designated date. Grant read-only IAM permissions to any AWS principals that access the S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6291,7 +8681,12 @@ A company is making a prototype of the infrastructure for its new website by man
 - C. Use AWS Config to record the inventory of resources that are used in the prototype infrastructure. Use AWS Config to deploy the prototype infrastructure into two Availability Zones.
 - D. Use AWS Elastic Beanstalk and configure it to use an automated reference to the prototype infrastructure to automatically deploy new environments in two Availability Zones.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6304,7 +8699,12 @@ A business application is hosted on Amazon EC2 and uses Amazon S3 for encrypted 
 - C. Private subnet
 - D. Virtual private gateway
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6317,7 +8717,12 @@ A company hosts a three-tier web application in the AWS Cloud. A Multi-AZAmazon 
 - C. Implement the adding TTL caching strategy
 - D. Implement the AWS AppConfig caching strategy
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6330,7 +8735,12 @@ A company wants to migrate 100 GB of historical data from an on-premises locatio
 - C. Use AWS Snowball to move the data to an S3 bucket
 - D. Set up an IPsec VPN from the on-premises location to AWS. Use the s3 cp command in the AWS CLI to move the data directly to an S3 bucket
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6343,7 +8753,12 @@ A company containerized a Windows job that runs on .NET 6 Framework under a Wind
 - C. Use Amazon Elastic Container Service (Amazon ECS) on AWS Fargate to run the job. Create a scheduled task based on the container image of the job to run every 10 minutes.
 - D. Use Amazon Elastic Container Service (Amazon ECS) on AWS Fargate to run the job. Create a standalone task based on the container image of the job. Use Windows task scheduler to run the job every 10 minutes.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6357,7 +8772,12 @@ A company wants to move from many standalone AWS accounts to a consolidated, mul
 - D. Create a new organization in AWS Organizations. Configure the organization's authentication mechanism to use AWS Directory Service directly.
 - E. Set up AWS IAM Identity Center (AWS Single Sign-On) in the organization. Configure IAM Identity Center, and integrate it with the company's corporate directory service.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -6370,7 +8790,12 @@ A company is looking for a solution that can store video archives in AWS from ol
 - C. Store the video archives in Amazon S3 Standard-Infrequent Access (S3 Standard-IA).
 - D. Store the video archives in Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA).
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6383,7 +8808,12 @@ A company is building a three-tier application on AWS. The presentation tier wil
 - C. Use Amazon S3 to host static content. Use Amazon Elastic Kubernetes Service (Amazon EKS) with AWS Fargate for compute power. Use a managed Amazon RDS cluster for the database.
 - D. Use Amazon EC2 Reserved Instances to host static content. Use Amazon Elastic Kubernetes Service (Amazon EKS) with Amazon EC2 for compute power. Use a managed Amazon RDS cluster for the database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6396,7 +8826,12 @@ A company seeks a storage solution for its application. The solution must be hig
 - C. Amazon Elastic File System (Amazon EFS) with multiple mount targets
 - D. Amazon Elastic File System (Amazon EFS) with a single mount target and multiple access points
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6409,7 +8844,12 @@ A 4-year-old media company is using the AWS Organizations all features feature s
 - C. Create a service control policy (SCP) to deny access to the billing information. Attach the SCP to the root organizational unit (OU).
 - D. Convert from the Organizations all features feature set to the Organizations consolidated billing feature set.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6422,7 +8862,12 @@ An ecommerce company runs an application in the AWS Cloud that is integrated wit
 - C. Configure an Amazon SNS dead letter queue that has an Amazon Simple Queue Service (Amazon SQS) target with a retention period of 14 days.
 - D. Configure an Amazon SNS dead letter queue that has an Amazon DynamoDB target with a TTL attribute set for a retention period of 14 days.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6435,7 +8880,12 @@ A gaming company uses Amazon DynamoDB to store user information such as geograph
 - C. Configure Amazon DynamoDB Streams. Create an AWS Lambda function to consume the stream and export the data to an Amazon S3 bucket.
 - D. Create an AWS Lambda function to export the data from the database tables to Amazon S3 on a regular basis. Turn on point-in-time recovery for the table.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6448,7 +8898,12 @@ A solutions architect is designing an asynchronous application to process credit
 - C. Use the AWS Lambda event source mapping. Set Amazon Simple Queue Service (Amazon SQS) FIFO queues as the event source. Use AWS KMS keys (SSE-KMS). Add the kms:Decrypt permission for the Lambda execution role.
 - D. Use the AWS Lambda event source mapping. Set Amazon Simple Queue Service (Amazon SQS) standard queues as the event source. Use AWS KMS keys (SSE-KMS) for encryption. Add the encryption key invocation permission for the Lambda function.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6461,7 +8916,12 @@ A company has multiple AWS accounts for development work. Some staff consistentl
 - C. Configure an Amazon EventBridge rule that invokes an AWS Lambda function when an EC2 instance is created. Stop disallowed EC2 instance types.
 - D. Set up AWS Service Catalog products for the staff to create the allowed EC2 instance types. Ensure that staff can deploy EC2 instances only by using the Service Catalog products.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6476,7 +8936,12 @@ A company wants to use artificial intelligence (AI) to determine the quality of 
 - E. Use Amazon Translate to translate text in any language to English.
 - F. Use Amazon Comprehend to create the sentiment analysis reports.
 
-<small>Answer: DEF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DEF
+
+</details>
 
 ---
 
@@ -6489,7 +8954,12 @@ A company uses Amazon EC2 instances to host its internal systems. As part of a d
 - C. The "Action" field does not grant the actions that are required to terminate the EC2 instance.
 - D. The request to terminate the EC2 instance does not originate from the CIDR blocks 192.0.2.0/24 or 203.0.113.0/24.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6502,7 +8972,12 @@ A company is conducting an internal audit. The company wants to ensure that the 
 - C. Configure Amazon Macie to run a data discovery job that uses managed identifiers for the required data types.
 - D. Use Amazon S3 Select to run a report across the S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6516,7 +8991,12 @@ A company uses on-premises servers to host its applications. The company is runn
 - D. Deploy an AWS Storage Gateway volume gateway to replace the block storage.
 - E. Deploy Amazon Elastic File System (Amazon EFS) volumes and mount them to on-premises servers.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -6529,7 +9009,12 @@ A company has a service that reads and writes large amounts of data from an Amaz
 - C. Provision a VPC gateway endpoint. Configure the route table for the private subnet to use the gateway endpoint as the route for all S3 traffic.
 - D. Provision a second NAT gateway. Configure the route table for the private subnet to use this NAT gateway as the destination for all S3 traffic.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6542,7 +9027,12 @@ A company uses Amazon S3 to store high-resolution pictures in an S3 bucket. To m
 - C. Use S3 Batch Operations to delete noncurrent object versions and retain only the two most recent versions.
 - D. Deactivate versioning on the S3 bucket and retain the two most recent versions.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6555,7 +9045,12 @@ A company needs to minimize the cost of its 1 Gbps AWS Direct Connect connection
 - C. Contact an AWS Direct Connect Partner to order a 1 Gbps connection. Share the connection with another AWS account.
 - D. Contact an AWS Direct Connect Partner to order a 200 Mbps hosted connection for an existing AWS account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6569,7 +9064,12 @@ A company has multiple Windows file servers on premises. The company wants to mi
 - D. Order an AWS Snowcone device. Connect the device to the on-premises network. Launch AWS DataSync agents on the device. Schedule DataSync tasks to transfer the data to the FSx for Windows File Server file system.
 - E. Order an AWS Snowball Edge Storage Optimized device. Connect the device to the on-premises network. Copy data to the device by using the AWS CLI. Ship the device back to AWS for import into Amazon S3. Schedule AWS DataSync tasks to transfer the data to the FSx for Windows File Server file system.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -6582,7 +9082,12 @@ A company wants to ingest customer payment data into the company's data lake in 
 - C. Use Amazon Kinesis Data Firehose to ingest data. Use Amazon Kinesis Data Analytics to analyze the data in real time.
 - D. Use Amazon API Gateway to ingest data. Use AWS Lambda to analyze the data in real time.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6596,7 +9101,12 @@ A company runs a website that uses a content management system (CMS) on Amazon E
 - D. Create an Amazon Machine Image (AMI) from the existing EC2 instance. Use the AMI to provision new instances behind an Application Load Balancer as part of an Auto Scaling group. Configure the Auto Scaling group to maintain a minimum of two instances. Configure an accelerator in AWS Global Accelerator for the website
 - E. Create an Amazon Machine Image (AMI) from the existing EC2 instance. Use the AMI to provision new instances behind an Application Load Balancer as part of an Auto Scaling group. Configure the Auto Scaling group to maintain a minimum of two instances. Configure an Amazon CloudFront distribution for the website.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -6609,7 +9119,12 @@ A company runs an infrastructure monitoring service. The company is building a n
 - C. Ensure that the customers create an IAM user in their account with read-only EC2 and CloudWatch permissions. Encrypt and store customer access and secret keys in a secrets management system.
 - D. Ensure that the customers create an Amazon Cognito user in their account to use an IAM role with read-only EC2 and CloudWatch permissions. Encrypt and store the Amazon Cognito user and password in a secrets management system.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6622,7 +9137,12 @@ A company needs to connect several VPCs in the us-east-1 Region that span hundre
 - C. Create an AWS Transit Gateway in the networking team’s AWS account. Configure static routes from each VPC.
 - D. Deploy VPN gateways in each VPC. Create a transit VPC in the networking team’s AWS account to connect to each VPC.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6635,7 +9155,12 @@ A company has Amazon EC2 instances that run nightly batch jobs to process data. 
 - C. Create a new launch template for the Auto Scaling group. Set the instances to Spot Instances. Set a policy to scale out based on CPU usage.
 - D. Create a new launch template for the Auto Scaling group. Increase the instance size. Set a policy to scale out based on CPU usage.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6648,7 +9173,12 @@ A social media company is building a feature for its website. The feature will g
 - C. Generate Amazon S3 presigned URLs in the application. Upload files directly from the user's browser into an S3 bucket.
 - D. Provision an Amazon Elastic File System (Amazon EFS) file system. Upload files directly from the user's browser to the file system.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6661,7 +9191,12 @@ A company has a web application for travel ticketing. The application is based o
 - C. Migrate the database to an Amazon RDS for MySQL database. Deploy MySQL read replicas in each Region. Use the correct Regional endpoint in each Regional deployment for access to the database.
 - D. Migrate the application to an Amazon Aurora Serverless database. Deploy instances of the database to each Region. Use the correct Regional endpoint in each Regional deployment to access the database. Use AWS Lambda functions to process event streams in each Region to synchronize the databases.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6675,7 +9210,12 @@ A company has migrated multiple Microsoft Windows Server workloads to Amazon EC2
 - D. Create a backup vault by using AWS Backup. Use AWS Backup to create a backup plan for the EC2 instances based on tag values. Define the destination for the copy as us-west-2. Specify the backup schedule to run twice daily.
 - E. Create a backup vault by using AWS Backup. Use AWS Backup to create a backup plan for the EC2 instances based on tag values. Specify the backup schedule to run twice daily. Copy on demand to us-west-2.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -6688,7 +9228,12 @@ A company operates a two-tier application for image processing. The application 
 - C. Modify the inbound security group for the application tier. Add a deny rule for the IP addresses that are consuming resources.
 - D. Modify the network ACL for the application tier subnets. Add an inbound deny rule for the IP addresses that are consuming resources.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6701,7 +9246,12 @@ A global marketing company has applications that run in the ap-southeast-2 Regio
 - C. Configure a VPC peering connection between the ap-southeast-2 VPC and the eu-west-1 VPUpdate the subnet route tables. Create an inbound rule in the ap-southeast-2 database security group that allows traffic from the eu-west-1 application server IP addresses.
 - D. Create a transit gateway with a peering attachment between the eu-west-1 VPC and the ap-southeast-2 VPC. After the transit gateways are properly peered and routing is configured, create an inbound rule in the database security group that references the security group ID of the application servers in eu-west-1.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6714,7 +9264,12 @@ A company is developing software that uses a PostgreSQL database schema. The com
 - C. Configure each development environment with its own Amazon Aurora On-Demand PostgreSQL-Compatible database
 - D. Configure each development environment with its own Amazon S3 bucket by using Amazon S3 Object Select
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6727,7 +9282,12 @@ A company uses AWS Organizations with resources tagged by account. The company a
 - C. Require all AWS account owners to review their resources to identify the resources that need to be backed up.
 - D. Use Amazon Inspector to identify all noncompliant resources.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6740,7 +9300,12 @@ A social media company wants to allow its users to upload images in an applicati
 - C. Create a dynamic website hosted on a web server that runs on an Amazon EC2 instance. Configure a process that runs on the EC2 instance to resize the images and store the images in an Amazon S3 bucket.
 - D. Create a dynamic website hosted on an automatically scaling Amazon Elastic Container Service (Amazon ECS) cluster that creates a resize job in Amazon Simple Queue Service (Amazon SQS). Set up an image-resizing program that runs on an Amazon EC2 instance to process the resize jobs.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6753,7 +9318,12 @@ A company is running a microservices application on Amazon EC2 instances. The co
 - C. Recreate nodes in the public subnet. Restrict security groups for EC2 nodes.
 - D. Allow outbound traffic in the security group of the nodes.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6768,7 +9338,12 @@ A company is migrating an on-premises application to AWS. The company wants to u
 - E. Scaling globally to support petabytes of data and tens of millions of requests per minute
 - F. Creating a secondary replica of the cluster by using the AWS Management Console
 
-<small>Answer: BCE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BCE
+
+</details>
 
 ---
 
@@ -6781,7 +9356,12 @@ A company provides an API interface to customers so the customers can retrieve t
 - C. Use an Application Load Balancer and an Amazon Elastic Kubernetes Service (Amazon EKS) cluster.
 - D. Use Amazon API Gateway and AWS Lambda functions with reserved concurrency.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6794,7 +9374,12 @@ A company wants to send all AWS Systems Manager Session Manager logs to an Amazo
 - C. Create a Systems Manager document to upload all server logs to a central S3 bucket. Use Amazon EventBridge to run the Systems Manager document against all servers that are in the account daily.
 - D. Install an Amazon CloudWatch agent. Push all logs to a CloudWatch log group. Create a CloudWatch logs subscription that pushes any incoming log events to an Amazon Kinesis Data Firehose delivery stream. Set Amazon S3 as the destination.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6807,7 +9392,12 @@ An application uses an Amazon RDS MySQL DB instance. The RDS database is becomin
 - C. Change the RDS database instance storage type to Provisioned IOPS
 - D. Back up the RDS database, increase the storage capacity, restore the database, and stop the previous instance
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6820,7 +9410,12 @@ A consulting company provides professional services to customers worldwide. The 
 - C. Create AWS Systems Manager templates for the customers.
 - D. Create AWS Config items for the customers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6833,7 +9428,12 @@ A company is designing a new web application that will run on Amazon EC2 Instanc
 - C. Configure DynamoDB with provisioned read and write by using the DynamoDB Standard Infrequent Access (DynamoDB Standard-IA) table class. Set DynamoDB auto scaling to a maximum defined capacity.
 - D. Configure DynamoDB in on-demand mode by using the DynamoDB Standard Infrequent Access (DynamoDB Standard-IA) table class.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6846,7 +9446,12 @@ A retail company has several businesses. The IT team for each business manages i
 - C. In every business account, create an IAM role named BU_ROLE with a policy that gives the role access to the DynamoDB table and a trust policy to trust a specific role in the inventory application account. In the inventory account, create a role named APP_ROLE that allows access to the STS AssumeRole API operation. Configure the application to use APP_ROLE and assume the crossaccount role BU_ROLE to read the DynamoDB table.
 - D. Integrate DynamoDB with AWS Certificate Manager (ACM). Generate identity certificates to authenticate DynamoDB. Configure the application to use the correct certificate to authenticate and read the DynamoDB table.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6860,7 +9465,12 @@ A company runs container applications by using Amazon Elastic Kubernetes Service
 - D. Use Amazon API Gateway and connect it to Amazon EKS.
 - E. Use AWS App Mesh to observe network activity.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -6873,7 +9483,12 @@ A company runs a microservice-based serverless web application. The application 
 - C. Edge-optimized Amazon API Gateway with AWS Lambda functions
 - D. Amazon Athena Federated Query with a DynamoDB connector
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6886,7 +9501,12 @@ A company wants to analyze and troubleshoot Access Denied errors and Unauthorize
 - C. Search CloudTrail logs with Amazon Athena queries to identify the errors.
 - D. Search CloudTrail logs with Amazon QuickSight. Create a dashboard to identify the errors.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -6899,7 +9519,12 @@ A company wants to add its existing AWS usage cost to its operation cost dashboa
 - C. Configure AWS Budgets actions to send usage cost data to the company through FTP.
 - D. Create AWS Budgets reports for usage cost data. Send the data to the company through SMTP.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6912,7 +9537,12 @@ A solutions architect is reviewing the resilience of an application. The solutio
 - C. Create an Amazon ElastiCache for Memcached cluster to handle the load during failover.
 - D. Set up an Amazon RDS proxy for the database. Update the application to use the proxy endpoint.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6925,7 +9555,12 @@ A company has a regional subscription-based streaming service that runs in a sin
 - C. Deploy the web tier and the application tier to a second Region. Create an Aurora PostgreSQL database in the second Region. Use AWS Database Migration Service (AWS DMS) to replicate the primary database to the second Region. Use Amazon Route 53 health checks with a failover routing policy to the second Region.
 - D. Deploy the web tier and the application tier to a second Region. Use an Amazon Aurora global database to deploy the database in the primary Region and the second Region. Use Amazon Route 53 health checks with a failover routing policy to the second Region. Promote the secondary to primary as needed.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6938,7 +9573,12 @@ A data analytics company wants to migrate its batch processing system to AWS. Th
 - C. Use AWS Transfer Family to create an FTP server to store incoming files on an Amazon Elastic Block Store (Amazon EBS) volume. Configure a job queue in AWS Batch. Use an Amazon S3 event notification when each file arrives to invoke the job in AWS Batch. Delete the files after the job has processed the files.
 - D. Use AWS Transfer Family to create an FTP server to store incoming files in Amazon S3 Standard. Create an AWS Lambda function to process the files and to delete the files after they are processed. Use an S3 event notification to invoke the Lambda function when the files arrive.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6951,7 +9591,12 @@ A company is migrating its workloads to AWS. The company has transactional and s
 - C. Migrate the data to Amazon S3 Use Amazon Macie for data security and protection
 - D. Migrate the database to Amazon RDS. Use Amazon CloudWatch Logs for data security and protection.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -6964,7 +9609,12 @@ A company has an online gaming application that has TCP and UDP multiplayer gami
 - C. Add AWS Global Accelerator in front of the NLBs. Configure a Global Accelerator endpoint to use the correct listener ports.
 - D. Add an Amazon API Gateway endpoint behind the NLBs. Enable API caching. Override method caching for the different stages.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -6977,7 +9627,12 @@ A company needs to integrate with a third-party data feed. The data feed sends a
 - C. Create an Amazon Simple Notification Service (Amazon SNS) topic. Attach the topic to the Lambda function. Provide the public hostname of the SNS topic to the third party for the webhook.
 - D. Create an Amazon Simple Queue Service (Amazon SQS) queue. Attach the queue to the Lambda function. Provide the public hostname of the SQS queue to the third party for the webhook.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -6992,7 +9647,12 @@ A company has a workload in an AWS Region. Customers connect to and access the w
 - E. Create multiple API endpoints for each customer in API Gateway.
 - F. Create a custom domain name in API Gateway for the REST API. Import the certificate from AWS Certificate Manager (ACM).
 
-<small>Answer: CFD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CFD
+
+</details>
 
 ---
 
@@ -7005,7 +9665,12 @@ A company stores data in Amazon S3. According to regulations, the data must not 
 - C. Use Amazon Macie. Create an Amazon EventBridge rule to filter the SensitiveData:S3Object/Personal event type from Macie findings and to send an Amazon Simple Queue Service (Amazon SQS) notification to the security team.
 - D. Use Amazon GuardDuty. Create an Amazon EventBridge rule to filter the CRITICAL event type from GuardDuty findings and to send an Amazon Simple Queue Service (Amazon SQS) notification to the security team.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7018,7 +9683,12 @@ A company wants to build a logging solution for its multiple AWS accounts. The c
 - C. Transition objects to the S3 Glacier Flexible Retrieval storage class 30 days after creation. Write an expiration action that directs Amazon S3 to delete objects after 90 days.
 - D. Transition objects to the S3 One Zone-Infrequent Access (S3 One Zone-IA) storage class 30 days after creation. Move all objects to the S3 Glacier Flexible Retrieval storage class after 90 days. Write an expiration action that directs Amazon S3 to delete objects after 90 days.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7031,7 +9701,12 @@ A company is building an Amazon Elastic Kubernetes Service (Amazon EKS) cluster 
 - C. Create the Amazon EKS cluster with default options. Use the Amazon Elastic Block Store (Amazon EBS) Container Storage Interface (CSI) driver as an add-on.
 - D. Create a new AWS Key Management Service (AWS KMS) key with the alias/aws/ebs alias. Enable default Amazon Elastic Block Store (Amazon EBS) volume encryption for the account.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7044,7 +9719,12 @@ A company wants to provide data scientists with near real-time read-only access 
 - C. Change the setup from a Single-AZ to a Multi-AZ instance deployment. Provide two additional read replicas for the data scientists.
 - D. Change the setup from a Single-AZ to a Multi-AZ cluster deployment with two readable standby instances. Provide read endpoints to the data scientists.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7057,7 +9737,12 @@ A company runs a three-tier web application in the AWS Cloud that operates acros
 - C. Migrate the MySQL database to Amazon DynamoDB Use DynamoDB Accelerator (DAX) to cache reads. Store the session data in DynamoDB. Migrate the web server to an Auto Scaling group that is in three Availability Zones.
 - D. Migrate the MySQL database to Amazon RDS for MySQL in a single Availability Zone. Use Amazon ElastiCache for Redis with high availability to store session data and to cache reads. Migrate the web server to an Auto Scaling group that is in three Availability Zones.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7070,7 +9755,12 @@ A global video streaming company uses Amazon CloudFront as a content distributio
 - C. Encrypt the data for the content that the company distributes. Set up a custom error message.
 - D. Create a new URL for restricted content. Set up a time-restricted access policy for signed URLs.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7083,7 +9773,12 @@ A company wants to use the AWS Cloud to improve its on-premises disaster recover
 - C. Use AWS Elastic Disaster Recovery configured to replicate disk changes to AWS as a pilot light.
 - D. Use third-party backup software to capture backups every night. Store a secondary set of backups in Amazon S3.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7096,7 +9791,12 @@ A company has an on-premises server that uses an Oracle database to process and 
 - C. Use Amazon RDS deployed in a Multi-AZ cluster deployment to create an Oracle database. Direct the reporting functions to use the reader instance in the cluster deployment.
 - D. Use Amazon RDS deployed in a Multi-AZ instance deployment to create an Amazon Aurora database. Direct the reporting functions to the reader instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7111,7 +9811,12 @@ A company wants to build a web application on AWS. Client access requests to the
 - E. Use AWS Amplify to serve the frontend web content with HTML, CSS, and JS. Use an integrated Amazon CloudFront configuration.
 - F. Use Amazon S3 static web hosting with PHP, CSS, and JS. Use Amazon CloudFront to serve the frontend web content.
 
-<small>Answer: ACE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ACE
+
+</details>
 
 ---
 
@@ -7124,7 +9829,12 @@ A media company uses an Amazon CloudFront distribution to deliver content over t
 - C. Use origin access control (OAC) to limit the access of non-premium customers.
 - D. Generate and activate field-level encryption to block non-premium customers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7138,7 +9848,12 @@ A company runs Amazon EC2 instances in multiple AWS accounts that are individual
 - D. Create an organization in AWS Organizations in a new payer account. Invite the other AWS accounts to join the organization from the management account.
 - E. Create an organization in AWS Organizations in the existing AWS account with the existing EC2 instances and Savings Plan. Invite the other AWS accounts to join the organization from the management account.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -7151,7 +9866,12 @@ A retail company uses a regional Amazon API Gateway API for its public REST APIs
 - C. Create a new API Gateway endpoint with a new version of the API in OpenAPI JSON file format. Use the import-to-update operation in overwrite mode into the API in API Gateway. Deploy the new version of the API to the production stage.
 - D. Create a new API Gateway endpoint with new versions of the API definitions. Create a custom domain name for the new API Gateway API. Point the Route 53 alias record to the new API Gateway API custom domain name.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7164,7 +9884,12 @@ A company wants to direct its users to a backup static error page if the company
 - C. Set up a Route 53 active-active configuration with the ALB and an Amazon EC2 instance that hosts a static error page as endpoints. Configure Route 53 to send requests to the instance only if the health checks fail for the ALB.
 - D. Update the Route 53 records to use a multivalue answer routing policy. Create a health check. Direct traffic to the website if the health check passes. Direct traffic to a static error page that is hosted in Amazon S3 if the health check does not pass.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7177,7 +9902,12 @@ A recent analysis of a company's IT expenses highlights the need to reduce backu
 - C. Set up an Amazon EFS file system that connects with the backup applications using the iSCSI interface.
 - D. Set up AWS Storage Gateway to connect with the backup applications using the iSCSI-virtual tape library (VTL) interface.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7190,7 +9920,12 @@ A company has data collection sensors at different locations. The data collectio
 - C. Use AWS Lambda to deliver streaming data and store the data to Amazon S3.
 - D. Use AWS Database Migration Service (AWS DMS) to deliver streaming data to Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7203,7 +9938,12 @@ A company has separate AWS accounts for its finance, data analytics, and develop
 - C. Use AWS CloudFormation to automatically provision only the AWS services that each department can use.
 - D. Set up a list of products in AWS Service Catalog in the AWS accounts to manage and control the usage of specific AWS services.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7216,7 +9956,12 @@ A company has created a multi-tier application for its ecommerce website. The we
 - C. Configure an internet gateway and attach it to the VPModify the private subnet route table to direct internet-bound traffic to the internet gateway.
 - D. Configure a virtual private gateway and attach it to the VPC. Modify the private subnet route table to direct internet-bound traffic to the virtual private gateway.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7230,7 +9975,12 @@ A company is using AWS Key Management Service (AWS KMS) keys to encrypt AWS Lamb
 - D. Allow the Lambda execution role in the AWS KMS key policy.
 - E. Allow the Lambda resource policy in the AWS KMS key policy.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -7243,7 +9993,12 @@ A company has a financial application that produces reports. The reports average
 - C. Use S3 Intelligent-Tiering. Configure S3 Intelligent-Tiering to transition the reports to S3 Standard-Infrequent Access (S3 Standard-IA) and S3 Glacier.
 - D. Use S3 Standard. Use an S3 Lifecycle rule to transition the reports to S3 Glacier Deep Archive after 7 days.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7256,7 +10011,12 @@ A company needs to optimize the cost of its Amazon EC2 instances. The company al
 - C. Purchase All Upfront Reserved Instances for a 1-year term.
 - D. Purchase an All Upfront EC2 Instance Savings Plan for a 1-year term.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7269,7 +10029,12 @@ A solutions architect needs to review a company's Amazon S3 buckets to discover 
 - C. Configure Amazon Inspector to analyze the data that is in Amazon S3.
 - D. Configure Amazon GuardDuty to analyze the data that is in Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7282,7 +10047,12 @@ A company's SAP application has a backend SQL Server database in an on-premises 
 - C. Use the memory optimized instance family for both the application and the database.
 - D. Use the high performance computing (HPC) optimized instance family for the application. Use the memory optimized instance family for the database.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7295,7 +10065,12 @@ A company runs an application in a VPC with public and private subnets. The VPC 
 - C. Implement an interface VPC endpoint for Amazon SQS. Configure the endpoint to use the public subnets. Attach an Amazon SQS access policy to the interface VPC endpoint that allows requests from only a specified VPC endpoint.
 - D. Implement a gateway endpoint for Amazon SQS. Add a NAT gateway to the private subnets. Attach an IAM role to the EC2 instances that allows access to the SQS queue.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7308,7 +10083,12 @@ A solutions architect is using an AWS CloudFormation template to deploy a three-
 - C. Use the parameter section in the AWS CloudFormation template to have the user input access and secret keys from an already-created IAM user that has the required permissions to read and write from the DynamoDB tables.
 - D. Create an IAM user in the AWS CloudFormation template that has the required permissions to read and write from the DynamoDB tables. Use the GetAtt function to retrieve the access and secret keys, and pass them to the application instances through the user data.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7321,7 +10101,12 @@ A solutions architect manages an analytics application. The application stores l
 - C. Use Amazon EMR to process the S3 data. Use Amazon Kinesis Data Streams to move the S3 data into Amazon Redshift so that the data can be enriched.
 - D. Use AWS Glue to process the S3 data. Use AWS Lake Formation with the Amazon Redshift data to enrich the S3 data.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7334,7 +10119,12 @@ A company has two VPCs that are located in the us-west-2 Region within the same 
 - C. Set up a VPC peering connection between the VPCs. Update the route tables of each VPC to use the VPC peering connection for inter- VPC communication.
 - D. Set up a 1 GB AWS Direct Connect connection between the VPCs. Update the route tables of each VPC to use the Direct Connect connection for inter-VPC communication.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7348,7 +10138,12 @@ A company hosts multiple applications on AWS for different product lines. The ap
 - D. Activate the selected tag from each AWS account.
 - E. Activate the selected tag from the Organizations management account.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -7361,7 +10156,12 @@ A company's solutions architect is designing an AWS multi-account solution that 
 - C. Use AWS Service Catalog to create accounts in Organizations. Use an AWS CloudTrail organization trail to identify the changes to the OU hierarchy.
 - D. Use AWS CloudFormation templates to create accounts in Organizations. Use the drift detection operation on a stack to identify the changes to the OU hierarchy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7374,7 +10174,12 @@ A company's website handles millions of requests each day, and the number of req
 - C. Set up Amazon ElastiCache for Memcached between the DynamoDB table and the web application. Route all read requests through Memcached.
 - D. Set up Amazon DynamoDB Streams on the table, and have AWS Lambda read from the table and populate Amazon ElastiCache. Route all read requests through ElastiCache.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7388,7 +10193,12 @@ A solutions architect needs to ensure that API calls to Amazon DynamoDB from Ama
 - D. Create an elastic network interface for the endpoint in each of the subnets of the VPC.
 - E. Create a security group entry in the endpoint's security group to provide access.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -7401,7 +10211,12 @@ A company runs its applications on both Amazon Elastic Kubernetes Service (Amazo
 - C. Use AWS Systems Manager to collect and view the cluster information.
 - D. Use Amazon EKS Anywhere as the primary cluster to view the other clusters with native Kubernetes commands.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7414,7 +10229,12 @@ A company is building an ecommerce application and needs to store sensitive cust
 - C. Store sensitive data in Amazon S3. Use AWS Key Management Service (AWS KMS) server-side encryption to encrypt the data. Use S3 bucket policies to restrict access.
 - D. Store sensitive data in Amazon FSx for Windows Server. Mount the file share on application servers. Use Windows file permissions to restrict access.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7427,7 +10247,12 @@ A company has an on-premises MySQL database that handles transactional data. The
 - C. Use AWS Database Migration Service (AWS DMS) to migrate the database to Amazon Aurora. Turn on Aurora Auto Scaling.
 - D. Use AWS Database Migration Service (AWS DMS) to migrate the database to Amazon DynamoDB. Configure an Auto Scaling policy.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7440,7 +10265,12 @@ A company runs multiple Amazon EC2 Linux instances in a VPC across two Availabil
 - C. Create a file system on a Provisioned IOPS SSD (io2) Amazon Elastic Block Store (Amazon EBS) volume. Attach the EBS volume to all the EC2 instances.
 - D. Create file systems on Amazon Elastic Block Store (Amazon EBS) volumes that are attached to each EC2 instance. Synchronize the EBS volumes across the different EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7453,7 +10283,12 @@ A solutions architect is designing a workload that will store hourly energy cons
 - C. Use Amazon API Gateway with AWS Lambda functions to receive the data from the sensors, process the data, and store the data in a Microsoft SQL Server Express database on an Amazon EC2 instance.
 - D. Use an Elastic Load Balancer that is supported by an Auto Scaling group of Amazon EC2 instances to receive and process the data from the sensors. Use an Amazon Elastic File System (Amazon EFS) shared file system to store the processed data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7466,7 +10301,12 @@ A solutions architect is designing the storage architecture for a new web applic
 - C. Amazon Elastic Block Store (Amazon EBS) volumes with Amazon CloudFront
 - D. AWS Storage Gateway with Amazon ElastiCache
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7479,7 +10319,12 @@ An Amazon EventBridge rule targets a third-party API. The third-party API has no
 - C. Check for the events in Amazon CloudWatch Logs.
 - D. Check the trails in AWS CloudTrail for the EventBridge events.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7492,7 +10337,12 @@ A company has a large workload that runs every Friday evening. The workload runs
 - C. Create an Auto Scaling group that uses manual scaling.
 - D. Create an Auto Scaling group that uses automatic scaling.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7505,7 +10355,12 @@ A company is creating a REST API. The company has strict requirements for the us
 - C. Use AWS Certificate Manager (ACM) to create a certificate that is signed by the third-party CA. Import the certificate into AWS Certificate Manager (ACM). Create an AWS Lambda function with a Lambda function URL. Configure the Lambda function URL to use the certificate.
 - D. Create a certificate in AWS Certificate Manager (ACM) that is signed by the third-party CA. Create an AWS Lambda function with a Lambda function URL. Configure the Lambda function URL to use the certificate.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7518,7 +10373,12 @@ A company runs an application on AWS. The application receives inconsistent amou
 - C. Provision an Amazon Aurora Serverless v2 database with a minimum capacity of 1 Aurora capacity unit (ACU).
 - D. Provision an Amazon RDS for MySQL database with 2 GiB of memory.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7531,7 +10391,12 @@ A company wants to use an event-driven programming model with AWS Lambda. The co
 - C. Increase the memory of the Lambda functions.
 - D. Configure Lambda SnapStart.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7544,7 +10409,12 @@ A financial services company launched a new application that uses an Amazon RDS 
 - C. Migrate the existing RDS for MySQL database to an Amazon EC2 instance that runs MySQL. Purchase an instance reservation for the EC2 instance.
 - D. Migrate the existing RDS for MySQL database to an Amazon Elastic Container Service (Amazon ECS) cluster that uses MySQL container images to run tasks.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7557,7 +10427,12 @@ A company deploys its applications on Amazon Elastic Kubernetes Service (Amazon 
 - C. Create an Amazon RDS database with Multi-AZ DB cluster deployment.
 - D. Create an Amazon RDS database configured with cross-Region read replicas.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7570,7 +10445,12 @@ A company is building a RESTful serverless web application on AWS by using Amazo
 - C. Interface VPC endpoint
 - D. Edge-optimized endpoint
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7583,7 +10463,12 @@ A company uses an Amazon CloudFront distribution to serve content pages for its 
 - C. Use AWS Certificate Manager (ACM) to create a certificate. Use DNS validation for the domain.
 - D. Use AWS Certificate Manager (ACM) to create a certificate. Use email validation for the domain.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7596,7 +10481,12 @@ A company deployed a serverless application that uses Amazon DynamoDB as a datab
 - C. Migrate the database to Amazon RDS.
 - D. Use Amazon ElastiCache for Redis.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7609,7 +10499,12 @@ A company runs an application that uses Amazon RDS for PostgreSQL. The applicati
 - C. Create a custom AWS Lambda function to start and stop the database based on minimum CPU utilization.
 - D. Purchase All Upfront reserved DB instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7622,7 +10517,12 @@ A company uses locally attached storage to run a latency-sensitive application o
 - C. Configure an Auto Scaling group with an Amazon EC2 instance. Use an Amazon FSx for OpenZFS file system to run the application.
 - D. Host the application on an Amazon EC2 instance. Use an Amazon Elastic Block Store (Amazon EBS) GP3 volume to run the application.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7635,7 +10535,12 @@ A company runs a stateful production application on Amazon EC2 instances. The ap
 - C. Set the Auto Scaling group's minimum capacity to two. Deploy four Spot Instances in one Availability Zone.
 - D. Set the Auto Scaling group's minimum capacity to four. Deploy two On-Demand Instances in one Availability Zone and two Spot Instances in a second Availability Zone.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7648,7 +10553,12 @@ An ecommerce company uses Amazon Route 53 as its DNS provider. The company hosts
 - C. Set up a latency routing policy. Associate the policy with us-west-1.
 - D. Set up a weighted routing policy. Split the traffic evenly between eu-central-1 and the on-premises data center.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7661,7 +10571,12 @@ A company has 5 PB of archived data on physical tapes. The company needs to pres
 - C. Order multiple AWS Snowball devices that have Tape Gateway. Copy the physical tapes to virtual tapes in Snowball. Ship the Snowball devices to AWS. Create a lifecycle policy to move the tapes to Amazon S3 Glacier Deep Archive.
 - D. Configure an on-premises Tape Gateway. Create virtual tapes in the AWS Cloud. Use backup software to copy the physical tape to the virtual tape.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7674,7 +10589,12 @@ A company is deploying an application that processes large quantities of data in
 - C. Configure the EC2 instances with dedicated tenancy.
 - D. Configure the EC2 instances with shared tenancy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7687,7 +10607,12 @@ A solutions architect is designing a disaster recovery (DR) strategy to provide 
 - C. Purchase regional Reserved Instances in the failover Region.
 - D. Purchase a Capacity Reservation in the failover Region.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7700,7 +10625,12 @@ A company has five organizational units (OUs) as part of its organization in AWS
 - C. Create a new R&D AWS account in the new organization. Migrate resources from the prior R&D AWS account to the new R&D AWS account.
 - D. Have the R&D AWS account join the new organization. Make the new management account a member of the prior organization.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7713,7 +10643,12 @@ A company is designing a solution to capture customer activity in different web 
 - C. Configure an Amazon API Gateway endpoint in front of an Amazon Kinesis Data Firehose that stores the information that the company receives in an Amazon S3 bucket. Use an API Gateway Lambda authorizer to resolve authorization.
 - D. Configure a Gateway Load Balancer (GWLB) in front of an Amazon Elastic Container Service (Amazon ECS) container instance that stores the information that the company receives on an Amazon Elastic File System (Amazon EFS) file system. Use an AWS Lambda function to resolve authorization.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7726,7 +10661,12 @@ An ecommerce company wants a disaster recovery solution for its Amazon RDS DB in
 - C. Use cross-Region replication every 24 hours to copy native backups to an Amazon S3 bucket.
 - D. Copy automatic snapshots to another Region every 24 hours.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7739,7 +10679,12 @@ A company runs a web application on Amazon EC2 instances in an Auto Scaling grou
 - C. Use an AWS Storage Gateway cached volume to store session data. Update the application to use AWS Storage Gateway cached volume to store the session state.
 - D. Use Amazon RDS to store the session state. Update the application to use Amazon RDS to store the session state.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -7752,7 +10697,12 @@ A company migrated a MySQL database from the company's on-premises data center t
 - C. Export the data to Amazon S3. Use Amazon Athena to query the S3 bucket.
 - D. Resize the DB instance to accommodate the additional workload.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7765,7 +10715,12 @@ A company runs a container application by using Amazon Elastic Kubernetes Servic
 - C. Use an AWS Lambda function to connect the requests to Amazon EKS.
 - D. Use Amazon API Gateway to connect the requests to Amazon EKS.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7778,7 +10733,12 @@ A company uses AWS and sells access to copyrighted images. The company’s globa
 - C. Use Amazon EC2 instances that are behind Application Load Balancers (ALBs) to store the images. Deploy the instances only in the countries the company services. Provide customers with links to the ALBs for their specific country's instances.
 - D. Use Amazon S3 to store the images. Use Amazon CloudFront to distribute the images with geographic restrictions. Provide a signed URL for each customer to access the data in CloudFront.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7791,7 +10751,12 @@ A solutions architect is designing a highly available Amazon ElastiCache for Red
 - C. Use a Multi-AZ Redis cluster with more than one read replica in the replication group.
 - D. Use Redis shards that contain multiple nodes with Auto Scaling turned on.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7804,7 +10769,12 @@ A company plans to migrate to AWS and use Amazon EC2 On-Demand Instances for its
 - C. Launch the EC2 On-Demand Instances with hibernation turned on. Configure EC2 Auto Scaling warm pools during the next testing phase.
 - D. Launch EC2 On-Demand Instances with Capacity Reservations. Start additional EC2 instances during the next testing phase.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7817,7 +10787,12 @@ A company's applications run on Amazon EC2 instances in Auto Scaling groups. The
 - C. Use dynamic scaling to change the size of the Auto Scaling group.
 - D. Use schedule scaling to change the size of the Auto Scaling group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7830,7 +10805,12 @@ An ecommerce application uses a PostgreSQL database that runs on an Amazon EC2 i
 - C. Migrate the PostgreSQL database to Amazon RDS for PostgreSQL with a larger instance type.
 - D. Migrate the PostgreSQL database to Amazon Redshift to accommodate increased usage.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7843,7 +10823,12 @@ A company hosts an internal serverless application on AWS by using Amazon API Ga
 - C. Create an Amazon CloudWatch alarm to initiate a Lambda function as a target for the alarm at the beginning of each day.
 - D. Increase the Lambda function memory.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7858,7 +10843,12 @@ A research company uses on-premises devices to generate data for analysis. The c
 - E. Set up an Amazon Redshift cluster to query the data that is in Amazon S3. Provide access to analysts.
 - F. Setup Amazon Athena to query the data that is in Amazon S3. Provide access to analysts.
 
-<small>Answer: CEF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CEF
+
+</details>
 
 ---
 
@@ -7873,7 +10863,12 @@ A company wants to use Amazon Elastic Container Service (Amazon ECS) clusters an
 - E. Physical maintenance of Outposts components
 - F. Providing extra capacity for Amazon ECS clusters to mitigate server failures and maintenance events
 
-<small>Answer: ACE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ACE
+
+</details>
 
 ---
 
@@ -7886,7 +10881,12 @@ A company is planning to migrate a TCP-based application into the company's VPC.
 - C. Deploy an Amazon CloudFront distribution that listens on the TCP port that the application requires. Use an Application Load Balancer as the origin.
 - D. Deploy an Amazon API Gateway API that is configured with the TCP port that the application requires. Configure AWS Lambda functions with provisioned concurrency to process the requests.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7899,7 +10899,12 @@ A company runs its critical database on an Amazon RDS for PostgreSQL DB instance
 - C. Use data import from Amazon S3 to migrate the database to an Aurora PostgreSQL DB cluster.
 - D. Use the pg_dump utility to back up the RDS for PostgreSQL database. Restore the backup to a new Aurora PostgreSQL DB cluster.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7912,7 +10917,12 @@ A company's infrastructure consists of hundreds of Amazon EC2 instances that use
 - C. Use AWS Backup to set up a backup plan for the entire group of EC2 instances. Use the AWS Backup API or the AWS CLI to speed up the restore process for multiple EC2 instances.
 - D. Create an AWS Lambda function to take a snapshot of the EBS storage that is attached to each EC2 instance and copy the Amazon Machine Images (AMIs). Create another Lambda function to perform the restores with the copied AMIs and attach the EBS storage.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7925,7 +10935,12 @@ A company recently migrated to the AWS Cloud. The company wants a serverless sol
 - C. Use AWS Glue to process the data in parallel.
 - D. Use several AWS Lambda functions to process the data in parallel.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7938,7 +10953,12 @@ A company will migrate 10 PB of data to Amazon S3 in 6 weeks. The current data c
 - C. Use the AWS CLI and multiple copy processes to send the data directly to Amazon S3.
 - D. Order multiple AWS Snowball devices. Copy the data to the devices. Send the devices to AWS to copy the data to Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -7951,7 +10971,12 @@ A company has several on-premises Internet Small Computer Systems Interface (ISC
 - C. Deploy an AWS Storage Gateway volume gateway that is configured with stored volumes.
 - D. Deploy an AWS Storage Gateway volume gateway that is configured with cached volumes.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7964,7 +10989,12 @@ A solutions architect is designing an application that will allow business users
 - C. Store all the objects in S3 Standard with an S3 Lifecycle rule to transition the objects to S3 One Zone-Infrequent Access (S3 One Zone- IA) after 30 days.
 - D. Store all the objects in S3 Intelligent-Tiering with an S3 Lifecycle rule to transition the objects to S3 Standard-Infrequent Access (S3 Standard-IA) after 30 days.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -7977,7 +11007,12 @@ A company has migrated a two-tier application from its on-premises data center t
 - C. Create an Amazon S3 bucket. Update the application to store documents in the S3 bucket. Store the object metadata in the existing database.
 - D. Create an Amazon DynamoDB table. Update the application to use DynamoDB. Use AWS Database Migration Service (AWS DMS) to migrate data from the Oracle database to DynamoDB.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -7990,7 +11025,12 @@ A company has an application that serves clients that are deployed in more than 
 - C. Store the IP addresses in an Amazon DynamoDB table. Configure an AWS Lambda authorization function on the ALB to validate that incoming requests are from the registered IP addresses.
 - D. Configure the network ACL on the subnet that contains the public interface of the ALB. Update the ingress rules on the network ACL with entries for each of the registered IP addresses.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8003,7 +11043,12 @@ A company is building a data analysis platform on AWS by using AWS Lake Formatio
 - C. Create an AWS Lambda function that removes sensitive information before Lake Formation ingests the data.
 - D. Create an AWS Lambda function that periodically queries and removes sensitive information from Lake Formation tables.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8016,7 +11061,12 @@ A company deploys Amazon EC2 instances that run in a VPC. The EC2 instances load
 - C. Set up an AWS Transit Gateway connection from the VPC to the S3 buckets. Create an AWS Site-to-Site VPN connection between the company and the VPC.
 - D. Set up proxy EC2 instances that have routes to NAT gateways. Configure the proxy EC2 instances to fetch S3 data and feed the application instances.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8029,7 +11079,12 @@ A company has an application with a REST-based interface that allows data to be 
 - C. Use Amazon Simple Notification Service (Amazon SNS) to ingest the data. Put the EC2 instances in an Auto Scaling group behind an Application Load Balancer.
 - D. Repackage the application as a container. Deploy the application using Amazon Elastic Container Service (Amazon ECS) using the EC2 launch type with an Auto Scaling group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8042,7 +11097,12 @@ A company has an application that runs on Amazon EC2 instances in a private subn
 - C. Configure a NAT gateway. Update the S3 bucket policy to allow access from the NAT gateway. Update the application to use the new NAT gateway.
 - D. Configure a VPC endpoint. Update the S3 bucket policy to allow access from the VPC endpoint. Update the application to use the new VPC endpoint.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8055,7 +11115,12 @@ A company uses Amazon Elastic Kubernetes Service (Amazon EKS) to run a container
 - C. Implement an AWS Lambda function to encrypt the information by using AWS Key Management Service (AWS KMS).
 - D. Use AWS Systems Manager Parameter Store to encrypt the information by using AWS Key Management Service (AWS KMS).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8068,7 +11133,12 @@ A company is designing a new multi-tier web application that consists of the fol
 - C. Deploy a Network Load Balancer with a target group that contains the application servers' Auto Scaling group. Configure the network ACL to allow only the web servers to access the application servers.
 - D. Deploy an Application Load Balancer with a target group that contains the application servers' Auto Scaling group. Configure the security group to allow only the web servers to access the application servers.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8081,7 +11151,12 @@ A company runs a critical, customer-facing application on Amazon Elastic Kuberne
 - C. Configure AWS CloudTrail to capture data events. Query CloudTrail by using Amazon OpenSearch Service.
 - D. Configure Amazon CloudWatch Container Insights in the existing EKS cluster. View the metrics and logs in the CloudWatch console.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8094,7 +11169,12 @@ A company has deployed its newest product on AWS. The product runs in an Auto Sc
 - C. Configure Amazon GuardDuty to monitor and report findings to AWS Security Hub.
 - D. Configure AWS Config to monitor and report findings to Amazon EventBridge.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8108,7 +11188,12 @@ A company wants to migrate an on-premises data center to AWS. The data center ho
 - D. Manually use an operating system copy command to push the data into the AWS destination.
 - E. Install an AWS DataSync agent in the on-premises data center. Use a DataSync task between the on-premises location and AWS.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -8121,7 +11206,12 @@ A company wants to use Amazon FSx for Windows File Server for its Amazon EC2 ins
 - C. Create an FSx for Windows File Server file system in us-east-1 that has a Multi-AZ deployment type. Use AWS Backup to create a daily backup plan that includes a backup rule that copies the backup to us-west-2. Configure AWS Backup Vault Lock in compliance mode for a target vault in us-west-2. Configure a minimum duration of 5 years.
 - D. Create an FSx for Windows File Server file system in us-east-1 that has a Single-AZ 2 deployment type. Use AWS Backup to create a daily backup plan that includes a backup rule that copies the backup to us-west-2. Configure AWS Backup Vault Lock in governance mode for a target vault in us-west-2. Configure a minimum duration of 5 years.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8134,7 +11224,12 @@ A solutions architect is designing a security solution for a company that wants 
 - C. Create a service control policy (SCP) that prohibits changes to CloudTrail, and attach it the developer accounts.
 - D. Create a service-linked role for CloudTrail with a policy condition that allows changes only from an Amazon Resource Name (ARN) in the management account.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8147,7 +11242,12 @@ A company is planning to deploy a business-critical application in the AWS Cloud
 - C. Provisioned IOPS SSD Amazon Elastic Block Store (Amazon EBS) volume
 - D. Throughput Optimized HDD Amazon Elastic Block Store (Amazon EBS) volume
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8160,7 +11260,12 @@ An online photo-sharing company stores its photos in an Amazon S3 bucket that ex
 - C. Create a second S3 bucket in us-east-1 across multiple Availability Zones. Create an S3 Lifecycle rule to save photos into the second S3 bucket.
 - D. Create a second S3 bucket in us-east-1. Configure S3 event notifications on object creation and update events to invoke an AWS Lambda function to copy photos from the existing S3 bucket to the second S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8174,7 +11279,12 @@ A company is creating a new web application for its subscribers. The application
 - D. Deploy the static content into an Amazon S3 bucket. Provision an Amazon CloudFront distribution with the S3 bucket as the origin.
 - E. Deploy the web servers for static content across a fieet of Amazon EC2 instances in Auto Scaling groups. Configure the instances to periodically refresh the content from an Amazon Elastic File System (Amazon EFS) volume.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -8187,7 +11297,12 @@ A company uses Amazon API Gateway to manage its REST APIs that third-party servi
 - C. Set up API Gateway with an Amazon CloudFront distribution. Configure AWS Shield in CloudFront.
 - D. Set up API Gateway with an Amazon CloudFront distribution. Configure AWS WAF in CloudFront.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8200,7 +11315,12 @@ A company wants to provide users with access to AWS resources. The company has 1
 - C. Define cross-account roles with the appropriate policies attached. Map the roles to the Active Directory groups.
 - D. Configure Security Assertion Markup Language (SAML) 2 0-based federation. Create roles with the appropriate policies attached Map the roles to the Active Directory groups.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8213,7 +11333,12 @@ A company is hosting a website behind multiple Application Load Balancers. The c
 - C. Configure Amazon Route 53 with a geolocation policy
 - D. Configure Amazon Route 53 with a geoproximity routing policy
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8226,7 +11351,12 @@ A company stores its data on premises. The amount of data is growing beyond the 
 - C. Create an Amazon S3 File Gateway on premises Configure the S3 File Gateway to perform the online data transfer to an S3 bucket
 - D. Configure an accelerator in Amazon S3 Transfer Acceleration on premises. Configure the accelerator to perform the online data transfer to an S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8239,7 +11369,12 @@ A company wants to migrate two DNS servers to AWS. The servers host a total of a
 - C. Migrate the servers to AWS by using AWS Server Migration Service (AWS SMS). Configure Amazon CloudWatch alarms and notifications to alert the company about any downtime.
 - D. Launch an Amazon EC2 instance in an Auto Scaling group across two Availability Zones. Import zone files. Set the desired capacity to 1 and the maximum capacity to 3 for the Auto Scaling group. Configure scaling alarms to scale based on CPU utilization.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8252,7 +11387,12 @@ A global company runs its applications in multiple AWS accounts in AWS Organizat
 - C. Configure S3 Storage Lens to report the incomplete multipart upload object count.
 - D. Create an S3 Multi-Region Access Point to report the incomplete multipart upload object count.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8265,7 +11405,12 @@ A company runs a production database on Amazon RDS for MySQL. The company wants 
 - C. Use AWS Database Migration Service (AWS DMS) to replicate the data to the upgraded new version of Amazon RDS for MySQL.
 - D. Use Amazon RDS Blue/Green Deployments to deploy and test production changes.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8278,7 +11423,12 @@ A solutions architect is creating a data processing job that runs once daily and
 - C. Use an Amazon Elastic Container Service (Amazon ECS) Fargate task triggered by an Amazon EventBridge scheduled event.
 - D. Use an Amazon Elastic Container Service (Amazon ECS) task running on Amazon EC2 triggered by an Amazon EventBridge scheduled event.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8291,7 +11441,12 @@ A social media company wants to store its database of user profiles, relationshi
 - C. Use Amazon Quantum Ledger Database (Amazon QLDB) to store the information. Use Amazon Kinesis Data Streams to process changes in the database.
 - D. Use Amazon Quantum Ledger Database (Amazon QLDB) to store the information. Use Neptune Streams to process changes in the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8304,7 +11459,12 @@ A company is creating a new application that will store a large amount of data. 
 - C. Store the data in an Amazon Elastic File System (Amazon EFS) file system. Mount the file system on the application instances.
 - D. Store the data in an Amazon Elastic Block Store (Amazon EBS) Provisioned IOPS volume shared between the application instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8317,7 +11477,12 @@ A company manages an application that stores data on an Amazon RDS for PostgreSQ
 - C. Create a read replica from the source DB instance. Serve read traffic from the read replica.
 - D. Use Amazon Kinesis Data Firehose between the application and Amazon RDS to increase the concurrency of database requests.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8330,7 +11495,12 @@ A company collects 10 GB of telemetry data daily from various machines. The comp
 - C. Configure cross-account access for the S3 bucket to the accounts that the agencies own.
 - D. Set up an IAM user for each analyst in the source data account. Grant each user access to the S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8343,7 +11513,12 @@ A company uses Amazon FSx for NetApp ONTAP in its primary AWS Region for CIFS an
 - C. Create an FSx for ONTAP instance in the secondary Region. Use NetApp SnapMirror to replicate data from the primary Region to the secondary Region.
 - D. Create an Amazon Elastic File System (Amazon EFS) volume. Migrate the current data to the volume. Replicate the volume to the secondary Region.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8356,7 +11531,12 @@ A development team is creating an event-based application that uses AWS Lambda f
 - C. Create an SNS subscription that sends the event to Amazon Simple Queue Service (Amazon SQS). Configure the SOS queue to trigger a Lambda function.
 - D. Create an SNS subscription that sends the event to AWS Server Migration Service (AWS SMS). Configure the Lambda function to poll from the SMS event.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8370,7 +11550,12 @@ A solutions architect is designing a new service behind Amazon API Gateway. The 
 - D. Amazon EC2 Auto Scaling
 - E. MySQL-compatible Amazon Aurora
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -8383,7 +11568,12 @@ A company collects and shares research data with the company's employees all ove
 - C. Create an S3 File Gateway. Create a share for uploading and a share for downloading. Allow employees to mount shares on their local computers to use S3 File Gateway.
 - D. Configure AWS Transfer Family SFTP endpoints. Select the custom identity provider options. Use AWS Secrets Manager to manage the user credentials Instruct employees to use Transfer Family.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8396,7 +11586,12 @@ A company is building a new furniture inventory application. The company has dep
 - C. Increase the number of EC2 instances in each Availability Zone
 - D. Adjust the frequency of the health checks on the ALB's target group
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8410,7 +11605,12 @@ A company has an application workfiow that uses an AWS Lambda function to downlo
 - D. Create a new IAM policy with the kms:decrypt permission and attach the policy to the Lambda function.
 - E. Create a new IAM role with the kms:decrypt permission and attach the execution role to the Lambda function.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -8423,7 +11623,12 @@ A company wants to monitor its AWS costs for financial review. The cloud operati
 - C. Enable Cost and Usage Reports for member accounts. Deliver the reports to Amazon S3 Use Amazon Redshift for analysis.
 - D. Enable Cost and Usage Reports for member accounts. Deliver the reports to Amazon Kinesis. Use Amazon QuickSight tor analysis.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8436,7 +11641,12 @@ A company wants to run a gaming application on Amazon EC2 instances that are par
 - C. Deploy an Amazon Route 53 record set with a weighted policy to route traffic appropriately.
 - D. Deploy a NAT instance that is configured with port forwarding to the EC2 instances in the Auto Scaling group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8449,7 +11659,12 @@ A company runs several websites on AWS for its different brands. Each website ge
 - C. Store the logs in Amazon OpenSearch Service. Use OpenSearch Service for analysis.
 - D. Store the logs in an Amazon EMR cluster Use a supported open-source framework for SQL-based analysis.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8463,7 +11678,12 @@ An international company has a subdomain for each country that the company opera
 - D. Validate domain ownership by email address. Switch to DNS validation by adding the required DNS records to the DNS provider.
 - E. Validate domain ownership for the domain by adding the required DNS records to the DNS provider.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -8476,7 +11696,12 @@ A company is required to use cryptographic keys in its on-premises key manager. 
 - C. Use the default AWS Key Management Service (AWS KMS) managed key store.
 - D. Use a custom key store backed by an AWS CloudHSM cluster.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8489,7 +11714,12 @@ A solutions architect needs to host a high performance computing (HPC) workload 
 - C. Use Amazon FSx for Lustre as a shared file system. Link the file system to an Amazon S3 bucket for postprocessing.
 - D. Configure AWS Resource Access Manager to share an Amazon S3 bucket so that it can be mounted to all instances for processing and postprocessing.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8502,7 +11732,12 @@ A gaming company is building an application with Voice over IP capabilities. The
 - C. Create an Amazon CloudFront distribution that includes multiple origins.
 - D. Create an Application Load Balancer that uses path-based routing.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8515,7 +11750,12 @@ A weather forecasting company needs to process hundreds of gigabytes of data wit
 - C. Use Amazon Elastic File System (Amazon EFS) with Bursting Throughput mode.
 - D. Use Amazon Elastic File System (Amazon EFS) with Provisioned Throughput mode.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8528,7 +11768,12 @@ An ecommerce company runs a PostgreSQL database on premises. The database stores
 - C. Configure the General Purpose SSD (gp3) EBS volume storage type and provision 15,000 IOPS.
 - D. Configure the EBS magnetic volume type to achieve maximum IOPS.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8541,7 +11786,12 @@ A company wants to migrate its on-premises Microsoft SQL Server Enterprise editi
 - C. Migrate to Amazon DynamoDB. Use DynamoDB on-demand replicas for reporting purposes
 - D. Migrate to Amazon Aurora MySQL. Use Aurora read replicas for reporting purposes
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8554,7 +11804,12 @@ A company stores a large volume of image files in an Amazon S3 bucket. The image
 - C. Transition the objects to S3 Standard-Infrequent Access (S3 Standard-IA) after 180 days, S3 Glacier Instant Retrieval after 360 days, and S3 Glacier Deep Archive after 5 years.
 - D. Transition the objects to S3 Standard-Infrequent Access (S3 Standard-IA) after 180 days, S3 Glacier Flexible Retrieval after 360 days, and S3 Glacier Deep Archive after 5 years.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8567,7 +11822,12 @@ A company has a large data workload that runs for 6 hours each day. The company 
 - C. Configure a transient cluster that runs the primary node on an On-Demand Instance and the core nodes and task nodes on Spot Instances.
 - D. Configure a long-running cluster that runs the primary node on an On-Demand Instance, the core nodes on Spot Instances, and the task nodes on Spot Instances.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8580,7 +11840,12 @@ A company maintains an Amazon RDS database that maps users to cost centers. The 
 - C. Create an AWS CloudFormation stack to deploy an AWS Lambda function. Configure the Lambda function to look up the appropriate cost center from the RDS database and to tag resources. Create an Amazon EventBridge scheduled rule to invoke the CloudFormation stack.
 - D. Create an AWS Lambda function to tag the resources with a default value. Configure an Amazon EventBridge rule that reacts to AWS CloudTrail events to invoke the Lambda function when a resource is missing the cost center tag.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8593,7 +11858,12 @@ A company recently migrated its web application to the AWS Cloud. The company us
 - C. Keep the backend code on the EC2 instance. Create an Amazon ElastiCache for Redis cluster that has Multi-AZ enabled. Configure the ElastiCache for Redis cluster in cluster mode. Copy the frontend resources to Amazon S3. Configure the backend code to reference the EC2 instance.
 - D. Configure an Amazon CloudFront distribution with an Amazon S3 endpoint to an S3 bucket that is configured to host the static content. Configure an Application Load Balancer that targets an Amazon Elastic Container Service (Amazon ECS) service that runs AWS Fargate tasks for the PHP application. Configure the PHP application to use an Amazon ElastiCache for Redis cluster that runs in multiple Availability Zones.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8607,7 +11877,12 @@ A company runs a web application on Amazon EC2 instances in an Auto Scaling grou
 - D. Create a second target group. Add Elastic IP addresses to the EC2 instances.
 - E. Create a web ACL in AWS WAF. Associate the web ACL with the endpoint
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -8620,7 +11895,12 @@ A company runs a website that stores images of historical events. Website users 
 - C. Store images in Amazon S3 Standard. Use S3 Standard to directly deliver images by using a static website.
 - D. Store images in Amazon S3 Standard-Infrequent Access (S3 Standard-IA). Use S3 Standard-IA to directly deliver images by using a static website.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8633,7 +11913,12 @@ A company has multiple AWS accounts in an organization in AWS Organizations that
 - C. Create an AWS managed prefix list. Use an AWS Security Hub policy to enforce the security group update across the organization. Use an AWS Lambda function to update the prefix list automatically when the CIDR ranges change.
 - D. Create security groups in a central administrative AWS account. Create an AWS Firewall Manager common security group policy for the whole organization. Select the previously created security groups as primary groups in the policy.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8647,7 +11932,12 @@ A company uses an on-premises network-attached storage (NAS) system to provide f
 - D. Attach the EC2 instances to an Amazon FSx for OpenZFS file system.
 - E. Attach the EC2 instances to an Amazon FSx for NetApp ONTAP file system.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -8660,7 +11950,12 @@ A company is relocating its data center and wants to securely transfer 50 TB of 
 - C. AWS Snowball Edge Storage Optimized
 - D. AWS Storage Gateway
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8673,7 +11968,12 @@ A company hosts an application on Amazon EC2 On-Demand Instances in an Auto Scal
 - C. Configure a dynamic scaling policy for the Auto Scaling group to launch new instances based on CPU utilization.
 - D. Configure a scheduled scaling policy for the Auto Scaling group to launch new instances before peak hours.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8686,7 +11986,12 @@ A company runs applications on AWS that connect to the company's Amazon RDS data
 - C. Use a custom proxy that runs on Amazon EC2 as an intermediary to the database. Change the applications to use the custom proxy endpoint.
 - D. Use an AWS Lambda function to provide connection pooling with a target group configuration for the database. Change the applications to use the Lambda function.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8699,7 +12004,12 @@ A company uses AWS Cost Explorer to monitor its AWS costs. The company notices t
 - C. Delete all expired and unused snapshots to reduce snapshot costs.
 - D. Delete all nonessential snapshots. Use Amazon Data Lifecycle Manager to create and manage the snapshots according to the company's snapshot policy requirements.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8712,7 +12022,12 @@ A company is developing a new application on AWS. The application consists of an
 - C. Create an S3 bucket policy that restricts bucket access to the ECS task execution role. Create a VPC endpoint for Amazon RDS for MySQL. Update the RDS for MySQL security group to allow access from only the subnets that the ECS cluster will generate tasks in.
 - D. Create a VPC endpoint for Amazon RDS for MySQL. Update the RDS for MySQL security group to allow access from only the subnets that the ECS cluster will generate tasks in. Create a VPC endpoint for Amazon S3. Update the S3 bucket policy to allow access from only the S3 VPC endpoint.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8725,7 +12040,12 @@ A company has a web application that runs on premises. The application experienc
 - C. Configure an Elastic Beanstalk environment to use compute optimized instances. Configure the environment to scale on a schedule.
 - D. Configure an Elastic Beanstalk environment to use burstable performance instances in unlimited mode. Configure the environment to scale on predictive metrics.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8738,7 +12058,12 @@ A company has customers located across the world. The company wants to use autom
 - C. Use AWS Organizations to set up the infrastructure. Use AWS Service Catalog to track changes.
 - D. Use AWS CloudFormation to set up the infrastructure. Use AWS Service Catalog to track changes.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8752,7 +12077,12 @@ A startup company is hosting a website for its customers on an Amazon EC2 instan
 - D. Use AWS DataSync to synchronize the database data across multiple EC2 instances.
 - E. Create an Application Load Balancer to distribute traffic to an Auto Scaling group of EC2 instances that are distributed across two Availability Zones.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -8765,7 +12095,12 @@ A company is moving its data and applications to AWS during a multiyear migratio
 - C. Create interface endpoints for Amazon S3. Use the interface endpoints to securely access the data from the Region and the on- premises location.
 - D. Use an AWS Key Management Service (AWS KMS) key to access the data securely from the Region and the on-premises location.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8778,7 +12113,12 @@ A company created a new organization in AWS Organizations. The organization has 
 - C. Create a resource group in AWS Resource Groups to validate that the tags are applied to all resources in all accounts.
 - D. Create a tag policy in Organizations that has a list of allowed application names.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8791,7 +12131,12 @@ A company runs its databases on Amazon RDS for PostgreSQL. The company wants a s
 - C. Integrate AWS Secrets Manager with Amazon RDS for PostgreSQL to automate password rotation.
 - D. Integrate AWS Systems Manager Parameter Store with Amazon RDS for PostgreSQL to automate password rotation.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8804,7 +12149,12 @@ A company performs tests on an application that uses an Amazon DynamoDB table. T
 - C. Purchase DynamoDB reserved capacity for a 1-year term.
 - D. Purchase DynamoDB reserved capacity for a 3-year term.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8817,7 +12167,12 @@ A company runs its applications on Amazon EC2 instances. The company performs pe
 - C. Create AWS Pricing Calculator estimates for the current running workload pricing details.
 - D. Use Amazon CloudWatch to monitor costs and to identify unusual spending.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8830,7 +12185,12 @@ A marketing company receives a large amount of new clickstream data in Amazon S3
 - C. Create external tables in a Hive metastore. Configure Spark jobs in Amazon EMR to query the data.
 - D. Configure an AWS Glue crawler to crawl the data. Configure Amazon Kinesis Data Analytics to use SQL to query the data.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8843,7 +12203,12 @@ A company runs an SMB file server in its data center. The file server stores lar
 - C. Create an Amazon FSx File Gateway to increase the company's storage space. Create an Amazon S3 Lifecycle policy to transition the data after 7 days.
 - D. Configure access to Amazon S3 for each user. Create an S3 Lifecycle policy to transition the data to S3 Glacier Flexible Retrieval after 7 days.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8857,7 +12222,12 @@ A company runs a web application on Amazon EC2 instances in an Auto Scaling grou
 - D. Create an Amazon ElastiCache cluster. Configure the application to cache query results in the ElastiCache cluster.
 - E. Configure the Auto Scaling group subnets to ensure that the EC2 instances are provisioned in the same Availability Zone as the DB instance.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -8870,7 +12240,12 @@ A company uses Amazon EC2 instances and Amazon Elastic Block Store (Amazon EBS) 
 - C. Add tags to the snapshots. Create retention rules in Recycle Bin for EBS snapshots that have the tags.
 - D. Lock the EBS snapshots to prevent deletion.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8883,7 +12258,12 @@ A company's application uses Network Load Balancers, Auto Scaling groups, Amazon
 - C. Create a trail in AWS CloudTrail. Configure VPC Flow Logs to send the log data to the trail. Use Amazon Kinesis Data Streams to stream the logs from the trail to OpenSearch Service.
 - D. Create a trail in AWS CloudTrail. Configure VPC Flow Logs to send the log data to the trail. Use Amazon Kinesis Data Firehose to stream the logs from the trail to OpenSearch Service.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8896,7 +12276,12 @@ A company is developing an application that will run on a production Amazon Elas
 - C. Create an Auto Scaling group that has a launch configuration that uses Spot Instances. Configure the user data to add the nodes to the EKS cluster.
 - D. Create a managed node group that contains only On-Demand Instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8909,7 +12294,12 @@ A company stores sensitive data in Amazon S3. A solutions architect needs to cre
 - C. Create an AWS managed key by using AWS Key Management Service (AWS KMS). Use the new key to encrypt the S3 objects by using server-side encryption with AWS KMS keys (SSE-KMS).
 - D. Download S3 objects to an Amazon EC2 instance. Encrypt the objects by using customer managed keys. Upload the encrypted objects back into Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -8924,7 +12314,12 @@ A company wants to back up its on-premises virtual machines (VMs) to AWS. The co
 - E. Configure an S3 Lifecycle policy to expire the objects after 30 days.
 - F. Configure the backup solution to tag the objects with a 30-day retention period
 
-<small>Answer: CEF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CEF
+
+</details>
 
 ---
 
@@ -8937,7 +12332,12 @@ A solutions architect needs to copy files from an Amazon S3 bucket to an Amazon 
 - C. Create an AWS DataSync location for both the destination S3 bucket and the EFS file system. Create a task for the destination S3 bucket and the EFS file system. Set the transfer mode to transfer all data.
 - D. Launch an Amazon EC2 instance in the same VPC as the file system. Mount the file system. Create a script to routinely synchronize all objects that changed in the origin S3 bucket to the destination S3 bucket and the mounted file system.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -8950,7 +12350,12 @@ A company uses Amazon EC2 instances and stores data on Amazon Elastic Block Stor
 - C. Create an external KMS key with imported key material. Use the key to encrypt the EBS volumes.
 - D. Use an AWS owned key to encrypt the EBS volumes.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -8963,7 +12368,12 @@ A company needs a solution to enforce data encryption at rest on Amazon EC2 inst
 - C. Use Amazon Macie to detect unencrypted Amazon Elastic Block Store (Amazon EBS) volumes. Use AWS Systems Manager Automation rules to automatically encrypt existing and new EBS volumes.
 - D. Use Amazon inspector to detect unencrypted Amazon Elastic Block Store (Amazon EBS) volumes. Use AWS Systems Manager Automation rules to automatically encrypt existing and new EBS volumes.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -8977,7 +12387,12 @@ A company is migrating its multi-tier on-premises application to AWS. The applic
 - D. Migrate the web tier to an AWS Lambda function.
 - E. Migrate the database to an Amazon DynamoDB table.
 
-<small>Answer: CE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CE
+
+</details>
 
 ---
 
@@ -8990,7 +12405,12 @@ A company wants to migrate its web applications from on premises to AWS. The com
 - C. Deploy the applications in eu-central-1. Extend the company’s VPC from eu-central-1 to the regional edge caches in Amazon CloudFront.
 - D. Deploy the applications in AWS Wavelength Zones by extending the company’s VPC from eu-central-1 to the chosen Wavelength Zone.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9003,7 +12423,12 @@ A company’s ecommerce website has unpredictable traffic and uses AWS Lambda fu
 - C. Point the client driver at an RDS custom endpoint. Deploy the Lambda functions outside a VPC.
 - D. Point the client driver at an RDS proxy endpoint. Deploy the Lambda functions outside a VPC.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9016,7 +12441,12 @@ A company is creating an application. The company stores data from tests of the 
 - C. Create a transit gateway. Create VPC attachments for the VPC connections. Create VPN attachments for the on-premises connections.
 - D. Create an AWS Direct Connect connection between the on-premises locations and a central VPC. Connect the central VPC to other VPCs by using peering connections.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9030,7 +12460,12 @@ A company that uses AWS needs a solution to predict the resources needed for man
 - D. Configure an AWS Lambda function with a function URL that uses an Amazon Forecast predictor to create a prediction based on the inputs.
 - E. Train an Amazon Forsecast predictor by using the historical data in the S3 bucket.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -9043,7 +12478,12 @@ A company manages AWS accounts in AWS Organizations. AWS IAM Identity Center (AW
 - C. Create individual users in IAM Identity Center. Create new developer and administrator groups in IAM Identity Center. Create new permission sets that include the appropriate IAM policies for each group. Assign the new groups to the appropriate accounts. Assign the new permission sets to the new groups. When new users are hired, add them to the appropriate group.
 - D. Create individual users in IAM Identity Center. Create new permission sets that include the appropriate IAM policies for each user. Assign the users to the appropriate accounts. Grant additional IAM permissions to the users from within specific accounts. When new users are hired, add them to IAM Identity Center and assign them to the accounts.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9056,7 +12496,12 @@ A company wants to standardize its Amazon Elastic Block Store (Amazon EBS) volum
 - C. Create an AWS Identity and Access Management (IAM) policy that requires the use of tags on EBS volumes. Use AWS Cost Explorer to display resources that are not properly tagged. Encrypt the untagged resources manually.
 - D. Create an AWS Config rule for Amazon EBS to evaluate if a volume is encrypted and to fiag the volume if it is not encrypted.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9070,7 +12515,12 @@ A company regularly uploads GB-sized files to Amazon S3. After the company uploa
 - D. Fetch multiple byte-ranges of an object in parallel.
 - E. Add a random prefix to each object when uploading the files.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -9084,7 +12534,12 @@ A solutions architect is designing a shared storage solution for a web applicati
 - D. Use AWS DataSync to perform continuous synchronization of data between EC2 hosts in the Auto Scaling group.
 - E. Create an Amazon S3 bucket to store the web content. Set the metadata for the Cache-Control header to no-cache. Use Amazon CloudFront to deliver the content.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -9097,7 +12552,12 @@ A company is deploying an application in three AWS Regions using an Application 
 - C. Create a CNAME record with a failover policy.
 - D. Create a CNAME record with a geoproximity policy.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9110,7 +12570,12 @@ A company has a web application that includes an embedded NoSQL database. The ap
 - C. Modify the Auto Scaling group to use EC2 instances across three Availability Zones. Maintain the embedded NoSQL database with its replication service on the EC2 instances.
 - D. Modify the Auto Scaling group to use EC2 instances across three Availability Zones. Migrate the embedded NoSQL database to Amazon DynamoDB by using AWS Database Migration Service (AWS DMS).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9123,7 +12588,12 @@ A company is building a shopping application on AWS. The application offers a ca
 - C. Configure Amazon OpenSearch Service to cache catalog data from Amazon DynamoDB and shopping cart data from the user's session.
 - D. Configure an Amazon EC2 instance with Amazon Elastic Block Store (Amazon EBS) storage for the catalog and shopping cart. Configure automated snapshots.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9136,7 +12606,12 @@ A company is building a microservices-based application that will be deployed on
 - C. Configure AWS CloudTrail to review the API calls. Build an Amazon QuickSight dashboard to observe the microservice interactions.
 - D. Use AWS Trusted Advisor to understand the performance of the application.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9149,7 +12624,12 @@ A company needs to provide customers with secure access to its data. The company
 - C. Provision a separate AWS Key Management Service (AWS KMS) key for each customer. Encrypt the data server-side. In each KMS key policy, deny decryption of data for all principals except an IAM role that the customer provides.
 - D. Provision an AWS Certificate Manager (ACM) certificate for each customer. Encrypt the data client-side. In the public certificate policy, deny access to the certificate for all principals except an IAM role that the customer provides.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9162,7 +12642,12 @@ A solutions architect creates a VPC that includes two public subnets and two pri
 - C. Launch a NAT gateway in a private subnet. Update the route table for the private subnets to add a default route to the NAT gateway. Attach a public Elastic IP address to the NAT gateway.
 - D. Ensure that the security group that is attached to the EC2 instance allows HTTP traffic on port 80 and HTTPS traffic on port 443. Ensure that the DNS record for the website resolves to the public IP address of the EC2 instance.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9175,7 +12660,12 @@ A company is deploying a new application to Amazon Elastic Kubernetes Service (A
 - C. Create an Amazon Elastic Block Store (Amazon EBS) volume. Register the volume in a StorageClass object on an EKS cluster. Use the same volume for all containers.
 - D. Create Amazon Elastic File System (Amazon EFS) file systems in the same Availability Zones where EKS worker nodes are placed. Register the file systems in a StorageClass object on an EKS cluster. Create an AWS Lambda function to synchronize the data between file systems.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9188,7 +12678,12 @@ A company has an application that uses Docker containers in its local data cente
 - C. Use Amazon Elastic Container Service (Amazon ECS) with an AWS Fargate launch type. Create an Amazon S3 bucket. Map the S3 bucket as a persistent storage volume mounted in the containers.
 - D. Use Amazon Elastic Container Service (Amazon ECS) with an Amazon EC2 launch type. Create an Amazon Elastic File System (Amazon EFS) volume. Add the EFS volume as a persistent storage volume mounted in the containers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9202,7 +12697,12 @@ A gaming company wants to launch a new internet-facing application in multiple A
 - D. Configure Amazon Route 53 to use a geolocation routing policy to distribute the traffic.
 - E. Configure Amazon CloudFront to handle the traffic and route requests to the application in each Region
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -9215,7 +12715,12 @@ A city has deployed a web application running on Amazon EC2 instances behind an 
 - C. Subscribe to AWS Shield Advanced. Engage the AWS DDoS Response Team (DRT) to integrate mitigating controls into the service.
 - D. Create an Amazon CloudFront distribution for the application, and set the ALB as the origin. Enable an AWS WAF web ACL on the distribution, and configure rules to block traffic from unknown sources
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9228,7 +12733,12 @@ A company copies 200 TB of data from a recent ocean survey onto AWS Snowball Edg
 - C. Create an Amazon S3 bucket and an Amazon Elastic File System (Amazon EFS) file system. Import the data into the S3 bucket. Copy the data from the S3 bucket to the EFS file system. Access the EFS file system from the HPC cluster instances.
 - D. Create an Amazon FSx for Lustre file system. Import the data directly into the FSx for Lustre file system. Access the FSx for Lustre file system from the HPC cluster instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9241,7 +12751,12 @@ A company has NFS servers in an on-premises data center that need to periodicall
 - C. Set up an SFTP sync using AWS Transfer for SFTP to sync data from on premises to Amazon S3.
 - D. Set up an AWS Direct Connect connection between the on-premises data center and a VPC, and copy the data to Amazon S3.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9254,7 +12769,12 @@ An online video game company must maintain ultra-low latency for its game server
 - C. Configure a Network Load Balancer with the required protocol and ports for the internet traffic. Specify the EC2 instances as the targets.
 - D. Launch an identical set of game servers on EC2 instances in separate AWS Regions. Route internet traffic to both sets of EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9268,7 +12788,12 @@ A company runs a three-tier application in a VPC. The database tier uses an Amaz
 - D. Define an AWS Database Migration Service (AWS DMS) task with change data capture (CDC) to migrate the data.
 - E. Promote the Aurora PostgreSQL read replica to a standalone Aurora PostgreSQL DB cluster when the replica lag is zero.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -9281,7 +12806,12 @@ A company hosts a database that runs on an Amazon RDS instance that is deployed 
 - C. Instruct the development team to manually export the new entries for the day in the database at the end of each day.
 - D. Use Amazon ElastiCache to cache the common queries that the script runs against the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9294,7 +12824,12 @@ A company is using an Application Load Balancer (ALB) to present its application
 - C. Enable ALB access logging to Amazon S3. Open each file in a text editor, and search each line for the relevant information.
 - D. Use Amazon EMR on a dedicated Amazon EC2 instance to directly query the ALB to acquire traffic access log information.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9307,7 +12842,12 @@ A company wants to use NAT gateways in its AWS environment. The company's Amazon
 - C. Create public NAT gateways in public subnets in the same VPCs as the EC2 instances.
 - D. Create private NAT gateways in public subnets in the same VPCs as the EC2 instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9321,7 +12861,12 @@ A company has an organization in AWS Organizations. The company runs Amazon EC2 
 - D. Create an OU for the production account. Attach the SCP to the OU. Move the production member account into the new OU.
 - E. Create an OU for the required accounts. Attach the SCP to the OU. Move the nonproduction member accounts into the new OU.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -9334,7 +12879,12 @@ A company’s website hosted on Amazon EC2 instances processes classified data s
 - C. Set up a NAT gateway to access resources outside the private subnet.
 - D. Set up an access key ID and a secret access key to access the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9347,7 +12897,12 @@ An ecommerce company runs its application on AWS. The application uses an Amazon
 - C. Add additional reader instances to the Aurora cluster. Create an Amazon RDS Proxy target group for the Aurora cluster.
 - D. Create an Amazon ElastiCache for Redis cache. Replicate data from the Aurora cluster to Redis by using AWS Database Migration Service (AWS DMS) with a write-around approach.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9360,7 +12915,12 @@ A company is designing a web application on AWS. The application will use a VPN 
 - C. Create a Route 53 private hosted zone. Associate the private hosted zone with the VPC.
 - D. Create a Route 53 public hosted zone. Create a record for each service to allow service communication
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9373,7 +12933,12 @@ A company is running a photo hosting service in the us-east-1 Region. The servic
 - C. Store the photos in the Amazon S3 Standard storage class. Set up an S3 Lifecycle policy to move photos older than 30 days to the S3 Standard-Infrequent Access (S3 Standard-IA) storage class. Use the object tags to keep track of metadata.
 - D. Store the photos in the Amazon S3 Glacier storage class. Set up an S3 Lifecycle policy to move photos older than 30 days to the S3 Glacier Deep Archive storage class. Store the photo metadata and its S3 location in Amazon OpenSearch Service.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9386,7 +12951,12 @@ A company runs a highly available web application on Amazon EC2 instances behind
 - C. Use the round robin routing algorithm based on the RequestCount and TargetResponseTime CloudWatch metrics.
 - D. Use the least outstanding requests algorithm based on the RequestCount and TargetResponseTime CloudWatch metrics.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9399,7 +12969,12 @@ A company uses Amazon EC2, AWS Fargate, and AWS Lambda to run multiple workloads
 - C. Create an AWS Budgets report for the Savings Plans budget. Set the frequency to daily.
 - D. Create a Savings Plans alert subscription. Enable all notification options. Enter an email address to receive notifications.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9412,7 +12987,12 @@ A company runs a real-time data ingestion solution on AWS. The solution consists
 - C. Deploy an Application Load Balancer (ALB) that uses private subnets. Configure an ALB security group inbound rule to allow inbound traffic from the VPC CIDR block for HTTPS protocol.
 - D. Deploy a Network Load Balancer (NLB) that uses private subnets. Configure an NLB listener for HTTPS communication over the internet.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9425,7 +13005,12 @@ A company wants to migrate an on-premises legacy application to AWS. The applica
 - C. Create an AWS Transfer Family SFTP internal server in two Availability Zones. Use Amazon Elastic File System (Amazon EFS) storage. Create an AWS Step Functions state machine to process order files. Use Amazon EventBridge Scheduler to invoke the state machine to periodically check Amazon EFS for order files.
 - D. Create an AWS Transfer Family SFTP internal server in two Availability Zones. Use Amazon S3 storage. Create an AWS Lambda function to process order files. Use a Transfer Family managed workfiow to invoke the Lambda function.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9438,7 +13023,12 @@ A company’s applications use Apache Hadoop and Apache Spark to process data on
 - C. Migrate the Apache Hadoop application and the Apache Spark application to Amazon EMR clusters on AWS Outposts. Use the EMR clusters to process the data.
 - D. Use an AWS Snowball device to migrate the data to an Amazon S3 bucket. Create an Amazon EMR cluster to process the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9451,7 +13041,12 @@ A company is migrating a large amount of data from on-premises storage to AWS. W
 - C. Create an Amazon S3 bucket that uses S3 Intelligent-Tiering. Migrate the data to the S3 bucket by using an AWS Storage Gateway Amazon S3 File Gateway.
 - D. Create an Amazon FSx for OpenZFS file system. Migrate the data to the new volume.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9464,7 +13059,12 @@ A manufacturing company runs its report generation application on AWS. The appli
 - C. Run the application on Amazon Elastic Container Service (Amazon ECS) as microservices with service auto scaling.
 - D. Run the application on AWS Elastic Beanstalk as a single application environment with an all-at-once deployment strategy.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9477,7 +13077,12 @@ A company wants to rearchitect a large-scale web application to a serverless mic
 - C. Use Amazon Elastic Kubernetes Service (Amazon EKS). Launch Auto Scaling groups of self-managed EC2 instances.
 - D. Use an AWS Lambda function that runs custom developed code.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9490,7 +13095,12 @@ A company has an AWS Direct Connect connection from its on-premises location to 
 - C. Create a transit VPConnect the Direct Connect connection to the transit VPCreate a peering connection between all other VPCs in the Region. Update the route tables.
 - D. Create AWS Site-to-Site VPN connections from on premises to each VPC. Ensure that both VPN tunnels are UP for each connection. Turn on the route propagation feature.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9503,7 +13113,12 @@ A company has applications that run on Amazon EC2 instances. The EC2 instances c
 - C. Enable Default Host Configuration Management in Systems Manager to manage the EC2 instances.
 - D. Remove the existing policies from the existing IAM role. Add the AmazonSSMManagedInstanceCore policy to the existing IAM role.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9516,7 +13131,12 @@ A company runs container applications by using Amazon Elastic Kubernetes Service
 - C. Use an AWS Lambda function to resize the EKS cluster automatically.
 - D. Use an Amazon EC2 Auto Scaling group to distribute the workload.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9529,7 +13149,12 @@ A company maintains about 300 TB in Amazon S3 Standard storage month after month
 - C. Configure S3 inventory to prevent objects from being archived too quickly.
 - D. Configure Amazon CloudFront to reduce the number of objects stored in Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9542,7 +13167,12 @@ A company has deployed a multiplayer game for mobile devices. The game requires 
 - C. Deploy Amazon DynamoDB Accelerator (DAX) in front of the existing DB instance. Modify the game to use DAX.
 - D. Deploy an Amazon ElastiCache for Redis cluster in front of the existing DB instance. Modify the game to use Redis.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9555,7 +13185,12 @@ A company stores critical data in Amazon DynamoDB tables in the company's AWS ac
 - C. Configure deletion protection on the DynamoDB tables.
 - D. Enable point-in-time recovery on the DynamoDB tables.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9568,7 +13203,12 @@ A company has an on-premises data center that is running out of storage capacity
 - C. Deploy AWS Storage Gateway using stored volumes to store data locally. Use Storage Gateway to asynchronously back up point-in-time snapshots of the data to Amazon S3.
 - D. Deploy AWS Direct Connect to connect with the on-premises data center. Configure AWS Storage Gateway to store data locally. Use Storage Gateway to asynchronously back up point-in-time snapshots of the data to Amazon S3.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9581,7 +13221,12 @@ A company runs a three-tier web application in a VPC across multiple Availabilit
 - C. Create an automated scheduled scaling action based on the traffic patterns of the web application.
 - D. Set up a simple scaling policy. Increase the cooldown period based on the EC2 instance startup time.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9594,7 +13239,12 @@ A package delivery company has an application that uses Amazon EC2 instances and
 - C. Configure Aurora Auto Scaling for the Aurora read replicas.
 - D. Modify the DB cluster to have multiple writer instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9607,7 +13257,12 @@ A company has an application that uses an Amazon DynamoDB table for storage. A s
 - C. Request strongly consistent reads for the table.
 - D. Request eventually consistent reads for the table.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9620,7 +13275,12 @@ A company has deployed its application on Amazon EC2 instances with an Amazon RD
 - C. Use AWS Network Firewall to protect the application and the database.
 - D. Use different database accounts in the application code for different functions. Avoid granting excessive privileges to the database users.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9633,7 +13293,12 @@ An ecommerce company runs applications in AWS accounts that are part of an organ
 - C. Publish the Aurora general logs to a log group in Amazon CloudWatch Logs. Export the log data to a central Amazon S3 bucket.
 - D. Publish all the Aurora PostgreSQL database events in AWS CloudTrail to a central Amazon S3 bucket.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9646,7 +13311,12 @@ A company has an AWS Direct Connect connection from its corporate data center to
 - C. Establish VPN appliances in a fully meshed VPN network hosted by Amazon EC2. Use AWS VPN CloudHub to send and receive data between the data centers and each VPC.
 - D. Connect the existing Direct Connect connection to a Direct Connect gateway. Route traffic from the virtual private gateways of the VPCs in each Region to the Direct Connect gateway.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9659,7 +13329,12 @@ A company is developing a mobile game that streams score updates to a backend pr
 - C. Push score updates to an Amazon Simple Notification Service (Amazon SNS) topic. Subscribe an AWS Lambda function to the SNS topic to process the updates. Store the processed updates in a SQL database running on Amazon EC2.
 - D. Push score updates to an Amazon Simple Queue Service (Amazon SQS) queue. Use a fieet of Amazon EC2 instances with Auto Scaling to process the updates in the SQS queue. Store the processed updates in an Amazon RDS Multi-AZ DB instance.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9672,7 +13347,12 @@ A company has multiple AWS accounts with applications deployed in the us-west-2 
 - C. Write a script that uses the PutObject API operation every day to copy the entire contents of the buckets to another S3 bucket in us- west-2. Use this S3 bucket for log analysis.
 - D. Write AWS Lambda functions in these accounts that are triggered every time logs are delivered to the S3 buckets (s3:ObjectCreated:* event). Copy the logs to another S3 bucket in us-west-2. Use this S3 bucket for log analysis.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9686,7 +13366,12 @@ A company has an application that delivers on-demand training videos to students
 - D. Create an S3 Multi-Region Access Point. Modify the application to use the Amazon Resource Name (ARN) of the Multi-Region Access Point for video streaming. Do not modify the application for video uploads.
 - E. Create an S3 Multi-Region Access Point. Modify the application to use the Amazon Resource Name (ARN) of the Multi-Region Access Point for video streaming and uploads.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -9699,7 +13384,12 @@ A company has a new mobile app. Anywhere in the world, users can see local news 
 - C. Upload content to Amazon EC2 instances in the Region that is closest to the user. Copy the data to Amazon S3.
 - D. Upload and store content in Amazon S3 in the Region that is closest to the user. Use multiple distributions of Amazon CloudFront.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9712,7 +13402,12 @@ A company is building a new application that uses serverless architecture. The a
 - C. Send the requests from the API Gateway REST API to Amazon Managed Streaming for Apache Kafka (Amazon MSK). Configure Amazon MSK to publish the messages to the target Lambda functions.
 - D. Send the requests from the API Gateway REST API to multiple Amazon Simple Queue Service (Amazon SQS) queues. Configure the target Lambda functions to poll the different SQS queues.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9725,7 +13420,12 @@ A company migrated millions of archival files to Amazon S3. A solutions architec
 - C. Create a list of unencrypted objects by filtering the AWS usage report for Amazon S3. Configure an AWS Batch job to encrypt the objects from the list with a server-side encryption with AWS KMS keys (SSE-KMS). Configure the S3 default encryption feature to use a server-side encryption with AWS KMS keys (SSE-KMS).
 - D. Create a list of unencrypted objects by filtering the AWS usage report for Amazon S3. Configure the S3 default encryption feature to use a server-side encryption with a customer-provided key (SSE-C).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9738,7 +13438,12 @@ The DNS provider that hosts a company's domain name records is experiencing outa
 - C. Create a Simple AD directory in AWS. Enable zone transfer between the DNS provider and AWS Directory Service for Microsoft Active Directory for the domain records.
 - D. Create an Amazon Route 53 Resolver inbound endpoint in the VPC. Specify the IP addresses that the provider's DNS will forward DNS queries to. Configure the provider's DNS to forward DNS queries for the domain to the IP addresses that are specified in the inbound endpoint.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9751,7 +13456,12 @@ A company is building an application on AWS that connects to an Amazon RDS datab
 - C. Use an encrypted application configuration file. Store the file in Amazon S3 for the application configuration. Create another S3 file to store and retrieve the credentials.
 - D. Use AWS AppConfig to store and manage the application configuration. Use Amazon RDS to store and retrieve the credentials.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9764,7 +13474,12 @@ To meet security requirements, a company needs to encrypt all of its application
 - C. Take a snapshot of the RDS instance. Restore the snapshot to a new instance with encryption enabled.
 - D. Download AWS-provided root certificates. Provide the certificates in all connections to the RDS instance.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9777,7 +13492,12 @@ A company is designing a new web service that will run on Amazon EC2 instances b
 - C. An A record in an Amazon Route 53 hosted zone pointing to an Elastic IP address.
 - D. An EC2 instance with a public IP address running as a proxy in front of the load balancer.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9790,7 +13510,12 @@ A company has established a new AWS account. The account is newly provisioned an
 - C. Generate an access key for the root user. Use the access key for daily administration tasks instead of the AWS Management Console.
 - D. Provide the root user credentials to the most senior solutions architect. Have the solutions architect use the root user for daily administration tasks.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9804,7 +13529,12 @@ A company is deploying an application that processes streaming data in near-real
 - D. Attach multiple elastic network interfaces to each EC2 instance.
 - E. Use Amazon Elastic Block Store (Amazon EBS) optimized instance types.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -9817,7 +13547,12 @@ A financial services company wants to shut down two data centers and migrate mor
 - C. Use AWS DataSync to migrate the data to Amazon FSx for Windows File Server.
 - D. Use AWS Direct Connect to migrate the data on-premises file storage to an AWS Storage Gateway volume gateway.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9830,7 +13565,12 @@ A company uses an organization in AWS Organizations to manage AWS accounts that 
 - C. Configure a new IAM user in the monitoring account. In each AWS account, configure an IAM policy to have access to query and visualize the CloudWatch data in the account. Attach the new IAM policy to the new IAM user.
 - D. Create a new IAM user in the monitoring account. Create cross-account IAM policies in each AWS account. Attach the IAM policies to the new IAM user.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9843,7 +13583,12 @@ A company’s website is used to sell products to the public. The site runs on A
 - C. Modify the network ACL for the EC2 instances in the target groups behind the ALB to deny the malicious IP address.
 - D. Modify the security groups for the EC2 instances in the target groups behind the ALB to deny the malicious IP address.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9856,7 +13601,12 @@ A company sets up an organization in AWS Organizations that contains 10 AWS acco
 - C. Configure AWS IAM Identity Center (AWS Single Sign-On). Connect IAM Identity Center to the existing IdP. Provision users and groups from the existing IdP.
 - D. Use AWS Resource Access Manager (AWS RAM) to share access to the AWS accounts with the users in the existing IdP.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9869,7 +13619,12 @@ A solutions architect is designing an AWS Identity and Access Management (IAM) a
 - C. Attach the AdministratorAccess identity-based policy to the IAM user group. Place each of the five designated employee IAM users in the IAM user group.
 - D. Attach the SystemAdministrator resource-based policy to the IAM user group. Place each of the five designated employee IAM users in the IAM user group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9883,7 +13638,12 @@ A company has a multi-tier payment processing application that is based on virtu
 - D. Use Amazon Simple Queue Service (Amazon SQS) FIFO queues as the messaging component between the compute layers.
 - E. Use containers that are based on Amazon Elastic Kubernetes Service (Amazon EKS) for the compute layers in the architecture.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -9896,7 +13656,12 @@ A company has a nightly batch processing routine that analyzes report files that
 - C. Deploy an Amazon EC2 instance that runs Linux and an SFTP service. Use an Amazon Elastic File System (Amazon EFS) file system for storage. Use an Auto Scaling group with the minimum number of instances and desired number of instances set to 1.
 - D. Deploy AWS Transfer for SFTP and an Amazon S3 bucket for storage. Modify the application to pull the batch files from Amazon S3 to an Amazon EC2 instance for processing. Use an EC2 instance in an Auto Scaling group with a scheduled scaling policy to run the batch operation.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9909,7 +13674,12 @@ A company has users all around the world accessing its HTTP-based application de
 - C. Put the EC2 instances behind Network Load Balancers (NLBs) in each Region. Deploy AWS WAF on the NLBs. Create an Amazon CloudFront distribution with an origin that uses Amazon Route 53 latency-based routing to route requests to the NLBs.
 - D. Put the EC2 instances behind Application Load Balancers (ALBs) in each Region. Create an Amazon CloudFront distribution with an origin that uses Amazon Route 53 latency-based routing to route requests to the ALBs. Deploy AWS WAF on the CloudFront distribution.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -9922,7 +13692,12 @@ A company’s data platform uses an Amazon Aurora MySQL database. The database h
 - C. Switch to Amazon DynamoDB with DynamoDB Accelerator (DAX) for read connections.
 - D. Switch to Amazon Redshift with relocation capability.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9935,7 +13710,12 @@ A company stores text files in Amazon S3. The text files include customer chat m
 - B. Create a web application on an Amazon EC2 instance that presents a list of the files, redacts the PII from the files, and allows the external service provider to download new versions of the files that have the PII redacted.
 - D. Create an Amazon DynamoDB table. Create an AWS Lambda function that reads only the data in the files that does not contain PII. Configure the Lambda function to store the non-PII data in the DynamoDB table when a new file is written to Amazon S3. Grant the external service provider access to the DynamoDB table.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -9948,7 +13728,12 @@ A company is running a legacy system on an Amazon EC2 instance. The application 
 - C. Create an Amazon CloudWatch alarm to recover the EC2 instance in case of failure.
 - D. Launch the EC2 instance with two Amazon Elastic Block Store (Amazon EBS) volumes that use RAID configurations for storage redundancy.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9961,7 +13746,12 @@ A company wants to deploy its containerized application workloads to a VPC acros
 - C. Use Amazon EC2 Reserved Instances. Launch three EC2 instances in a spread placement group. Configure an Auto Scaling group to use target tracking scaling. Set the minimum capacity to 3.
 - D. Use an AWS Lambda function. Configure the Lambda function to connect to a VPC. Configure Application Auto Scaling to use Lambda as a scalable target. Set the minimum capacity to 3.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -9974,7 +13764,12 @@ A media company stores movies in Amazon S3. Each movie is stored in a single vid
 - C. Store newer movie video files in S3 Intelligent-Tiering. Store older movie video files in S3 Glacier Flexible Retrieval. When a user orders an older movie, retrieve the video file by using expedited retrieval.
 - D. Store newer movie video files in S3 Standard. Store older movie video files in S3 Glacier Flexible Retrieval. When a user orders an older movie, retrieve the video file by using bulk retrieval.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -9987,7 +13782,12 @@ A solutions architect needs to design the architecture for an application that a
 - C. Create an Amazon Elastic Container Service (Amazon ECS) cluster that uses the AWS Fargate launch type. Create a task definition for the container image with an Amazon Elastic File System (Amazon EFS) volume. Create a service with that task definition.
 - D. Create an Amazon Elastic Container Service (Amazon ECS) cluster that uses the Amazon EC2 launch type with an Amazon Elastic Block Store (Amazon EBS) volume that has more than 50 GB of space. Create a task definition for the container image. Create a service with that task definition.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10000,7 +13800,12 @@ A company needs to use its on-premises LDAP directory service to authenticate it
 - C. Set up a process that rotates the IAM credentials whenever LDAP credentials are updated.
 - D. Develop an on-premises custom identity broker application or process that uses AWS Security Token Service (AWS STS) to get short- lived credentials.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10013,7 +13818,12 @@ A company stores multiple Amazon Machine Images (AMIs) in an AWS account to laun
 - C. Create a retention rule in Recycle Bin.
 - D. Upload the AMIs to an Amazon S3 bucket that has Cross-Region Replication.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10026,7 +13836,12 @@ A company has 150 TB of archived image data stored on-premises that needs to be 
 - C. Enable Amazon S3 Transfer Acceleration and securely upload the data.
 - D. Create an Amazon S3 VPC endpoint and establish a VPN to upload the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10039,7 +13854,12 @@ A company wants to migrate its three-tier application from on premises to AWS. T
 - C. Migrate the web tier to Amazon EC2 instances in public subnets. Migrate the application tier to EC2 instances in private subnets. Migrate the database tier to Amazon RDS for MySQL in private subnets.
 - D. Migrate the web tier and the application tier to Amazon EC2 instances in public subnets. Migrate the database tier to Amazon Aurora MySQL in public subnets.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10052,7 +13872,12 @@ A development team is collaborating with another company to create an integrated
 - C. Create an SQS access policy that provides the other company access to the SQS queue.
 - D. Create an Amazon Simple Notification Service (Amazon SNS) access policy that provides the other company access to the SQS queue.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10065,7 +13890,12 @@ A company’s developers want a secure way to gain SSH access on the company's A
 - C. Create a bastion host in the public subnet of the VPConfigure the security groups and SSH keys of the bastion host to only allow connections and SSH authentication from the developers’ corporate and remote networks. Instruct the developers to connect through the bastion host by using SSH to reach the EC2 instances.
 - D. Attach the AmazonSSMManagedInstanceCore IAM policy to an IAM role that is associated with the EC2 instances. Instruct the developers to use AWS Systems Manager Session Manager to access the EC2 instances.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10078,7 +13908,12 @@ A pharmaceutical company is developing a new drug. The volume of data that the c
 - C. Deploy an AWS Storage Gateway volume gateway with cached volumes with an Amazon S3 bucket as the target storage. Migrate the data to the Storage Gateway appliance.
 - D. Configure an AWS Site-to-Site VPN connection from the on-premises environment to AWS. Migrate data to an Amazon Elastic File System (Amazon EFS) file system.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10091,7 +13926,12 @@ A company has a business-critical application that runs on Amazon EC2 instances.
 - C. Use an AWS Lambda function to make an on-demand backup of the table every hour.
 - D. Turn on streams on the table to capture a log of all changes to the table in the last 24 hours. Store a copy of the stream in an Amazon S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10104,7 +13944,12 @@ A company hosts an application used to upload files to an Amazon S3 bucket. Once
 - C. Configure Amazon Kinesis Data Streams to process and send data to Amazon S3. Invoke an AWS Lambda function to process the files.
 - D. Configure an Amazon Simple Notification Service (Amazon SNS) topic to process the files uploaded to Amazon S3. Invoke an AWS Lambda function to process the files.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10117,7 +13962,12 @@ A company’s application is deployed on Amazon EC2 instances and uses AWS Lambd
 - C. Use Compute Savings Plans for the production instances. Use On-Demand Instances for the nonproduction instances. Shut down the nonproduction instances when not in use.
 - D. Use Dedicated Hosts for the production instances. Use EC2 Instance Savings Plans for the nonproduction instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10130,7 +13980,12 @@ A company stores data in an on-premises Oracle relational database. The company 
 - C. Use the AWS Schema Conversion Tool (AWS SCT) to convert the Oracle schema to Aurora PostgreSQL schema. Use AWS Database Migration Service (AWS DMS) to migrate the existing data and replicate the ongoing changes.
 - D. Use an AWS Snowball device to migrate the data to an Amazon S3 bucket. Import the S3 data to Aurora PostgreSQL by using the Aurora PostgreSQL aws_s3 extension.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10144,7 +13999,12 @@ A company built an application with Docker containers and needs to run the appli
 - D. Use Amazon Elastic Container Service (Amazon ECS) with Amazon EC2 worker nodes.
 - E. Use Amazon Elastic Kubernetes Service (Amazon EKS) with Amazon EC2 worker nodes.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -10157,7 +14017,12 @@ An ecommerce company is running a seasonal online sale. The company hosts its we
 - C. Use Amazon CloudFront and Amazon ElastiCache to cache dynamic content with an Auto Scaling group set as the origin. Configure the Auto Scaling group with the instances necessary to populate CloudFront and ElastiCache. Scale in after the cache is fully populated.
 - D. Configure an Auto Scaling group to scale out as traffic increases. Create a launch template to start new instances from a preconfigured Amazon Machine Image (AMI).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10170,7 +14035,12 @@ A solutions architect must provide an automated solution for a company's complia
 - C. Create an IAM role with permissions to globally open security groups and network ACLs. Create an Amazon Simple Notification Service (Amazon SNS) topic to generate a notification every time the role is assumed by a user.
 - D. Configure a service control policy (SCP) that prevents non-administrative users from creating or editing security groups. Create a notification in the ticketing system when a user requests a rule that needs administrator permissions.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10183,7 +14053,12 @@ Use Amazon Elastic Kubernetes Service (Amazon EKS) with Amazon EC2 worker nodes.
 - C. Create a Network Load Balancer (NLB) with an HTTPS listener and target groups for each microservice. Create an AWS PrivateLink endpoint service for each microservice. Create an interface VPC endpoint in each VPC that needs to consume that microservice.
 - D. Create peering connections between VPCs that contain microservices. Create a prefix list for each service that requires a connection to a client. Create route tables to route traffic to the appropriate VPC. Create security groups to allow only HTTPS communication.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10196,7 +14071,12 @@ A company has a mobile game that reads most of its metadata from an Amazon RDS D
 - C. Add an Amazon ElastiCache for Redis layer in front of the database.
 - D. Add an Amazon ElastiCache for Memcached layer in front of the database.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10210,7 +14090,12 @@ A company uses AWS Organizations for its multi-account AWS setup. The security o
 - D. Add the development team’s account Amazon Resource Name (ARN) to the launch permission list for the AMIs.
 - E. Recreate the AWS KMS key. Add a key policy to allow the Organizations root Amazon Resource Name (ARN) to use the AWS KMS key.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -10223,7 +14108,12 @@ A data analytics company has 80 offices that are distributed globally. Each offi
 - C. Use an AWS Snowmobile to store and transfer the data to Amazon S3.
 - D. Set up an AWS Storage Gateway Volume Gateway to transfer the data to Amazon S3.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10236,7 +14126,12 @@ A company has an Amazon Elastic File System (Amazon EFS) file system that contai
 - C. Create an identity policy for the EFS file system that denies the elasticfilesystem:ClientWrite action on the EFS file system.
 - D. Create an EFS access point for each application. Use Portable Operating System Interface (POSIX) file permissions to allow read-only access to files in the root directory.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10249,7 +14144,12 @@ A company has hired an external vendor to perform work in the company’s AWS ac
 - C. Create an IAM group in the company’s account. Add the automated tool’s IAM user from the vendor account to the group. Attach the appropriate IAM policies to the group for the permissions that the vendor requires.
 - D. Create an IAM user in the company’s account that has a permission boundary that allows the vendor’s account. Attach the appropriate IAM policies to the user for the permissions that the vendor requires.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10262,7 +14162,12 @@ A company wants to run its experimental workloads in the AWS Cloud. The company 
 - C. Use cost allocation tags on AWS resources to label owners. Use AWS Support API on AWS Trusted Advisor to create alert threshold notifications when spending exceeds 60% of the budget.
 - D. Use AWS Cost Explorer forecasts to determine resource owners. Create usage budgets in AWS Budgets. Add an alert threshold to receive notification when spending exceeds 60% of the budget.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10275,7 +14180,12 @@ A company wants to deploy an internal web application on AWS. The web applicatio
 - C. Deploy the web application on Amazon EC2 instances in public subnets behind an internal Application Load Balancer (ALB). Deploy NAT gateways in private subnets. Attach an internet gateway to the VPSet the outbound destination of the ALB’s security group to the company's office network CIDR block.
 - D. Deploy the web application on Amazon EC2 instances in private subnets behind a public Application Load Balancer (ALB). Attach an internet gateway to the VPC. Set the outbound destination of the ALB’s security group to 0.0.0.0/0.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10288,7 +14198,12 @@ A company maintains its accounting records in a custom application that runs on 
 - C. Copy the records from the application into an Amazon Timestream database.
 - D. Copy the records from the application into an Amazon Quantum Ledger Database (Amazon QLDB) ledger.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10301,7 +14216,12 @@ A company's marketing data is uploaded from multiple sources to an Amazon S3 buc
 - C. Use AWS Glue DataBrew to process the data. Use an AWS Step Functions state machine to run the DataBrew data preparation jobs.
 - D. Use AWS Data Pipeline to process the data. Schedule Data Pipeline to process the data once at midnight.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10314,7 +14234,12 @@ A solutions architect is designing a payment processing application that runs on
 - C. Use Lambda to retrieve all due payments. Publish the due payments to an Amazon Simple Queue Service (Amazon SQS) FIFO queue. Configure another Lambda function to poll the FIFO queue and to process the due payments.
 - D. Use Lambda to retrieve all due payments. Store the due payments in an Amazon DynamoDB table. Configure streams on the DynamoDB table to invoke another Lambda function to process the due payments.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10327,7 +14252,12 @@ A company runs multiple workloads in its on-premises data center. The company's 
 - C. Use the AWS Schema Conversion Tool (AWS SCT) to create the relevant templates. Use AWS Trusted Advisor to collect data about the on-premises servers.
 - D. Use the AWS Schema Conversion Tool (AWS SCT) to create the relevant templates. Use AWS Database Migration Service (AWS DMS) to collect data about the on-premises servers.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10340,7 +14270,12 @@ A company has an organization in AWS Organizations that has all features enabled
 - C. Use AWS Managed Services (AMS) Accelerate to build a multi-account landing zone (MALZ). Submit an RFC to self-service provision Amazon GuardDuty in the MALZ.
 - D. Use AWS Managed Services (AMS) Accelerate to build a multi-account landing zone (MALZ). Submit an RFC to self-service provision AWS Security Hub in the MALZ.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10353,7 +14288,12 @@ A company has stored 10 TB of log files in Apache Parquet format in an Amazon S3
 - C. Create an AWS Glue crawler to store and retrieve table metadata from the S3 bucket. Use Amazon Athena to run SQL statements directly on the data in the S3 bucket.
 - D. Create an Amazon EMR cluster. Use Apache Spark SQL to run SQL statements directly on the data in the S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10366,7 +14306,12 @@ A company needs a solution to prevent AWS CloudFormation stacks from deploying A
 - C. Use AWS Config to create rules for EC2 and IAM compliance. Configure the rules to run an AWS Systems Manager Session Manager automation to delete a resource when it is not compliant.
 - D. Use a service control policy (SCP) to block actions for the EC2 instances and IAM resources if the actions lead to noncompliance.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10380,7 +14325,12 @@ A company's web application that is hosted in the AWS Cloud recently increased i
 - D. Replace the EC2 instance with a larger memory optimized instance.
 - E. Configure an Application Load Balancer in a public subnet to distribute web traffic.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -10393,7 +14343,12 @@ A company has AWS Lambda functions that use environment variables. The company d
 - C. Create a certificate in AWS Certificate Manager (ACM). Configure the Lambda functions to use the certificate to encrypt the environment variables.
 - D. Create an AWS Key Management Service (AWS KMS) key. Enable encryption helpers on the Lambda functions to use the KMS key to store and encrypt the environment variables.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10406,7 +14361,12 @@ An analytics company uses Amazon VPC to run its multi-tier services. The company
 - C. Configure an AWS Lambda function to handle user authentication. Implement Amazon API Gateway REST APIs with a Lambda authorizer.
 - D. Configure an IAM user to handle user authentication. Implement Amazon API Gateway HTTP APIs with an IAM authorizer.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10419,7 +14379,12 @@ A company has a mobile app for customers. The app’s data is sensitive and must
 - C. Create an Amazon EventBridge rule that reacts when the KMS DeleteKey operation is performed. Configure the rule to initiate an AWS Systems Manager Automation runbook. Configure the runbook to cancel the deletion of the KMS key. Create an SNS topic. Configure the EventBridge rule to publish an SNS message that notifies the administrators.
 - D. Create an AWS CloudTrail trail. Configure the trail to deliver logs to a new Amazon CloudWatch log group. Create a CloudWatch alarm based on the metric filter for the CloudWatch log group. Configure the alarm to use Amazon SNS to notify the administrators when the KMS DeleteKey operation is performed.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10432,7 +14397,12 @@ A company wants to analyze and generate reports to track the usage of its mobile
 - C. Run the program in Amazon Elastic Container Service (Amazon ECS). Schedule Amazon ECS to run the program when reports are requested.
 - D. Run the program by using Amazon EC2 Spot Instances. Create an Amazon EventBndge rule to start the EC2 instances when reports are requested. Run the EC2 instances continuously during the last week of each month.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10446,7 +14416,12 @@ A company is designing a tightly coupled high performance computing (HPC) enviro
 - D. Launch Amazon EC2 instances. Attach an Elastic Fabric Adapter (EFA) to the instances.
 - E. Create an AWS Elastic Beanstalk deployment to manage the environment.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -10459,7 +14434,12 @@ A company needs a solution to prevent photos with unwanted content from being up
 - C. Create an Amazon CloudFront function that uses Amazon Comprehend to detect unwanted content. Associate the function with the web application.
 - D. Create an AWS Lambda function that uses Amazon Rekognition Video to detect unwanted content. Create a Lambda function URL that the web application invokes when new photos are uploaded.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10472,7 +14452,12 @@ A company uses AWS to run its ecommerce platform. The platform is critical to th
 - C. Create a new administrator account when the company cannot access the root account.
 - D. Attach the administrator policy to another IAM user when the company cannot access the root account.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10485,7 +14470,12 @@ A social media company is creating a rewards program website for its users. The 
 - C. Create an AWS Step Functions state machine. Create a task for every affiliated partner. Invoke the state machine with user IDs as input when the company gives users points.
 - D. Create a data stream in Amazon Kinesis Data Streams. Implement producer and consumer applications. Store a list of affiliated partners in the data stream. Send user IDs when the company gives users points.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10498,7 +14488,12 @@ A company needs to extract the names of ingredients from recipe records that are
 - C. Use S3 Event Notifications to invoke an AWS Lambda function when PutObject requests occur. Use Amazon Polly to create audio recordings of the recipe records. Save the audio files in the S3 bucket. Use Amazon Simple Notification Service (Amazon SNS) to send a URL as a message to employees. Instruct the employees to listen to the audio files and calculate the nutrition score. Store the ingredient names in the DynamoDB table.
 - D. Use an Amazon EventBridge rule to invoke an AWS Lambda function when a PutObject request occurs. Program the Lambda function to analyze the object and extract the ingredient names by using Amazon SageMaker. Store the inference output from the SageMaker endpoint in the DynamoDB table.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10511,7 +14506,12 @@ A company needs to create an AWS Lambda function that will run in a VPC in the c
 - C. Create a second Lambda function in the secondary account that has a mount that is configured for the file system. Use the primary account's Lambda function to invoke the secondary account's Lambda function.
 - D. Move the contents of the file system to a Lambda layer. Configure the Lambda layer's permissions to allow the company's secondary account to use the Lambda layer.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10524,7 +14524,12 @@ A financial company needs to handle highly sensitive data. The company will stor
 - C. Encrypt the data in the S3 bucket with the default server-side encryption (SSE).
 - D. Encrypt the data at the company's data center before storing the data in the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10537,7 +14542,12 @@ A company wants to run its payment application on AWS. The application receives 
 - C. Create an Amazon Simple Queue Service (Amazon SQS) queue. Integrate the queue with an Amazon EventBridge rule to receive payment notifications from mobile devices. Configure the rule to validate payment notifications and send the notifications to the backend application. Deploy the backend application on Amazon EC2 Spot Instances. Configure a Spot Fleet with a default allocation strategy.
 - D. Create an Amazon API Gateway API. Integrate the API with AWS Lambda to receive payment notifications from mobile devices. Invoke a Lambda function to validate payment notifications and send the notifications to the backend application. Deploy the backend application on Amazon Elastic Container Service (Amazon ECS). Configure Amazon ECS with an AWS Fargate launch type.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10550,7 +14560,12 @@ A solutions architect is designing a user authentication solution for a company.
 - C. Configure AWS Identity and Access Management (IAM) users for user authentication. Attach an IAM policy that allows the AllowManageOwnUserMFA action.
 - D. Configure AWS IAM Identity Center (AWS Single Sign-On) authentication for user authentication. Configure the permission sets to require multi-factor authentication (MFA).
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10563,7 +14578,12 @@ A company has an Amazon S3 data lake. The company needs a solution that transfor
 - C. Run a daily AWS Glue job to transform the data and load the data into Amazon Redshift Serverless. Use Amazon Redshift ML to create and train the ML models.
 - D. Run a daily AWS Glue job to transform the data and load the data into Amazon Athena tables. Use Amazon Athena ML to create and train the ML models.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10576,7 +14596,12 @@ A company runs containers in a Kubernetes environment in the company's local dat
 - C. Install an AWS Outposts rack in the company's data center.
 - D. Install an AWS Snowball Edge Storage Optimized node in the data center.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10589,7 +14614,12 @@ A social media company has workloads that collect and process data. The workload
 - C. Use the Amazon Elastic File System (Amazon EFS) Standard-Infrequent Access (Standard-IA) storage class. Activate the infrequent access lifecycle policy.
 - D. Use the Amazon Elastic File System (Amazon EFS) One Zone-Infrequent Access (One Zone-IA) storage class. Activate the infrequent access lifecycle policy.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10602,7 +14632,12 @@ A company uses high concurrency AWS Lambda functions to process a constantly inc
 - C. Configure provisioned concurrency for the Lambda functions. Decrease the memory allocated to the Lambda functions.
 - D. Configure provisioned concurrency for the Lambda functions. Increase the memory according to AWS Compute Optimizer recommendations.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10615,7 +14650,12 @@ A company runs its workloads on Amazon Elastic Container Service (Amazon ECS). T
 - C. Deploy the workloads to Amazon Elastic Kubernetes Service (Amazon EKS). Use Amazon Elastic Container Registry (Amazon ECR) as a private image repository. Specify scan on push filters for the ECR enhanced scan.
 - D. Store the container images in an Amazon S3 bucket that has versioning enabled. Configure an S3 Event Notification for s3:ObjectCreated:* events to invoke an AWS Lambda function. Configure the Lambda function to initiate an Amazon Inspector scan.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10628,7 +14668,12 @@ A company uses an AWS Batch job to run its end-of-day sales process. The company
 - C. Configure an AWS Batch job to publish job SUCCEEDED events to an Amazon API Gateway REST API. Configure an HTTP proxy integration on the API Gateway REST API to invoke the third-party API by using a username and password.
 - D. Configure an AWS Batch job to publish job SUCCEEDED events to an Amazon API Gateway REST API. Configure a proxy integration on the API Gateway REST API to an AWS Lambda function. Configure the Lambda function to invoke the third-party API by using a username and password.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10641,7 +14686,12 @@ A company collects and processes data from a vendor. The vendor stores its data 
 - C. Instruct the vendor to create a Network Load Balancer (NLB). Place the NLB in front of the Amazon RDS for MySQL database. Use AWS PrivateLink to integrate the company's VPC and the vendor's VPC.
 - D. Use AWS Transit Gateway to integrate the company's VPC and the vendor's VPC. Use VPC peering to connect the company’s VPC and the vendor's VPC.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10654,7 +14704,12 @@ A company wants to set up Amazon Managed Grafana as its visualization tool. The 
 - C. Create an Amazon Managed Grafana workspace without a VPCreate an AWS PrivateLink endpoint to establish a connection between Amazon Managed Grafana and Amazon RDS. Set up Amazon RDS as a data source in Amazon Managed Grafana.
 - D. Create an Amazon Managed Grafana workspace in a VPC. Create a public endpoint for the RDS database. Configure the public endpoint as a data source in Amazon Managed Grafana.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10667,7 +14722,12 @@ A company hosts a data lake on Amazon S3. The data lake ingests data in Apache P
 - C. Configure AWS Glue DataBrew to transform the data. Share the transformation steps with employees by using DataBrew recipes.
 - D. Create Amazon Athena tables for the data. Write Athena SQL queries to transform the data. Share the Athena SQL queries with employees.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10680,7 +14740,12 @@ A solutions architect runs a web application on multiple Amazon EC2 instances th
 - C. Create an A Record for the development website that has the value set to the ALB. Create a listener rule on the ALB to redirect requests for the development website to the public IP address of the development instance.
 - D. Place all the instances in the same target group. Create an A Record for the development website. Set the value to the ALB. Create a listener rule on the ALB that forwards requests for the development website to the target group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10693,7 +14758,12 @@ A company runs a container application on a Kubernetes cluster in the company's 
 - C. Use highly available Amazon EC2 instances to run the application. Use Amazon MQ to retrieve the messages.
 - D. Use AWS Lambda functions to run the application. Use Amazon Simple Queue Service (Amazon SQS) to retrieve the messages.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10706,7 +14776,12 @@ An online gaming company hosts its platform on Amazon EC2 instances behind Netwo
 - C. Create additional NLBs and EC2 instances in other Regions where the company has large customer bases.
 - D. Create a standard accelerator in AWS Global Accelerator. Configure the existing NLBs as target endpoints.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10719,7 +14794,12 @@ A company has an on-premises application that uses SFTP to collect financial dat
 - C. Configure an Amazon EC2 instance to run an SFTP server. Instruct the vendors that use legacy applications to use the SFTP server to upload data.
 - D. Configure an Amazon S3 File Gateway for vendors that use legacy applications to upload files to an SMB file share.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10732,7 +14812,12 @@ A marketing team wants to build a campaign for an upcoming multi-sport event. Th
 - C. Provide the extracted insights to Amazon Comprehend for analysis. Save the analysis to an Amazon S3 bucket.
 - D. Store the extracted insights in an Amazon S3 bucket. Use Amazon QuickSight to visualize and analyze the data.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10745,7 +14830,12 @@ A company's application runs on Amazon EC2 instances that are in multiple Availa
 - C. Create and configure AWS DataSync agents on the EC2 instances. Configure DataSync tasks to transfer data from the EC2 instances to the S3 bucket.
 - D. Create an AWS Direct Connect connection to the application for data ingestion. Create Amazon Kinesis Data Firehose delivery streams to consume direct PUT operations from the application. Specify the S3 bucket as the destination of the delivery streams.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10758,7 +14848,12 @@ A company’s application is receiving data from multiple data sources. The size
 - C. Split all incoming large data into a collection of items that have the same partition key. Write the data to a DynamoDB table in a single operation by using the BatchWriteItem API operation.
 - D. Create an AWS Lambda function that uses gzip compression to compress the large objects as they are written to a DynamoDB table.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10771,7 +14866,12 @@ A company is migrating a legacy application from an on-premises data center to A
 - C. Create a container image for the cron jobs. Use Amazon EventBridge Scheduler to create a recurring schedule. Run the cron job tasks on AWS Fargate.
 - D. Create a container image for the cron jobs. Create a workfiow in AWS Step Functions that uses a Wait state to run the cron jobs at a specified time. Use the RunTask action to run the cron job tasks on AWS Fargate.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10784,7 +14884,12 @@ A company uses Salesforce. The company needs to load existing data and ongoing d
 - C. Create an AWS PrivateLink connection in the VPC to Salesforce. Use Amazon AppFlow to transfer data.
 - D. Create a VPC peering connection to Salesforce. Use Amazon AppFlow to transfer data.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10797,7 +14902,12 @@ A company recently migrated its application to AWS. The application runs on Amaz
 - C. Deploy Amazon FSx for OpenZFS file system shares. Update the application to use the new mount point to store and retrieve files.
 - D. Create an Amazon S3 bucket that uses S3 Glacier Flexible Retrieval. Copy all files to the S3 bucket. Update the application to use Amazon S3 API to store and retrieve files as standard retrievals.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10810,7 +14920,12 @@ A robotics company is designing a solution for medical surgery. The robots will 
 - C. Use an Application Load Balancer with a certificate attached from AWS Certificate Manager (ACM). Use query parameter-based routing.
 - D. Use a Network Load Balancer. Import a generated certificate in AWS Identity and Access Management (IAM). Attach the certificate to the load balancer. Use query parameter-based routing.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10823,7 +14938,12 @@ A company has an application that runs on a single Amazon EC2 instance. The appl
 - C. Deploy the application to EC2 instances that run in an Auto Scaling group behind an Application Load Balancer. Create an Amazon Aurora Serverless MySQL cluster for the database layer.
 - D. Deploy the application to EC2 instances that are configured as a target group behind an Application Load Balancer. Create an Amazon ElastiCache for Redis cluster that uses the MySQL connector.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10836,7 +14956,12 @@ A company is planning to migrate data to an Amazon S3 bucket. The data must be e
 - C. Create an AWS Key Management Service (AWS KMS) customer managed key. Set the S3 bucket's default encryption behavior to use the customer managed KMS key. Migrate the data to the S3 bucket. Manually rotate the KMS key every year.
 - D. Use customer key material to encrypt the data. Migrate the data to the S3 bucket. Create an AWS Key Management Service (AWS KMS) key without key material. Import the customer key material into the KMS key. Enable automatic key rotation.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10849,7 +14974,12 @@ A company is migrating applications from an on-premises Microsoft Active Directo
 - C. Use AWS Directory Service and create a two-way trust relationship with the company's self-managed Active Directory.
 - D. Deploy an identity provider (IdP) on Amazon EC2. Link the IdP as an identity source within AWS IAM Identity Center.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10862,7 +14992,12 @@ A company is planning to deploy its application on an Amazon Aurora PostgreSQL S
 - C. Configure the cluster storage type as General Purpose.
 - D. Configure the cluster to use the Aurora I/O-Optimized storage configuration.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10875,7 +15010,12 @@ A financial services company that runs on AWS has designed its security controls
 - C. Configure an AWS CloudTrail organization trail in the Organizations management account. Designate one account as the compliance account. Enable CloudTrail security standards for NIST and PCI DSS in the compliance account.
 - D. Designate one account as the AWS Security Hub delegated administrator account from the Organizations management account. In the designated Security Hub administrator account, enable Security Hub for all member accounts. Enable Security Hub standards for NIST and PCI DSS.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10888,7 +15028,12 @@ A company uses an Amazon S3 bucket as its data lake storage platform. The S3 buc
 - C. Use data from S3 storage class analysis to create S3 Lifecycle rules to automatically transition objects to the S3 Standard-Infrequent Access (S3 Standard-IA) storage class.
 - D. Transition objects to the S3 Standard-Infrequent Access (S3 Standard-IA) storage class. Create an AWS Lambda function to transition objects to the S3 Standard storage class when they are accessed by an application.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -10901,7 +15046,12 @@ A company has 5 TB of datasets. The datasets consist of 1 million user profiles 
 - C. Use an Amazon S3 bucket to store the datasets. Use Amazon QuickSight to visualize connections.
 - D. Use Amazon RDS to store the datasets with multiple tables. Perform SQL JOIN queries to find connections.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10914,7 +15064,12 @@ A company needs a secure connection between its on-premises environment and AWS.
 - C. Implement a bastion host on Amazon EC2.
 - D. Implement an AWS Site-to-Site VPN connection.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -10927,7 +15082,12 @@ A company has an on-premises SFTP file transfer solution. The company is migrati
 - C. Create an AWS Transfer Family server with SFTP endpoints. Choose the AWS Directory Service option as the identity provider. Use AD Connector to connect the on-premises Active Directory.
 - D. Create an AWS Transfer Family SFTP endpoint. Configure the endpoint to use the AWS Directory Service option as the identity provider to connect to the existing Active Directory.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10940,7 +15100,12 @@ A company is designing an event-driven order processing system. Each order requi
 - C. Create an Amazon EventBridge event bus. Create an event rule for each validation step. Configure the input transformer to send only the required data to each target validation step Lambda function.
 - D. Create an Amazon Simple Queue Service (Amazon SQS) queue. Create a new Lambda function to subscribe to the SQS queue and to transform the order data to the format that each validation step requires. Use the new Lambda function to perform synchronous invocations of the validation step Lambda functions in parallel on separate threads.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10953,7 +15118,12 @@ A company is migrating a three-tier application to AWS. The application requires
 - C. Create an Amazon Aurora MySQL Multi-AZ DB cluster with multiple read replicas. Configure the application to use the reader endpoint for reports.
 - D. Create an Amazon Aurora MySQL Multi-AZ DB cluster. Configure the application to use the backup instance of the cluster as an endpoint for the reports.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10966,7 +15136,12 @@ A company is expanding a secure on-premises network to the AWS Cloud by using an
 - C. Create a VPC and an Amazon S3 interface endpoint. Route the AWS traffic from the on-premises network to the S3 interface endpoint.
 - D. Create a VPC peering connection between the on-premises network and Direct Connect. Route the AWS traffic over the peering connection.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -10979,7 +15154,12 @@ A company serves its website by using an Auto Scaling group of Amazon EC2 instan
 - C. An Application Load Balancer in one Region with a target group that specifies the EC2 instance IDs from both Regions
 - D. An Application Load Balancer in one Region with a target group that specifies the IP addresses of the EC2 instances from both Regions
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -10992,7 +15172,12 @@ A company runs its applications on Amazon EC2 instances that are backed by Amazo
 - C. Mount an Amazon Elastic File System (Amazon EFS) file system across all the EC2 instances. Instruct the employees to access the files from the EC2 instances.
 - D. Create an Amazon Machine Image (AMI) from the EC2 instances. Configure new EC2 instances from the AMI that use an instance store volume. Instruct the employees to access the files from the EC2 instances.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11005,7 +15190,12 @@ A company is running a highly sensitive application on Amazon EC2 backed by an A
 - C. Configure SSL encryption using AWS Key Management Service (AWS KMS) keys to encrypt database volumes.
 - D. Configure Amazon Elastic Block Store (Amazon EBS) encryption and Amazon RDS encryption with AWS Key Management Service (AWS KMS) keys to encrypt instance and database volumes.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11018,7 +15208,12 @@ A company runs an AWS Lambda function in private subnets in a VPC. The subnets h
 - C. Provision a gateway endpoint for Amazon S3 in the VPUpdate the route tables of the subnets accordingly.
 - D. Provision a transit gateway. Place transit gateway attachments in the private subnets where the Lambda function is running.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11031,7 +15226,12 @@ A news company that has reporters all over the world is hosting its broadcast sy
 - C. AWS Client VPN
 - D. Amazon EC2 instances and AWS Elastic IP addresses
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11044,7 +15244,12 @@ A company uses Amazon EC2 instances and Amazon Elastic Block Store (Amazon EBS) 
 - C. Keep the daily snapshot in the EBS snapshot standard tier for 1 month. Keep the monthly snapshot in the standard tier for 7 years. Use incremental snapshots.
 - D. Keep the daily snapshot in the EBS snapshot standard tier. Use EBS direct APIs to take snapshots of all the EBS volumes every month. Store the snapshots in an Amazon S3 bucket in the Infrequent Access tier for 7 years.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11057,7 +15262,12 @@ A company runs an application on several Amazon EC2 instances that store persist
 - C. Create a VPC in another Region. Establish a cross-Region VPC peer. Run a nightly rsync to copy data from the original Region to the new Region.
 - D. Use AWS Backup to create a backup plan with a rule that takes a daily backup and replicates it to another Region. Assign the EFS file system resource to the backup plan.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11070,7 +15280,12 @@ An ecommerce company is migrating its on-premises workload to the AWS Cloud. The
 - C. Migrate the web application to Amazon EC2 instances that run in an Auto Scaling group across two Availability Zones behind an Application Load Balancer. Migrate the database to Amazon RDS with Multi-AZ deployment.
 - D. Migrate the web application to three Amazon EC2 instances across three Availability Zones behind an Application Load Balancer. Migrate the database to three EC2 instances across three Availability Zones.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11083,7 +15298,12 @@ A company has an on-premises business application that generates hundreds of fil
 - C. AWS Snowball
 - D. AWS Storage Gateway
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11096,7 +15316,12 @@ A company has 15 employees. The company stores employee start dates in an Amazon
 - C. Create an AWS Lambda function that scans the DynamoDB table and uses Amazon Simple Notification Service (Amazon SNS) to send email messages to employees when necessary. Schedule this Lambda function to run every day.
 - D. Create an AWS Lambda function that scans the DynamoDB table and uses Amazon Simple Queue Service (Amazon SQS) to send email messages to employees when necessary. Schedule this Lambda function to run every day.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11109,7 +15334,12 @@ A company’s application is running on Amazon EC2 instances within an Auto Scal
 - C. Increase the minimum and maximum number of EC2 instances in the Auto Scaling group during the peak demand period.
 - D. Configure an Amazon Simple Notification Service (Amazon SNS) notification to send alerts when there are autoscaling:EC2_INSTANCE_LAUNCH events.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11122,7 +15352,12 @@ A company uses Amazon RDS for PostgreSQL databases for its data tier. The compan
 - C. Store the password in AWS Systems Manager Parameter Store. Write an AWS Lambda function that rotates the password.
 - D. Store the password in AWS Key Management Service (AWS KMS). Enable automatic rotation on the AWS KMS key.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11135,7 +15370,12 @@ A company runs its application on Oracle Database Enterprise Edition. The compan
 - C. Migrate the database to Amazon DynamoDB by using AWS Database Migration Service (AWS DMS). Customize the new database settings to support the third-party features.
 - D. Migrate the database to Amazon RDS for PostgreSQL by using AWS Database Migration Service (AWS DMS). Rewrite the application code to remove the dependency on third-party features.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11148,7 +15388,12 @@ A large international university has deployed all of its compute services in the
 - C. Use AWS Config to set lifecycle management to take snapshots of all data sources on a schedule.
 - D. Use AWS Systems Manager State Manager to manage the configuration and monitoring of backup tasks.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11161,7 +15406,12 @@ A company wants to build a map of its IT infrastructure to identify and enforce 
 - C. Use Amazon Redshift to store the data. Use SQL to query the data to identify security risks.
 - D. Use Amazon DynamoDB to store the data. Use PartiQL to query the data to identify security risks.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11174,7 +15424,12 @@ A large company wants to provide its globally located developers separate, limit
 - C. Create an Amazon Aurora Serverless cluster. Develop an AWS Service Catalog product to launch databases in the cluster with the default capacity settings. Grant the developers access to the product.
 - D. Monitor AWS Trusted Advisor checks for idle Amazon RDS databases. Create a process to terminate identified idle RDS databases.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11187,7 +15442,12 @@ A company is building a web application that serves a content management system.
 - C. Copy the website assets to an Amazon S3 bucket. Ensure that each EC2 instance downloads the website assets from the S3 bucket to the attached Amazon Elastic Block Store (Amazon EBS) volume. Run the S3 sync command once each hour to keep files up to date.
 - D. Restore an Amazon Elastic Block Store (Amazon EBS) snapshot with the website assets. Attach the EBS snapshot as a secondary EBS volume when a new EC2 instance is launched. Configure the website hosting application to reference the website assets that are stored in the secondary EBS volume.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11200,7 +15460,12 @@ A company's web application consists of multiple Amazon EC2 instances that run b
 - C. Use Amazon Inspector to perform threat detection and to update the AWS WAF rules. Create a VPC network ACL to limit access to the web application.
 - D. Use Amazon Macie to perform threat detection and to update the AWS WAF rules. Create a VPC network ACL to limit access to the web application.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11213,7 +15478,12 @@ A company is planning to run a group of Amazon EC2 instances that connect to an 
 - C. Configure the DB cluster to use IAM database authentication. Create a database user to use with IAM authentication. Associate a role with the EC2 instances to allow applications on the instances to access the database.
 - D. Configure the DB cluster to use IAM database authentication with an IAM user. Create a database user that has a name that matches the IAM user. Associate the IAM user with the EC2 instances to allow applications on the instances to access the database.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11226,7 +15496,12 @@ A company wants to configure its Amazon CloudFront distribution to use SSL/TLS c
 - C. Request an Amazon issued public certificate from AWS Certificate Manager (ACM) in the us-east-1 Region.
 - D. Request an Amazon issued public certificate from AWS Certificate Manager (ACM) in the us-west-1 Region.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11239,7 +15514,12 @@ A company creates operations data and stores the data in an Amazon S3 bucket. Fo
 - C. Create a new IAM user that has access to the report in the S3 bucket. Provide the access keys to the external consultant. Revoke the access keys after 7 days.
 - D. Generate a presigned URL that has the required access to the location of the report on the S3 bucket. Share the presigned URL with the external consultant.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11252,7 +15532,12 @@ A company plans to run a high performance computing (HPC) workload on Amazon EC2
 - C. Launch the EC2 instances as Spot Instances.
 - D. Configure an On-Demand Capacity Reservation when the EC2 instances are launched.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11265,7 +15550,12 @@ A company has primary and secondary data centers that are 500 miles (804.7 km) a
 - C. Two AWS Direct Connect connections from each of the primary and secondary data centers terminating at two Direct Connect locations on two separate devices
 - D. A single AWS Direct Connect connection from each of the primary and secondary data centers terminating at one Direct Connect location on two separate devices
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11279,7 +15569,12 @@ A company runs several Amazon RDS for Oracle On-Demand DB instances that have hi
 - D. Review the Trusted Advisor checks for Amazon RDS Idle DB Instances.
 - E. Review the Trusted Advisor checks for compute optimization. Crosscheck the results by using AWS Compute Optimizer.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -11292,7 +15587,12 @@ A solutions architect is creating an application. The application will run on Am
 - C. Create an AWS PrivateLink interface endpoint for Amazon S3 in the VPIn the route tables for the private subnets, add an entry for the interface endpoint.
 - D. Create one NAT gateway for each Availability Zone in public subnets. In each of the route tables for the private subnets, add a default route that points to the NAT gateway in the same Availability Zone.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11305,7 +15605,12 @@ A company wants to relocate its on-premises MySQL database to AWS. The database 
 - C. Provision an Amazon DocumentDB (with MongoDB compatibility) instance with a memory optimized instance type. Monitor Amazon CloudWatch for performance-related issues. Change the instance class if necessary.
 - D. Provision an Amazon Elastic File System (Amazon EFS) file system in General Purpose performance mode. Monitor Amazon CloudWatch for IOPS bottlenecks. Change to Provisioned Throughput performance mode if necessary.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11318,7 +15623,12 @@ A company runs an application in the AWS Cloud that generates sensitive archival
 - C. Configure the S3 bucket to use dual-layer server-side encryption with AWS KMS keys (SSE-KMS). Configure the application to use the S3 bucket to store the archival files.
 - D. Configure the application to use client-side encryption with a key stored in AWS Key Management Service (AWS KMS). Configure the application to store the archival files in the S3 bucket.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11331,7 +15641,12 @@ A company uses Amazon RDS with default backup settings for its database tier. Th
 - C. Use AWS Systems Manager Maintenance Windows to modify the RDS backup retention period.
 - D. Create a manual snapshot every day by using the AWS CLI. Modify the RDS backup retention period.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11344,7 +15659,12 @@ A company that runs its application on AWS uses an Amazon Aurora DB cluster as i
 - C. Create an Aurora read replica in the existing Aurora DB cluster. Update the application to use the replica endpoint for read-only queries and to use the cluster endpoint for write queries.
 - D. Create an Amazon Redshift cluster. Copy the users' data to the Redshift cluster. Update the application to connect to the Redshift cluster and to perform read-only queries on the Redshift cluster.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11358,7 +15678,12 @@ A company's near-real-time streaming application is running on AWS. As the data 
 - D. Use Amazon EC2 instances in an Auto Scaling group to process the data.
 - E. Use AWS Fargate with Amazon Elastic Container Service (Amazon ECS) to process the data.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -11371,7 +15696,12 @@ A company runs a web application on multiple Amazon EC2 instances in a VPC. The 
 - C. Deploy the S3 bucket inside the VPCreate a route in the VPC route table to the bucket.
 - D. Create an AWS Direct Connect connection between the VPC and an S3 regional endpoint.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11384,7 +15714,12 @@ A company runs its production workload on Amazon EC2 instances with Amazon Elast
 - C. Use Amazon CloudWatch metrics reporting to determine EBS volume recommendations for optimization.
 - D. Use AWS Compute Optimizer to generate EBS volume recommendations for optimization.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11396,7 +15731,12 @@ A global company runs its workloads on AWS. The company's application uses Amazo
 - C. Enable IAM Access Analyzer for S3 to identify all S3 buckets that are not versioning-enabled across Regions.
 - D. Create an S3 Multi-Region Access Point to identify all S3 buckets that are not versioning-enabled across Regions.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11409,7 +15749,12 @@ A company wants to enhance its ecommerce order-processing application that is de
 - C. Create a fiow by using Amazon AppFlow. Send the orders to the fiow. Configure an AWS Lambda function as the target to process the orders.
 - D. Configure AWS X-Ray in the application to track the order requests. Configure the application to process the orders by pulling the orders from Amazon CloudWatch.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11422,7 +15767,12 @@ A company has two AWS accounts: Production and Development. The company needs to
 - C. Create an IAM role in the Production account. Define a trust policy that specifies the Development account. Allow developers to assume the role.
 - D. Create an IAM group in the Production account. Add the group as a principal in a trust policy that specifies the Production account. Add developers to the group.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11435,7 +15785,12 @@ A company wants to restrict access to the content of its web application. The co
 - C. Configure Amazon Cognito for authentication. Implement AWS Lambda for authorization. Use Amazon S3 Transfer Acceleration to serve the web application globally.
 - D. Configure AWS Directory Service for Microsoft Active Directory for authentication. Implement Lambda@Edge for authorization. Use AWS Elastic Beanstalk to serve the web application globally.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11448,7 +15803,12 @@ A development team uses multiple AWS accounts for its development, staging, and 
 - C. Create an IAM role in each account that denies the launch of large EC2 instances. Grant the developers IAM group access to the role.
 - D. Create an organization in AWS Organizations in the management account with the default policy. Create a service control policy (SCP) that denies the launch of large EC2 instances, and apply it to the AWS accounts.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11461,7 +15821,12 @@ A company has migrated a fieet of hundreds of on-premises virtual machines (VMs)
 - C. Set up AWS Shield Advanced, and configure monthly reports. Deploy AWS Config to automate patch installations on the EC2 instances.
 - D. Set up Amazon GuardDuty in the account to monitor all EC2 instances. Deploy AWS Config to automate patch installations on the EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11474,7 +15839,12 @@ A company hosts its application in the AWS Cloud. The application runs on Amazon
 - C. Create an AWS CloudFormation template to create EC2 instances and an ELB to be launched when necessary. Configure the DynamoDB table as a global table. Configure DNS failover to point to the new DR Region's ELB.
 - D. Create an Auto Scaling group and an ELB in the DR Region. Configure the DynamoDB table as a global table. Create an Amazon CloudWatch alarm with an evaluation period of 10 minutes to invoke an AWS Lambda function that updates Amazon Route 53 to point to the DR Region's ELB.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11487,7 +15857,12 @@ A company runs an application on Amazon EC2 instances in a private subnet. The a
 - C. Deploy an S3 interface endpoint to access the S3 buckets.
 - D. Deploy an S3 gateway endpoint to access the S3 buckets.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11501,7 +15876,12 @@ A company hosts an application on Amazon EC2 instances that run in a single Avai
 - D. Create an Auto Scaling group for the EC2 instances. Configure the Auto Scaling group to use multiple Availability Zones. Configure the Auto Scaling group to run application health checks on the instances.
 - E. Create an Amazon CloudWatch alarm. Configure the alarm to restart EC2 instances that transition to a stopped state.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -11514,7 +15894,12 @@ A company uses Amazon S3 to host its static website. The company wants to add a 
 - C. Host the website by using AWS Amplify Hosting for static content and dynamic content. Use server-side scripting to build the contact form. Configure Amazon Simple Queue Service (Amazon SQS) to deliver the message to the company.
 - D. Migrate the website from Amazon S3 to Amazon EC2 instances that run Windows Server. Use Internet Information Services (IIS) for Windows Server to host the webpage. Use client-side scripting to build the contact form. Integrate the form with Amazon WorkMail.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11527,7 +15912,12 @@ A company creates dedicated AWS accounts in AWS Organizations for its business u
 - C. Configure each AWS account root user email address to be the individual company managed email address of one person from each business unit. Configure alternate contacts for each AWS account with corresponding distribution lists for the billing team, the security team, and the operations team for each business unit.
 - D. Configure each AWS account root user to use email aliases that go to a centralized mailbox. Configure alternate contacts for each account by using a single business managed email distribution list each for the billing team, the security team, and the operations team.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11541,7 +15931,12 @@ A company runs an ecommerce application on AWS. Amazon EC2 instances process pur
 - D. Configure an AWS Lambda function to retry the ticket purchases until the processing is complete.
 - E. Configure an Amazon AP! Gateway REST API with a usage plan.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -11554,7 +15949,12 @@ A company that uses AWS Organizations runs 150 applications across 30 different 
 - C. Share an Amazon CloudWatch dashboard that includes the requested table visual. Configure CloudWatch to use AWS DataSync to query the new report.
 - D. Share an Amazon CloudWatch dashboard that includes the requested table visual. Configure CloudWatch to use Amazon Athena to query the new report.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11568,7 +15968,12 @@ A company is hosting a high-trafic static website on Amazon S3 with an Amazon Cl
 - D. Create an AWS Lambda@Edge function to add an Expires header to HTTP responses. Configure the function to run on viewer response.
 - E. Add a Cache-Control max-age directive of 24 hours to the objects in Amazon S3. On deployment, create a CloudFront invalidation to clear any changed files from edge caches.
 
-<small>Answer: AE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AE
+
+</details>
 
 ---
 
@@ -11581,7 +15986,12 @@ A company runs its application by using Amazon EC2 instances and AWS Lambda func
 - C. Purchase a Compute Savings Plan. Connect the Lambda functions to the private subnets that contain the EC2 instances.
 - D. Purchase a Compute Savings Plan. Keep the Lambda functions in the Lambda service VPC.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11594,7 +16004,12 @@ A company has deployed a multi-account strategy on AWS by using AWS Control Towe
 - C. Use AWS Cost Explorer to monitor and report on costs for each developer account. Configure Cost Explorer to send a daily report to each developer to monitor their spending. Use AWS Cost Anomaly Detection to detect anomalous spending and provide alerts.
 - D. Use AWS Service Catalog to allow developers to launch resources within a limited cost range. Create AWS Lambda functions in each AWS account to stop running resources at the end of each work day. Configure the Lambda functions to resume the resources at the start of each work day.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11609,7 +16024,12 @@ A solutions architect is designing a three-tier web application. The architectur
 - E. Configure the security group for the application tier to allow inbound HTTPS traffic from the security group for the web tier.
 - F. Configure the security group for the application tier to allow outbound HTTPS traffic and Microsoft SQL Server traffic to the security group for the web tier.
 
-<small>Answer: ACE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ACE
+
+</details>
 
 ---
 
@@ -11623,7 +16043,12 @@ A company has released a new version of its production application. The company'
 - D. Purchase a Compute Savings Plan for Lambda, Fargate, and Amazon EC2.
 - E. Purchase an EC2 Instance Savings Plan for Amazon EC2 and Fargate.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -11637,7 +16062,12 @@ A company uses a Microsoft SQL Server database. The company's applications are c
 - D. Use Amazon RDS Proxy to connect the applications to Aurora PostgreSQL.
 - E. Use AWS Database Migration Service (AWS DMS) to rewrite the SQL queries in the applications.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -11650,7 +16080,12 @@ A company plans to rehost an application to Amazon EC2 instances that use Amazon
 - C. Configure AWS Systems Manager to create encrypted copies of the EBS volumes. Reconfigure the EC2 instances to use the encrypted volumes.
 - D. Create a customer managed key in AWS Key Management Service (AWS KMS). Configure AWS Migration Hub to use the key when the company migrates workloads.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11663,7 +16098,12 @@ An ecommerce company wants to collect user clickstream data from the company's w
 - C. Use Amazon Kinesis Video Streams to capture the clickstream data. Use AWS Glue to process the data in real time.
 - D. Use Amazon Managed Service for Apache Flink (previously known as Amazon Kinesis Data Analytics) to capture the clickstream data. Use AWS Lambda to process the data in real time.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11676,7 +16116,12 @@ A global company runs its workloads on AWS. The company's application uses Amazo
 - C. Enable IAM Access Analyzer for S3 to identify all S3 buckets that are not versioning-enabled across Regions.
 - D. Create an S3 Multi-Region Access Point to identify all S3 buckets that are not versioning-enabled across Regions.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11689,7 +16134,12 @@ A company needs to optimize its Amazon S3 storage costs for an application that 
 - C. Create an S3 Lifecycle policy to move the files to S3 Standard-Infrequent Access (S3 Standard-IA) 30 days after object creation. Delete the files 4 years after object creation.
 - D. Create an S3 Lifecycle policy to move the files to S3 Standard-Infrequent Access (S3 Standard-IA) 30 days after object creation. Move the files to S3 Glacier Flexible Retrieval 4 years after object creation.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11702,7 +16152,12 @@ A company runs its critical storage application in the AWS Cloud. The applicatio
 - C. Send user data to the regional S3 endpoints closest to the user. Configure an S3 cross-account replication rule to keep the S3 buckets synchronized.
 - D. Set up Amazon S3 to use Multi-Region Access Points in an active-active configuration with a single global endpoint. Configure S3 Cross- Region Replication.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11715,7 +16170,12 @@ A company is migrating a data center from its on-premises location to AWS. The c
 - C. Create an Amazon Machine Image (AMI) of each application instance. Launch two new EC2 instances from the AMI. Place each EC2 instance in a separate Availability Zone. Configure a Network Load Balancer that has the EC2 instances as targets.
 - D. Use AWS Mitigation Hub Refactor Spaces to migrate each application off the EC2 instance. Break down functionality from each application into individual components. Host each application on Amazon Elastic Container Service (Amazon ECS) with an AWS Fargate launch type.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11728,7 +16188,12 @@ A company wants to isolate its workloads by creating an AWS account for each wor
 - C. Use AWS Control Tower to deploy accounts. Deploy a VPC in each workload account. Configure each VPC to route through an inspection VPC by using a transit gateway attachment.
 - D. Use AWS Organizations to deploy accounts. Deploy a VPC in each workload account. Configure each VPC to route through an inspection VPC by using a transit gateway attachment.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11741,7 +16206,12 @@ A company hosts a website on Amazon EC2 instances behind an Application Load Bal
 - C. Move the website to AWS Amplify. Configure an ALB to resolve to the Amplify website.
 - D. Move the website to AWS Amplify. Configure EC2 instances to cache the website.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11754,7 +16224,12 @@ A company is implementing a shared storage solution for a media application that
 - C. Create an Amazon EC2 Windows instance. Install and configure a Windows file share role on the instance. Connect the application server to the file share.
 - D. Create an Amazon FSx for Windows File Server file system. Connect the application server to the file system.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11767,7 +16242,12 @@ A company is designing its production application's disaster recovery (DR) strat
 - C. Create a new Aurora cluster in us-west-1 that has Cross-Region Replication.
 - D. Create a new Aurora cluster in us-west-1. Use AWS Database Migration Service (AWS DMS) to sync both clusters.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11780,7 +16260,12 @@ A company runs a critical data analysis job each week before the first day of th
 - C. Configure an Auto Scaling group of Amazon EC2 Spot Instances that run Amazon Linux. Configure a crontab entry on the instances to run the analysis.
 - D. Configure an AWS DataSync task to run the job. Configure a cron expression to run the task on a schedule.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11793,7 +16278,12 @@ A company runs workloads in the AWS Cloud. The company wants to centrally collec
 - C. Configure a data lake in Amazon Security Lake to collect the security data. Upload the data to an Amazon S3 bucket.
 - D. Configure an AWS Database Migration Service (AWS DMS) replication instance to load the security data into an Amazon RDS cluster.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11806,7 +16296,12 @@ A company is migrating five on-premises applications to VPCs in the AWS Cloud. E
 - C. Deploy an AWS Direct Connect connection between the application VPCs and the shared services VPAdd routes from the application VPCs in their subnets to the shared services VPC and the applications VPCs. Add routes from the shared services VPC subnets to the applications VPCs.
 - D. Deploy a transit gateway with associations between the transit gateway and the application VPCs and the shared services VPC. Add routes between the application VPCs in their subnets and the application VPCs to the shared services VPC through the transit gateway.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11820,7 +16315,12 @@ A company wants to use Amazon Elastic Container Service (Amazon ECS) to run its 
 - D. Set up an ECS cluster that uses the AWS Fargate launch type. Use Fargate for the cloud application containers and the on-premises application containers.
 - E. Set up an ECS cluster that uses the Amazon EC2 launch type for the cloud application containers. Use Amazon ECS Anywhere with an AWS Fargate launch type for the on-premises application containers.
 
-<small>Answer: AB</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AB
+
+</details>
 
 ---
 
@@ -11833,7 +16333,12 @@ A company is migrating its workloads to AWS. The company has sensitive and criti
 - C. Migrate the data to an Amazon S3 bucket. Use Amazon Macie to ensure data security.
 - D. Migrate the databases to an Amazon DynamoDB table. Use Amazon CloudWatch Logs to ensure data security.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11846,7 +16351,12 @@ A company wants to migrate an application to AWS. The company wants to increase 
 - C. Create two Amazon EC2 instances that host the application across two Availability Zones. Configure the EC2 instances as the targets of an Application Load Balancer (ALB). Connect a WAF to the ALB.
 - D. Create an Auto Scaling group that contains multiple Amazon EC2 instances that host the application across two Availability Zones. Configure an Application Load Balancer (ALB) and set the Auto Scaling group as the target. Connect a WAF to the Auto Scaling group.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11859,7 +16369,12 @@ A company manages a data lake in an Amazon S3 bucket that numerous applications 
 - C. Replicate the objects in the S3 bucket to new S3 buckets for each application. Create replication rules by prefix.
 - D. Replicate the objects in the S3 bucket to new S3 buckets for each application. Create dedicated S3 access points for each application.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11872,7 +16387,12 @@ A company has an application that customers use to upload images to an Amazon S3
 - C. Use S3 Event Notifications to publish a message with image details to an Amazon Simple Notification Service (Amazon SNS) topic. Configure a container instance in Amazon Elastic Container Service (Amazon ECS) to subscribe to the topic and to process the images.
 - D. Use S3 Event Notifications to publish a message with image details to an Amazon Simple Notification Service (Amazon SNS) topic. Configure an AWS Elastic Beanstalk application to subscribe to the topic and to process the images.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11886,7 +16406,12 @@ A company wants to improve the availability and performance of its hybrid applic
 - D. Configure a Network Load Balancer in each Region to address the EC2 endpoints. Configure a Network Load Balancer in each Region that routes to the on-premises endpoints.
 - E. Configure a Network Load Balancer in each Region to address the EC2 endpoints. Configure an Application Load Balancer in each Region that routes to the on-premises endpoints.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -11899,7 +16424,12 @@ A company runs a self-managed Microsoft SQL Server on Amazon EC2 instances and A
 - C. Create a 7-day EBS snapshot retention rule in Recycle Bin and apply the rule for all snapshots.
 - D. Copy EBS snapshots to Amazon S3 Standard-Infrequent Access (S3 Standard-IA).
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11912,7 +16442,12 @@ A company wants to use an AWS CloudFormation stack for its application in a test
 - C. Create a presigned URL for the template object. Configure the CloudFormation stack to use the presigned URL.
 - D. Allow public access to the template object in the S3 bucket. Block the public access after the test environment is created.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11925,7 +16460,12 @@ A company has applications that run in an organization in AWS Organizations. The
 - C. Confirm that all instances have a security group that allows SSH access only from the external support engineers’ source IP address ranges. Provide local IAM user credentials in each AWS account to the external support engineers for console access. Provide each external support engineer an SSH key pair to log in to the application instances.
 - D. Create a bastion host in a public subnet. Set up the bastion host security group to allow access from only the external engineers’ IP address ranges. Ensure that all instances have a security group that allows SSH access from the bastion host. Provide each external support engineer an SSH key pair to log in to the application instances. Provide local account IAM user credentials to the engineers for console access.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -11938,7 +16478,12 @@ A company uses Amazon RDS for PostgreSQL to run its applications in the us-east-
 - C. Use AWS Data Migration Service (AWS DMS) to logically replicate data to a new database. Configure the reports to be generated from the new database.
 - D. Create a read replica in us-east-1. Configure the reports to be generated from the read replica.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11951,7 +16496,12 @@ A company hosts its multi-tier, public web application in the AWS Cloud. The web
 - C. Create an AWS Lambda function to fetch EC2 logs from Amazon CloudWatch Logs. Use Amazon CloudWatch metrics to perform further analysis.
 - D. Send EC2 logs to Amazon S3. Use Amazon Redshift to fetch logs from the S3 bucket to process raw data for further analysis with Amazon QuickSight.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -11964,7 +16514,12 @@ A company runs an application that stores and shares photos. Users upload the ph
 - C. Configure an S3 event notification to invoke an AWS Lambda function each time a user uploads a new photo to the application. Configure the Lambda function to generate a thumbnail and to upload the thumbnail to the second S3 bucket.
 - D. Configure S3 Storage Lens to invoke an AWS Lambda function each time a user uploads a new photo to the application. Configure the Lambda function to generate a thumbnail and to upload the thumbnail to a second S3 bucket.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -11977,7 +16532,12 @@ A company has stored millions of objects across multiple prefixes in an Amazon S
 - C. Provision an AWS Glue crawler to query objects older than 3 years. Save the manifest file of old objects. Create a script to delete objects in the manifest.
 - D. Enable S3 Inventory. Create an AWS Lambda function to filter and delete objects. Invoke the Lambda function with S3 Batch Operations to delete objects by using the inventory reports.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -11990,7 +16550,12 @@ A company is building an application on AWS. The application uses multiple AWS L
 - C. Create individual IAM roles for each Lambda function. Grant the IAM roles access to the S3 bucket. Assign each IAM role as the Lambda execution role for its corresponding Lambda function.
 - D. Configure a bucket policy granting access to the Lambda functions based on their function ARNs.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12003,7 +16568,12 @@ A company has developed a non-production application that is composed of multipl
 - C. Use Amazon CloudFront and Amazon S3 to host the static web frontend. Refactor the microservices to use AWS Lambda functions that are in a target group behind a Network Load Balancer. Migrate the MySQL database to Amazon RDS for MySQL.
 - D. Use Amazon S3 to host the static web frontend. Refactor the microservices to use AWS Lambda functions that are in a target group behind an Application Load Balancer. Migrate the MySQL database to an Amazon EC2 Reserved Instance.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12016,7 +16586,12 @@ A video game company is deploying a new gaming application to its global users. 
 - C. Deploy an Amazon ElastiCache for Redis duster. Store the player data in the ElastiCache cluster.
 - D. Deploy an Amazon ElastiCache for Memcached duster. Store the player data in the ElastiCache cluster.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12029,7 +16604,12 @@ A company is designing an application on AWS that processes sensitive data. The 
 - C. Create a single AWS KMS key to encrypt all sensitive data across the application.
 - D. Create separate AWS KMS keys for each customer's data that have granular access control and logging enabled.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12042,7 +16622,12 @@ A company needs to design a resilient web application to process customer orders
 - C. Use a Gateway Load Balancer (GWLB) to manage web traffic. Use Amazon Elastic Container Service (Amazon ECS) to receive and process customer orders. Use the GWLB to capture and store unprocessed orders. Use Amazon DynamoDB to store processed customer orders.
 - D. Use an Application Load Balancer to manage web traffic. Use Amazon EC2 Auto Scaling groups to receive and process customer orders. Use Amazon Simple Queue Service (Amazon SQS) to store unprocessed orders. Use Amazon RDS with a Multi-AZ deployment to store processed customer orders.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12055,7 +16640,12 @@ A company is using AWS DataSync to migrate millions of files from an on-premises
 - C. Configure the destination storage class for the files as S3 Glacier Instant Retrieval. Use a lifecycle policy to transition the files to S3 Glacier Flexible Retrieval after 1 year with a retention period of 7 years.
 - D. Configure a DataSync task to transfer the files to S3 Standard-Infrequent Access (S3 Standard-IA). Use a lifecycle configuration to transition the files to S3 Deep Archive after 1 year with a retention period of 7 years.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12068,7 +16658,12 @@ A company recently performed a lift and shift migration of its on-premises Oracl
 - C. Increase the size of the Provisioned IOPS SSD (io1) EBS volume to 2 TB.
 - D. Change the EC2 Linux instance to a storage optimized instance type. Do not change the Provisioned IOPS SSD (io1) EBS volume.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12081,7 +16676,12 @@ A company is migrating from a monolithic architecture for a web application that
 - C. Configure an Amazon API Gateway WebSocket API to write to a data stream in Amazon Kinesis Data Streams with enhanced fan-out. Configure one or more subscribers to receive events from the data stream.
 - D. Configure an Amazon API Gateway HTTP API to invoke an AWS Lambda function that publishes events to an Amazon Simple Notification Service (Amazon SNS) topic. Configure one or more subscribers to receive events from the topic.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12094,7 +16694,12 @@ A company recently migrated a monolithic application to an Amazon EC2 instance a
 - C. Configure an Auto Scaling group with a minimum size of 1 and maximum size of 2. Resize the RDS DB instance to an instance type that has more CPU capacity.
 - D. Resize the EC2 instance to an EC2 instance type that has more CPU capacity. Configure an Auto Scaling group with a minimum and maximum size of 1. Resize the RDS DB instance to an instance type that has more CPU capacity.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12107,7 +16712,12 @@ A company needs to grant a team of developers access to the company's AWS resour
 - C. Create IAM access keys to grant programmatic access to AWS resources. Allow only developers to interact with AWS resources through API calls by using the access keys.
 - D. Create an AWS Cognito user pool. Grant developers access to AWS resources by using the user pool.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12121,7 +16731,12 @@ A company hosts a monolithic web application on an Amazon EC2 instance. Applicat
 - D. Use AWS Compute Optimizer to obtain a recommendation for an instance type to scale horizontally.
 - E. Create an Auto Scaling group and an Application Load Balancer to scale horizontally.
 
-<small>Answer: BE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BE
+
+</details>
 
 ---
 
@@ -12134,7 +16749,12 @@ A company runs all its business applications in the AWS Cloud. The company uses 
 - C. Use AWS Identity and Access Management (IAM) Access Analyzer to review all the company’s resources and accounts.
 - D. Use Amazon Inspector to find vulnerabilities in existing IAM policies.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12147,7 +16767,12 @@ A company needs to implement a new data retention policy for regulatory complian
 - C. Enable versioning on the S3 bucket. Set a lifecycle policy to delete the objects after a specified period.
 - D. Configure an S3 Lifecycle policy to transition objects to S3 Glacier Flexible Retrieval for the retention duration.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12160,7 +16785,12 @@ A company runs its customer-facing web application on containers. The workload u
 - C. Configure an ECS capacity provider with Fargate Spot for steady state and Fargate for burst traffic.
 - D. Configure an ECS capacity provider with Fargate. Use AWS Compute Optimizer to rightsize the Fargate task.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12173,7 +16803,12 @@ A company is building an application in the AWS Cloud. The application is hosted
 - C. Store the ALB access logs in an Amazon S3 bucket. Configure Amazon GuardDuty to detect and take automated preventative actions for DDoS attacks.
 - D. Subscribe to AWS Shield Advanced. Configure hosted zones in Route 53. Add ALB resources as protected resources.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12186,7 +16821,12 @@ A company hosts a video streaming web application in a VPC. The company uses a N
 - C. Deploy a second NLB in parallel with the existing NLB configured with a strict IP address allow list.
 - D. Use AWS Shield Advanced to provide enhanced DDoS protection and prevent unauthorized access attempts.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12201,7 +16841,12 @@ A healthcare company is developing an AWS Lambda function that publishes notific
 - E. Associate an Amazon API Gateway HTTP API with the SNS topic to control access to the topic by using API Gateway resource policies.
 - F. Configure a Lambda execution role that has the necessary IAM permissions to use a customer managed key in AWS KMS.
 
-<small>Answer: ADF</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ADF
+
+</details>
 
 ---
 
@@ -12214,7 +16859,12 @@ A company has an employee web portal. Employees log in to the portal to view pay
 - C. Purchase a Savings Plan to run the web portal and the document extract program. Run the web portal and the document extract program in an Auto Scaling group.
 - D. Create an Amazon S3 bucket to host the web portal. Use Amazon API Gateway and an AWS Lambda function for the existing functionalities. Use the Lambda function to run the document extract program. Invoke the Lambda function when the API that is associated with a new document upload is called.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12228,7 +16878,12 @@ A media company has a multi-account AWS environment in the us-east-1 Region. The
 - D. Use an Amazon EventBridge rule in the production account to capture the SNS topic notifications. Configure the EventBridge rule to forward notifications to the Lambda function that is in the administrator account.
 - E. Store performance metrics in an Amazon S3 bucket in the production account. Use Amazon Athena to analyze the metrics from the administrator account.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -12241,7 +16896,12 @@ A company is migrating an application from an on-premises location to Amazon Ela
 - C. Use the Amazon VPC CNI plugin for Kubernetes. Define custom subnets in the VPC cluster for the pods to use.
 - D. Implement a Kubernetes network policy that has pod anti-afinity rules to restrict pod placement to specific nodes that are within custom subnets.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12254,7 +16914,12 @@ A company hosts an ecommerce application that stores all data in a single Amazon
 - C. Create a new RDS DB instance in a Multi-AZ deployment. Manually restore the data from the existing RDS DB instance from the most recent snapshot.
 - D. Configure the DB instance in an Amazon EC2 Auto Scaling group with a minimum group size of three. Use Amazon Route 53 simple routing to distribute requests to all DB instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12267,7 +16932,12 @@ A company has multiple Microsoft Windows SMB file servers and Linux NFS file ser
 - C. Use Amazon FSx for NetApp ONTAP for SMB access. Use Amazon FSx for Lustre for NFS access.
 - D. Use Amazon S3 storage. Access Amazon S3 through an Amazon S3 File Gateway.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12281,7 +16951,12 @@ A software company needs to upgrade a critical web application. The application 
 - D. Create and configure an Auto Scaling group to launch private EC2 instances in multiple AWS Regions. Add the instances to a target group behind a new Application Load Balancer.
 - E. Migrate the database to an Amazon Aurora MySQL cluster with cross-Region read replicas.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -12295,7 +16970,12 @@ A company runs thousands of AWS Lambda functions. The company needs a solution t
 - D. Store sensitive information in AWS Systems Manager Parameter Store
 - E. Create a Lambda consumer with dedicated throughput to retrieve sensitive information and create environmental variables
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -12308,7 +16988,12 @@ A company has an internal application that runs on Amazon EC2 instances in an Au
 - C. Configure AWS Compute Optimizer for cost recommendations for the EC2 instances, the Auto Scaling group and the EBS volumes.
 - D. Configure AWS Compute Optimizer for cost recommendations for the EC2 instances. Create a new AWS Cost and Usage Report. Search the report for cost recommendations for the Auto Scaling group and the EBS volumes.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12321,7 +17006,12 @@ A company is running a media store across multiple Amazon EC2 instances distribu
 - C. Configure an Amazon Elastic Block Store (Amazon EBS) volume and mount it across all instances
 - D. Configure an Amazon Elastic File System (Amazon EFS) file system and mount it across all instances
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12334,7 +17024,12 @@ A company uses an Amazon RDS for MySQL instance. To prepare for end-of-year proc
 - C. Resize the read replica to a larger instance size Resize the primary instance to a smaller instance size
 - D. Delete the read replica Resize the primary instance to a larger instance
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12347,7 +17042,12 @@ A company is migrating its databases to Amazon RDS for PostgreSQL. The company i
 - C. Purchase Reserved Instances for a 1 year term with the Partial Upfront option for the Amazon RDS for PostgreSQL workloads. Purchase a 1 year EC2 Instance Savings Plan with the Partial Upfront option for the EC2 instances.
 - D. Purchase Reserved Instances for a 3 year term with the All Upfront option for the Amazon RDS for PostgreSQL workloads. Purchase a 3 year EC2 Instance Savings Plan with the All Upfront option for the EC2 instances.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12361,7 +17061,12 @@ A company is using an Amazon Elastic Kubernetes Service (Amazon EKS) cluster. Th
 - D. Define an IAM role that includes the necessary permissions. Annotate the Kubernetes service accounts with the Amazon ResourceName (ARN) of the IAM role.
 - E. Set up a trust relationship between the IAM roles for the service accounts and an OpenID Connect (OIDC) identity provider.
 
-<small>Answer: DE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: DE
+
+</details>
 
 ---
 
@@ -12374,7 +17079,12 @@ A company regularly uploads confidential data to Amazon S3 buckets for analysis.
 - C. Use server-side encryption with AWS KMS keys (SSE-KMS)
 - D. Use server-side encryption with customer managed AWS KMS keys
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12387,7 +17097,12 @@ A company has migrated several applications to AWS in the past 3 months. The com
 - C. Tag all the AWS resources with a key for cost and a value of the application's name. Activate cost allocation tags. Use Cost Explorerto get the desired information.
 - D. Tag all the AWS resources with a key for cost and a value of the application's name. Use the AWS Billing and Cost Management console todownload bills for the past 3 months. Look up the desired information.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12400,7 +17115,12 @@ An ecommerce company is preparing to deploy a web application on AWS to ensure c
 - C. Deploy Amazon EC2 instances in a single Availability Zone. Deploy an RDS DB instance in a second Availability Zone for cross-AZ redundancy. Serve static assets directly from the EC2 instances.
 - D. Use AWS Lambda functions to serve the web application. Use Amazon Aurora Serverless v2 for the database. Store static assets in Amazon Elastic File System (Amazon EFS) One Zone-Infrequent Access (One Zone-IA).
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12413,7 +17133,12 @@ An ecommerce company runs several internal applications in multiple AWS accounts
 - C. Deploy a Gateway Load Balancer (GWLB) in the networking account to send traffic to the security appliance. Configure the application accounts to send traffic to the GWLB by using an interface GWLB endpoint in the application accounts.
 - D. Deploy an interface VPC endpoint in the application accounts to send traffic directly to the security appliance.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12426,7 +17151,12 @@ A company runs its production workload on an Amazon Aurora MySQL DB cluster that
 - C. Use any of the instance endpoints for the selected three nodes
 - D. Use the reader endpoint to automatically distribute the read-only workload
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12439,7 +17169,12 @@ A company runs a Node js function on a server in its on-premises data center. Th
 - C. Store the database credentials as an encrypted Lambda environment variable. Write a custom Lambda function to rotate the credentials. Schedule the Lambda function to run every 30 days.
 - D. Store the database credentials as a key in AWS Key Management Service (AWS KMS). Configure automatic rotation for the key. Update the Lambda function to retneve the credentials from the KMS key.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12452,7 +17187,12 @@ A company wants to replicate existing and ongoing data changes from an on-premis
 - C. Use Amazon EC2 Auto Scaling to scale the size of the AWS DMS replication instance up or down based on the amount of data toreplicate.
 - D. Provision AWS DMS replication capacity by using Amazon Elastic Container Service (Amazon ECS) with an AWS Fargate launch type to analyze and replicate the data while provisioning the required capacity.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12465,7 +17205,12 @@ A company has a multi-tier web application. The application's internal service c
 - C. Configure AWS PrivateLink to allow only outbound traffic from the VPC without enabling the third-party SaaS provider to establish.
 - D. Use AWS PrivateLink to create a private connection between the application's VPC and the third-party SaaS provider.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12478,7 +17223,12 @@ A solutions architect needs to connect a company's corporate network to its VPC 
 - C. Configure AWS Site-to-Site VPN to connect to the VPConfigure route table entries to direct traffic from on premises to the VPConfigure instance security groups and network ACLs to allow only required traffic from on premises.
 - D. Configure AWS Transit Gateway to connect to the VPC. Configure route table entries to direct traffic from on premises to the VPC. Configure instance security groups and network ACLs to allow only required traffic from on premises.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12491,7 +17241,12 @@ A company has a custom application with embedded credentials that retrieves info
 - C. Store the credentials in AWS Secrets Manager. Configure the application to load the database credentials from Secrets Manager. Set up a credentials rotation schedule by creating an AWS Lambda function for Secrets Manager.
 - D. Store the credentials in AWS Systems Manager Parameter Store. Configure the application to load the database credentials from Parameter Store. Set up a credentials rotation schedule in the RDS for MySQL database by using Parameter Store.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12504,7 +17259,12 @@ A company wants to move its application to a serverless solution. The serverless
 - C. Configure Cross-Region Replication (CRR) on the existing S3 bucket. Use server-side encryption with Amazon S3 managed keys (SSE-S3). Use Amazon Athena to query the data.
 - D. Configure S3 Cross-Region Replication (CRR) on the existing S3 bucket. Use server-side encryption with AWS KMS multi-Region keys (SSE-KMS). Use Amazon RDS to query the data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12517,7 +17277,12 @@ A company has a web application that has thousands of users. The application use
 - C. Move uploaded images to Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA). Move premium user-generated AI images to S3 Standard. Move non-premium user-generated AI images to S3 Standard-Infrequent Access (S3 Standard-IA).
 - D. Move uploaded images to Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA). Move all generated AI images to S3 Glacier Flexible Retrieval.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12530,7 +17295,12 @@ A company is developing machine learning (ML) models on AWS. The company is deve
 - C. Direct the requests from the API into an Amazon Simple Queue Service (Amazon SQS) queue. Deploy the ML models as AWS Lambda functions that SQS events will invoke. Use auto scaling to increase the number of vCPUs for the Lambda functions based on the size of the SQS queue.
 - D. Direct the requests from the API into an Amazon Simple Queue Service (Amazon SQS) queue. Deploy the ML models as Amazon Elastic Container Service (Amazon ECS) services that read from the queue. Use auto scaling for Amazon ECS to scale both the cluster capacity and number of the services based on the size of the SQS queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12543,7 +17313,12 @@ A company runs a web application on Amazon EC2 instances in an Auto Scaling grou
 - C. Back up the Aurora MySQL DB cluster data by using AWS Backup. Deploy the DR infrastructure in a second AWS Region with an ALB. Update the Auto Scaling group to include EC2 instances from the second Region. Use Amazon Route 53 to configure active-active failover. Create an Aurora MySQL DB cluster in the second Region Restore the data from the backup.
 - D. Back up the infrastructure configuration by using AWS Backup. Use the backup to create the required infrastructure in a second AWS Region. Set the Auto Scaling group desired capacity to zero. Use Amazon Route 53 to configure active-passive failover. Convert the Aurora MySQL DB cluster to an Aurora global database.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12556,7 +17331,12 @@ A company is migrating its data processing application to the AWS Cloud. The app
 - C. Deploy Amazon EC2 Spot Instances to run the batch jobs. Store the data in Amazon S3 Standard. Move the data to Amazon S3 Glacier Flexible Retrieval after 30 days. Set an expiration to delete the data after 2 years.
 - D. Deploy Amazon EC2 On-Demand Instances to run the batch jobs. Store the data in Amazon S3 Standard. Move the data to Amazon S3 Glacier Deep Archive after 30 days. Set an expiration to delete the data after 2 years.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12570,7 +17350,12 @@ A company needs to design a hybrid network architecture. The company's workloads
 - D. Establish an AWS Direct Connect connection. Create a transit virtual interface (VIF) to a Direct Connect gateway.
 - E. Associate AWS Site-to-Site VPN connections with the transit gateway that is attached to the VPCs.
 
-<small>Answer: BD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BD
+
+</details>
 
 ---
 
@@ -12583,7 +17368,12 @@ A global ecommerce company runs its critical workloads on AWS. The workloads use
 - C. Enable Performance Insights. Monitor the CPU load to identify the timeouts.
 - D. Take regular automatic snapshots. Copy the automatic snapshots to multiple AWS Regions.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12596,7 +17386,12 @@ A company has multiple Amazon RDS DB instances that run in a development AWS acc
 - C. Create AWS Systems Manager State Manager associations to start and stop the RDS instances.
 - D. Create an Amazon EventBridge rule that invokes AWS Lambda functions to start and stop the RDS instances.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12609,7 +17404,12 @@ A consumer survey company has gathered data for several years from a specific ge
 - C. Configure AWS Resource Access Manager to share the S3 bucket with the marketing firm AWS account.
 - D. Configure the company’s S3 bucket to use S3 Intelligent-Tiering Sync the S3 bucket to one of the marketing firm’s S3 buckets.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12622,7 +17422,12 @@ A company uses AWS to host its public ecommerce website. The website uses an AWS
 - C. Configure an AWS WAF web ACL on the ALB to block traffic by using rate-based rules
 - D. Configure an Amazon CloudFront distribution in front of the Global Accelerator accelerator
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12635,7 +17440,12 @@ A company uses an Amazon DynamoDB table to store data that the company receives 
 - C. Use an Amazon Redshift COPY command to calculate performance metrics on a recurring schedule.
 - D. Use an Amazon EMR job with an Apache Hive external table to calculate performance metrics on a recurring schedule.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12648,7 +17458,12 @@ A solutions architect is designing the cloud architecture for a new stateless ap
 - C. Create an Amazon Simple Queue Service (Amazon SQS) queue to hold the jobs that need to be processed. Create an Auto Scaling group by using the launch template with the scaling policy set to add and remove EC2 instances based on the number of items in the SQS queue.
 - D. Create an Amazon Simple Notification Service (Amazon SNS) topic to send the jobs that need to be processed. Create an Auto Scaling group by using the launch template with the scaling policy set to add and remove EC2 instances based on the number of messages published to the SNS topic.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -12661,7 +17476,12 @@ A global ecommerce company uses a monolithic architecture. The company needs a s
 - C. Use Amazon Elastic Kubernetes Service (Amazon EKS) with an Amazon EC2 deployment to deploy a containerized application. Use an Amazon Aurora cluster to store the product data. Use AWS Step Functions to manage workfiows. Store the product images in Amazon S3 Glacier Deep Archive.
 - D. Use Amazon Elastic Container Service (Amazon ECS) with AWS Fargate to deploy a containerized application. Use Amazon RDS with a Multi-AZ deployment to store the product data. Store the product images in an Amazon S3 bucket.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12674,7 +17494,12 @@ A company is migrating an application from an on-premises environment to AWS. Th
 - C. Encrypt the data by using server-side encryption with customer-provided keys (SSE-C).
 - D. Encrypt the data by using client-side encryption with Amazon S3 managed keys.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12687,7 +17512,12 @@ A company wants to create an Amazon EMR cluster that multiple teams will use. Th
 - C. Create an EC2 IAM instance profile that has the required permissions for each team. Use the instance profile to submit the big data workloads.
 - D. Create an EMR security configuration that has the EnableApplicationScopedIAMRole option set to false. Use the security configuration to submit the big data workloads.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12700,7 +17530,12 @@ A solutions architect is designing an application that helps users fill out and 
 - C. Use an Amazon Simple Queue Service (Amazon SQS) standard queue between the web application server tier and the worker tier to store and forward form data.
 - D. Use an AWS Step Functions workfiow. Create a synchronous workfiow between the web application server tier and the worker tier that stores and forwards form data.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12713,7 +17548,12 @@ A finance company uses an on-premises search application to collect streaming da
 - C. Use Amazon Elastic Kubernetes Service (Amazon EKS) to ingest and process the data streams to Amazon DynamoDB for storage. Use Amazon CloudWatch to create graphical dashboards to search and visualize the data.
 - D. Use Amazon Kinesis Data Streams to ingest and process the data streams to Amazon OpenSearch Service. Use OpenSearch Service to search the data. Use Amazon QuickSight to create visualizations.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12726,7 +17566,12 @@ A company currently runs an on-premises application that usesASP.NET on Linux ma
 - C. Use AWS App Runner to containerize the application. Use App Runner to deploy the application to Amazon Elastic Container Service (Amazon ECS) on AWS Fargate.
 - D. Use AWS App Runner to containerize the application. Use App Runner to deploy the application to Amazon Elastic Kubernetes Service (Amazon EKS) on Amazon EC2 instances.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12739,7 +17584,12 @@ A company is designing a new internal web application in the AWS Cloud. The new 
 - C. Store the employee credentials in AWS Systems Manager Parameter Store. Use AWS CloudFormation and AWS Batch with the BatchGetSecretValue API to retrieve the usernames and passwords from Parameter Store.
 - D. Store the employee credentials in AWS Secrets Manager. Use AWS CloudFormation and the BatchGetSecretValue API to retrieve the usernames and passwords from Secrets Manager.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12752,7 +17602,12 @@ A company that is in the ap-northeast-1 Region has a fieet of thousands of AWS O
 - C. Create an Amazon S3 bucket in ap-northeast-1. Configure Amazon S3 Transfer Acceleration. Download the software by using the S3 Transfer Acceleration endpoint.
 - D. Create an Amazon S3 bucket in ap-northeast-1. Set up an Amazon CloudFront distribution. Configure the S3 bucket as the origin. Download the software by using signed URLs.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12765,7 +17620,12 @@ A company currently runs an on-premises stock trading application by using Micro
 - C. Deploy the application on Amazon EC2 instances in two Availability Zones. Configure one EC2 instance as active and the second EC2 instance in standby mode. Use an Amazon FSx for NetApp ONTAP Multi-AZ file system to access the data by using Internet Small Computer Systems Interface (iSCSI) protocol.
 - D. Deploy the application on Amazon EC2 instances in two Availability Zones. Configure one EC2 instance as active and the second EC2 instance in standby mode. Use Amazon Elastic Block Store (Amazon EBS) Provisioned IOPS SSD (io2) volumes as storage attached to the EC2 instances. Set up Amazon EBS level replication to sync data from one io2 volume in one Availability Zone to another io2 volume in the second Availability Zone.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12780,7 +17640,12 @@ A company is designing a web application with an internet-facing Application Loa
 - E. Allow HTTPS outbound traffic to the web application instances for the health check on port 8443.
 - F. Allow HTTPS inbound traffic from the web application instances for the health check on port 8443.
 
-<small>Answer: ACE</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: ACE
+
+</details>
 
 ---
 
@@ -12794,7 +17659,12 @@ A company hosts an application on AWS. The application gives users the ability t
 - D. Configure Amazon S3 to allow uploads from CloudFront origin access control (OAC).
 - E. Configure Amazon S3 to allow uploads from CloudFront. Configure an Amazon S3 website endpoint.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -12807,7 +17677,12 @@ A weather forecasting company collects temperature readings from various sensors
 - C. Configure Amazon Redshift to read the encrypted files. Use Redshift Spectrum and Redshift query editor v2 to run SQL queries on the data directly in Amazon S3.
 - D. Configure Amazon EMR Serverless to read the encrypted files. Use Apache SparkSQL to run SQL queries on the data directly in Amazon S3.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12820,7 +17695,12 @@ A company is implementing a new application on AWS. The company will run the app
 - C. Implement an Amazon Route 53 multivalue answer routing policy. Use an internet-facing Application Load Balancer to distribute the traffic across all Availability Zones within the same Region.
 - D. Implement an Amazon Route 53 weighted routing policy. Use an internet-facing Network Load Balancer to distribute the traffic across all Availability Zones within the same Region.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12833,7 +17713,12 @@ A financial services company plans to launch a new application on AWS to handle 
 - C. Implement third-party application-level data encryption before storing data in Amazon RDS for MySQL. Configure AWS Certificate Manager (ACM) SSL/TLS certificates for encryption in transit.
 - D. Configure encryption at rest for Amazon RDS for MySQL by using AWS KMS managed keys. Configure a VPN connection to enable private connectivity to encrypt data in transit.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12846,7 +17731,12 @@ A company is migrating its on-premises Oracle database to an Amazon RDS for Orac
 - C. Use the Amazon Aurora Clone feature for Oracle to create a point-in-time restore. Delete clones that are older than 90 days.
 - D. Create a backup plan that has a retention period of 90 days by using AWS Backup for Amazon RDS.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12859,7 +17749,12 @@ A company is developing a new application that uses a relational database to sto
 - C. Deploy the database on Amazon DynamoDB. Use on-demand capacity mode to automatically scale throughput to accommodate the workload.
 - D. Deploy the database on Amazon RDS. Use magnetic storage and use read replicas to accommodate the workload.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12872,7 +17767,12 @@ A company hosts its application on several Amazon EC2 instances inside a VPC. Th
 - C. Create a gateway endpoint for Amazon S3 that is attached to the VPUpdate the IAM instance profile policy with a Deny action and the following condition key:
 - D. Create a NAT Gateway in a public subnet. Update route tables to use the NAT Gateway. Assign bucket policies for all buckets with a Deny action and the following condition key:
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12885,7 +17785,12 @@ A company is building a cloud-based application on AWS that will handle sensitiv
 - C. Create individual IAM users for each member in all the teams with role-based permissions. Assign the IAM roles with predefined policies for RDS and S3 access to each user based on user needs. Implement IAM Access Analyzer for periodic credential evaluation.
 - D. Use AWS Organizations to create separate accounts for each team. Implement cross-account IAM roles with least privilege. Grant specific permission for RDS and S3 access based on team roles and responsibilities.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12898,7 +17803,12 @@ A company has an Amazon S3 bucket that contains sensitive data files. The compan
 - C. Install the AWS CLI on the virtual machine. Configure the AWS CLI with access keys from an IAM user that has access to the bucket.
 - D. Create an IAM user and policy that grants access to the bucket. Store the access key and secret key for the IAM user in AWS Secrets Manager. Configure the application to retrieve the access key and secret key at startup.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12911,7 +17821,12 @@ A company hosts its core network services, including directory services and DNS,
 - C. Create a VPN connection between each new account and the DX VPRoute the network traffic to the on-premises servers.
 - D. Configure AWS Transit Gateway between the accounts. Assign DX to the transit gateway and route network traffic to the on-premises servers.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12924,7 +17839,12 @@ A company hosts its main public web application in one AWS Region across multipl
 - C. Create an Amazon S3 bucket with public read access enabled. Migrate the web application to the S3 bucket. Configure the S3 bucket for website hosting.
 - D. Use AWS Direct Connect to directly serve content from the web application to the location of each customer.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -12937,7 +17857,12 @@ A company stores user data in AWS. The data is used continuously with peak usage
 - C. Amazon S3 Glacier Deep Archive
 - D. Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA)
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -12950,7 +17875,12 @@ A company is testing an application that runs on an Amazon EC2 Linux instance. A
 - C. Provision an EC2 instance with two 250 GB Provisioned IOPS SSD EBS volumes.
 - D. Provision an Amazon Elastic File System (Amazon EFS) file system. Configure the file system to use General Purpose performance mode.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -12964,7 +17894,12 @@ A company recently launched a new application for its customers. The application
 - D. Manually add more EC2 instances for the application.
 - E. Add a Gateway Load Balancer in front of the EC2 instances.
 
-<small>Answer: BC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BC
+
+</details>
 
 ---
 
@@ -12978,7 +17913,12 @@ A company is designing the architecture for a new mobile app that uses the AWS C
 - D. Create a service control policy (SCP) to deny creating instances when a tag key is not specified. Create another SCP that prevents identities from deleting tags. Attach the SCPs to the appropriate OU.
 - E. Create an AWS Config rule to check if EC2 instances use the data sensitivity tag and the specified values. Configure an AWS Lambda function to delete the resource if a noncompliant resource is found.
 
-<small>Answer: AD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AD
+
+</details>
 
 ---
 
@@ -12991,7 +17931,12 @@ A company runs database workloads on AWS that are the backend for the company's 
 - C. Configure the RDS backup retention policy to 30 days for automated backups. Manually delete manual backups that are older than 30 days.
 - D. Disable RDS automated backups. Delete automated backups and manual backups that are older than 30 days automatically by using AWS CloudFormation. Configure the RDS backup retention policy to 30 days for automated backups.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13004,7 +17949,12 @@ A company is planning to migrate a legacy application to AWS. The application cu
 - C. Amazon Elastic File System (Amazon EFS)
 - D. Amazon EMR File System (Amazon EMRFS)
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13017,7 +17967,12 @@ A company uses GPS trackers to document the migration patterns of thousands of s
 - C. Create an Amazon Simple Queue Service (Amazon SQS) queue to store the incoming data. Configure the application to poll for new messages for processing.
 - D. Create an Amazon DynamoDB table to store transmitted location coordinates. Configure the application to query the table for new data for processing. Use TTL to remove data that has been processed.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13030,7 +17985,12 @@ A company's software development team needs an Amazon RDS Multi-AZ cluster. The 
 - C. Create a VPC and two private subnets. Create the RDS cluster in the private subnets. Use RDS security groups to allow the company's office IP ranges to access the cluster.
 - D. Create a VPC and two public subnets. Create the RDS cluster in the public subnets. Create a cluster user for each developer. Use RDS security groups to allow the users to access the cluster.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13043,7 +18003,12 @@ A solutions architect is creating an application that will handle batch processi
 - C. Place all the EC2 instances in the same Availability Zone.
 - D. Place all the EC2 instances in private subnets in multiple Availability Zones.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13056,7 +18021,12 @@ A company hosts a multi-tier web application that uses an Amazon Aurora MySQL DB
 - C. Store a file that contains the credentials in an AWS Key Management Service (AWS KMS) encrypted Amazon Elastic File System (Amazon EFS) file system. Mount the EFS file system in all EC2 instances of the application tier. Restrict the access to the file on the file system so that the application can read the file and that only super users can modify the file. Implement an AWS Lambda function that rotates the key in Aurora every 14 days and writes new credentials into the file.
 - D. Store a file that contains the credentials in an AWS Key Management Service (AWS KMS) encrypted Amazon S3 bucket that the application uses to load the credentials. Download the file to the application regularly to ensure that the correct credentials are used. Implement an AWS Lambda function that rotates the Aurora credentials every 14 days and uploads these credentials to the file in the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -13069,7 +18039,12 @@ A streaming media company is rebuilding its infrastructure to accommodate increa
 - C. Use Amazon EC2 instances in an Auto Scaling group behind an Application Load Balancer (ALB) to process videos. Store video content in Amazon S3 Standard. Use Amazon Simple Queue Service (Amazon SQS) for queuing and to decouple processing tasks.
 - D. Deploy a containerized video processing application on Amazon Elastic Kubernetes Service (Amazon EKS) on Amazon EC2. Store video metadata in Amazon RDS in a single Availability Zone. Store video content in Amazon S3 Glacier Deep Archive.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13082,7 +18057,12 @@ A company runs an on-premises application on a Kubernetes cluster. The company r
 - C. Use AWS Fargate to supply compute capacity. Create a Fargate profile. Use the Fargate profile to deploy the application.
 - D. Use managed node groups with Karpenter to supply compute capacity. Deploy the application to the new EKS cluster.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13095,7 +18075,12 @@ A company is launching a new application that requires a structured database to 
 - C. Use Amazon Aurora Serverless for the database. Use serverless capacity scaling. Configure automated backups to Amazon S3.
 - D. Deploy a self-managed NoSQL database on Amazon EC2 instances. Use Reserved Instances for cost optimization. Configure automated backups directly to Amazon S3 Glacier Flexible Retrieval.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13108,7 +18093,12 @@ A company runs its legacy web application on AWS. The web application server run
 - C. Create an Amazon S3 access point for the Amazon EC2 instance inside the VPConfigure the web application to upload by using the Amazon S3 access point.
 - D. Configure an AWS Direct Connect connection between the VPC that has the Amazon EC2 instance and Amazon S3 to provide a dedicated network path.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -13121,7 +18111,12 @@ A company is creating a prototype of an ecommerce website on AWS. The website co
 - C. Add an additional scaling policy to the Auto Scaling group to launch additional EC2 instances when database response is slow.
 - D. Turn on the Multi-AZ configuration for the DB instance. Configure the EC2 instances to throttle the product catalog queries that are sent to the database.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13134,7 +18129,12 @@ A company currently stores 5 TB of data in on-premises block storage systems. Th
 - C. Use an AWS Storage Gateway Volume Gateway with stored volumes as iSCSI targets.
 - D. Use an AWS Storage Gateway Tape Gateway. Integrate Tape Gateway with the on-premises applications to store virtual tapes in Amazon S3.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13147,7 +18147,12 @@ A company operates a food delivery service. Because of recent growth, the compan
 - C. Provision two Amazon Simple Queue Service (Amazon SQS) queues. Use one SQS queue for order collection. Use the second SQS queue for order fulfillment. Configure the EC2 instances to poll their respective queues. Scale the Auto Scaling groups based on notifications that the queues send.
 - D. Provision two Amazon Simple Queue Service (Amazon SQS) queues. Use one SQS queue for order collection. Use the second SQS queue for order fulfillment. Configure the EC2 instances to poll their respective queues. Scale the Auto Scaling groups based on the number of messages in each queue.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -13160,7 +18165,12 @@ An online gaming company is transitioning user data storage to Amazon DynamoDB t
 - C. Create DynamoDB tables in multiple AWS Regions. Use on-demand capacity mode. Use DynamoDB Streams for Cross-Region Replication between Regions.
 - D. Use DynamoDB global tables for automatic multi-Region replication. Deploy tables in multiple AWS Regions. Use provisioned capacity mode. Enable auto scaling.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -13173,7 +18183,12 @@ A company runs its media rendering application on premises. The company wants to
 - C. Copy the data from Amazon S3 to Amazon FSx for Windows File Server. Configure an Amazon FSx File Gateway to provide storage for the on-premises application.
 - D. Configure an on-premises file server. Use the Amazon S3 API to connect to S3 storage. Configure the application to access the storage from the on-premises file server.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13186,7 +18201,12 @@ A company hosts its enterprise resource planning (ERP) system in the us-east-1 R
 - C. Set up AWS Global Accelerator. Configure listeners for the necessary ports. Configure endpoint groups for the appropriate Regions to distribute traffic. Create an endpoint in the group for the API.
 - D. Use AWS Site-to-Site VPN to establish dedicated VPN tunnels between Regions and customer networks. Route traffic to the API over the VPN connections.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13199,7 +18219,12 @@ A company tracks customer satisfaction by using surveys that the company hosts o
 - C. Write the survey results data to an Amazon S3 bucket. Use S3 Event Notifications to invoke an AWS Lambda function to read the data and call Amazon Rekognition for sentiment analysis. Store the sentiment analysis results in a second S3 bucket. Use S3 lifecycle policies on each bucket to expire objects after 365 days.
 - D. Send the survey results data to an Amazon API Gateway endpoint that is connected to an Amazon Simple Queue Service (Amazon SQS) queue. Configure the SQS queue to invoke an AWS Lambda function that calls Amazon Lex for sentiment analysis and saves the results to an Amazon DynamoDB table. Set the TTL for all records to 365 days in the future.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -13213,7 +18238,12 @@ A company uses AWS Systems Manager for routine management and patching of Amazon
 - D. Use Systems Manager Maintenance Windows to automatically remove the instances from service to patch the instances.
 - E. Configure Systems Manager State Manager to remove the instances from service and manage the patching schedule. Use ALB health checks to re-route traffic.
 
-<small>Answer: CD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: CD
+
+</details>
 
 ---
 
@@ -13226,7 +18256,12 @@ A medical company wants to perform transformations on a large amount of clinical
 - C. Create one AWS Glue job for each customer. Attach a security configuration to each job that uses client-side encryption with AWS KMS managed keys (CSE-KMS) to encrypt the data.
 - D. Create one Amazon EMR cluster for each customer. Attach a security configuration to each cluster that uses server-side encryption with AWS KMS keys (SSE-KMS) to encrypt the data.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -13239,7 +18274,12 @@ A company hosts a website analytics application on a single Amazon EC2 On-Demand
 - C. Create an AWS Lambda function to stop the EC2 instance and change the instance type. Create an Amazon CloudWatch alarm to invoke the Lambda function when CPU utilization is more than 75%.
 - D. Create an Amazon Machine Image (AMI) of the web application. Apply the AMI to a launch template. Create an Auto Scaling group that includes the launch template. Configure the launch template to use a Spot Fleet. Attach an Application Load Balancer to the Auto Scaling group.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -13252,7 +18292,12 @@ A company runs an environment where data is stored in an Amazon S3 bucket. The o
 - C. Use client-side encryption with AWS KMS customer managed keys.
 - D. Use server-side encryption with customer-provided keys (SSE-C) stored in AWS KMS.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13267,7 +18312,12 @@ A company runs multiple workloads on virtual machines (VMs) in an on-premises da
 - E. Use AWS App2Container (A2C) to collect data about the VMs.
 - F. Use AWS Database Migration Service (AWS DMS) to migrate the VMs.
 
-<small>Answer: BCD</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: BCD
+
+</details>
 
 ---
 
@@ -13281,7 +18331,12 @@ A company hosts an application in a private subnet. The company has already inte
 - D. Create a NAT gateway in the VPC where the company hosts the application. Assign a policy to the S3 bucket to deny any request that is not initiated from Amazon Cognito.
 - E. Attach a policy to the S3 bucket that allows access only from the users' IP addresses.
 
-<small>Answer: AC</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: AC
+
+</details>
 
 ---
 
@@ -13294,7 +18349,12 @@ A company has a three-tier web application that processes orders from customers.
 - C. Add an Amazon CloudFront distribution to cache the responses for the web tier. Use HTTP latency as a metric to determine when to scale.
 - D. Use an Amazon EC2 Auto Scaling target tracking policy to scale out the processing tier instances. Use the ApproximateNumberOfMessages attribute to determine when to scale.
 
-<small>Answer: D</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: D
+
+</details>
 
 ---
 
@@ -13307,7 +18367,12 @@ A company's production environment consists of Amazon EC2 On-Demand Instances th
 - C. Use Spot Instances for the EC2 instances that run for only 12 hours on Sunday. Purchase Standard Reserved Instances for the EC2 instances that run constantly between Monday and Saturday.
 - D. Use Spot Instances for the EC2 instances that run for only 12 hours on Sunday. Purchase Convertible Reserved Instances for the EC2 instances that run constantly between Monday and Saturday.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -13320,7 +18385,12 @@ A digital image processing company wants to migrate its on-premises monolithic a
 - C. Use AWS Lambda functions and Amazon EC2 Spot Instances to process the images. Store the processed files in Amazon FSx.
 - D. Deploy a group of Amazon EC2 instances to process the images. Use AWS Step Functions to orchestrate the workfiow. Store the processed files in an Amazon Elastic Block Store (Amazon EBS) volume.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13333,7 +18403,12 @@ A company's image-hosting website gives users around the world the ability to up
 - C. Configure an Amazon CloudFront distribution that uses the S3 bucket as an origin to improve the download performance. Configure the application to use CloudFront to upload images to improve the upload performance. Create S3 buckets in multiple AWS Regions. Configure replication rules for the buckets to replicate users' data based on the users' location. Redirect downloads to the S3 bucket that is closest to each user's location.
 - D. Configure AWS Global Accelerator for the S3 bucket to improve network performance. Create an endpoint for the application to use Global Accelerator instead of the S3 bucket.
 
-<small>Answer: A</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: A
+
+</details>
 
 ---
 
@@ -13346,7 +18421,12 @@ A company runs an application in a private subnet behind an Application Load Bal
 - C. Configure an S3 bucket policy to allow traffic from the Elastic IP address that is assigned to the NAT gateway.
 - D. Create a second NAT gateway in the same subnet where the legacy application is deployed. Update the VPC route table to use the second NAT gateway.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
@@ -13359,7 +18439,12 @@ A company has an application that runs on an Amazon Elastic Kubernetes Service (
 - C. Create separate Kubernetes service accounts for the UI and data services to assume an IAM role. Attach the AmazonS3FullAccess policy to the data services account and the AmazonDynamoDBFullAccess policy to the UI service account.
 - D. Create separate Kubernetes service accounts for the UI and data services to assume an IAM role. Use IAM Role for Service Accounts (IRSA) to provide access to the EKS Pods for the UI to Amazon S3 and the EKS Pods for the data services to DynamoDB.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13372,7 +18457,12 @@ A company needs to give a globally distributed development team secure access to
 - C. Use AD Connector in AWS Directory Service to connect to the on-premises Active Directory. Integrate AD Connector with AWS IAM Identity Center. Configure permissions sets to give each AD group access to specific AWS accounts and resources.
 - D. Use Amazon Cognito to deploy an identity federation solution. Integrate the identity federation solution with the on-premises Active Directory. Use Amazon Cognito to provide access tokens for developers to access AWS accounts and resources.
 
-<small>Answer: C</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: C
+
+</details>
 
 ---
 
@@ -13385,7 +18475,12 @@ A company is developing an application in the AWS Cloud. The application's HTTP 
 - C. Directly deploy the API in a private subnet. Create a network ACL. Set up rules to allow the traffic from specific IP addresses.
 - D. Modify the security group that is attached to API Gateway to allow inbound traffic from only the trusted IP addresses.
 
-<small>Answer: B</small>
+<details>
+<summary>Reveal answer</summary>
+
+Answer: B
+
+</details>
 
 ---
 
