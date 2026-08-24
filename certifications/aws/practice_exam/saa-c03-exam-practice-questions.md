@@ -106,7 +106,7 @@ A company uses NFS to store large video files in on-premises network attached st
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B (Snowball takes less than 2 weeks. C will take 65 days over 100Mbps internet)
 
 </details>
 
@@ -124,7 +124,7 @@ A company has an application that ingests incoming messages. Dozens of other app
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -142,7 +142,7 @@ A company is migrating a distributed application to AWS. The application serves 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -160,7 +160,7 @@ A company is running an SMB file server in its data center. The file server stor
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -178,7 +178,7 @@ A company is building an ecommerce web application on AWS. The application sends
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -196,7 +196,7 @@ A company has an application that runs on Amazon EC2 instances and uses an Amazo
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -286,7 +286,7 @@ A company hosts a data lake on AWS. The data lake consists of data in Amazon S3 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -341,7 +341,7 @@ A company has a three-tier web application that is deployed on AWS. The web serv
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: D
 
 </details>
 
@@ -431,7 +431,7 @@ A company observes an increase in Amazon EC2 costs in its most recent bill. The 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -503,7 +503,7 @@ A company is migrating applications to AWS. The applications are deployed in dif
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -521,7 +521,7 @@ A company provides a Voice over Internet Protocol (VoIP) service that uses UDP c
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -647,7 +647,7 @@ A company is building an application in the AWS Cloud. The application will stor
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -701,7 +701,7 @@ A company maintains a searchable repository of items on its website. The data is
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -792,7 +792,7 @@ A company has an Amazon S3 bucket that contains critical data. The company must 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: BD
+Answer: A, B
 
 </details>
 
@@ -865,7 +865,7 @@ A company's website uses an Amazon EC2 instance store for its catalog of items. 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -920,7 +920,7 @@ A company is developing an application that provides order shipping statistics f
 <details>
 <summary>Reveal answer</summary>
 
-Answer: DE
+Answer: B, D
 
 </details>
 
@@ -1010,7 +1010,7 @@ A company has registered its domain name with Amazon Route 53. The company uses 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -1154,7 +1154,7 @@ A company has more than 5 TB of file data on Windows file servers that run on pr
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -1588,7 +1588,7 @@ A survey company has gathered data for several years from areas in the United St
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -1624,7 +1624,7 @@ A company is using a SQL database to store movie data that is publicly accessibl
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -1769,7 +1769,7 @@ An image-processing company has a web application that users use to upload image
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -1805,7 +1805,7 @@ A company's containerized application runs on an Amazon EC2 instance. The applic
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -1842,7 +1842,7 @@ A company wants to migrate an on-premises data center to AWS. The data center ho
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AB
+Answer: B, E
 
 </details>
 
@@ -1951,7 +1951,7 @@ A company has an automobile sales website that stores its listings in a database
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -1988,7 +1988,7 @@ A social media company allows users to upload images to its website. The website
 <details>
 <summary>Reveal answer</summary>
 
-Answer: BD
+Answer: C, D
 
 </details>
 
@@ -2060,7 +2060,7 @@ A company has created an image analysis application in which users can upload ph
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -2151,7 +2151,7 @@ A global company is using Amazon API Gateway to design REST APIs for its loyalty
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -2169,7 +2169,7 @@ A company has implemented a self-managed DNS solution on three Amazon EC2 instan
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -2255,12 +2255,12 @@ A company runs its two-tier ecommerce website on AWS. The web tier consists of a
 - B. Configure a VPC with two private subnets and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the private subnets.
 - C. Use an Auto Scaling group to launch the EC2 instances in public subnets across two Availability Zones. Deploy an RDS Multi-AZ DB instance in private subnets.
 - D. Configure a VPC with one public subnet, one private subnet, and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the public subnet.
-- D. Configure a VPC with two public subnets, two private subnets, and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the public subnets.
+- E. Configure a VPC with two public subnets, two private subnets, and two NAT gateways across two Availability Zones. Deploy an Application Load Balancer in the public subnets.
 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CE
+Answer: A, E
 
 </details>
 
@@ -2405,7 +2405,7 @@ A company runs an Oracle database on premises. As part of the company’s migrat
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -2460,7 +2460,7 @@ A company is migrating its on-premises PostgreSQL database to Amazon Aurora Post
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CD
+Answer: A, C
 
 </details>
 
@@ -2478,7 +2478,7 @@ A company uses AWS Organizations to create dedicated AWS accounts for each busin
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -2514,7 +2514,7 @@ A reporting team receives files each day in an Amazon S3 bucket. The reporting t
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -2823,7 +2823,7 @@ A company produces batch data that comes from different databases. The company a
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AC
+Answer: A, E
 
 </details>
 
@@ -2842,7 +2842,7 @@ A company stores data in an Amazon Aurora PostgreSQL DB cluster. The company mus
 <details>
 <summary>Reveal answer</summary>
 
-Answer: BE
+Answer: D, E
 
 </details>
 
@@ -2879,7 +2879,7 @@ A company is running a publicly accessible serverless application that uses Amaz
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CD
+Answer: A, C
 
 </details>
 
@@ -2951,7 +2951,7 @@ A company is building a containerized application on premises and decides to mov
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -3095,7 +3095,7 @@ A company provides an API to its users that automates inquiries for tax computat
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -3113,7 +3113,7 @@ A solutions architect is creating a new Amazon CloudFront distribution for an ap
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -3185,7 +3185,7 @@ An application runs on Amazon EC2 instances in private subnets. The application 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -3330,7 +3330,7 @@ A company has an AWS account used for software engineering. The AWS account has 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -3403,7 +3403,7 @@ A company uses Amazon S3 as its data lake. The company has a new partner that mu
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -3422,7 +3422,7 @@ A company needs to store contract documents. A contract lasts for 5 years. Durin
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CE
+Answer: B, D
 
 </details>
 
@@ -3458,7 +3458,7 @@ A company has an ordering application that stores customer information in Amazon
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -3477,7 +3477,7 @@ A hospital wants to create digital copies for its large collection of historical
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CD
+Answer: B, E
 
 </details>
 
@@ -3513,7 +3513,7 @@ A company needs to run a critical application on AWS. The company needs to use A
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -3531,7 +3531,7 @@ A company’s order system sends requests from clients to Amazon EC2 instances. 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -3604,7 +3604,7 @@ A telemarketing company is designing its customer call center functionality on A
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -3622,7 +3622,7 @@ A company hosts its application on AWS. The company uses Amazon Cognito to manag
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -3640,7 +3640,7 @@ A company is developing a marketing communications service that targets mobile a
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -3694,7 +3694,7 @@ An online retail company has more than 50 million active customers and receives 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -3730,7 +3730,7 @@ A company wants to manage Amazon Machine Images (AMIs). The company currently co
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -3802,7 +3802,7 @@ A company offers a food delivery service that is growing rapidly. Because of the
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -3874,7 +3874,7 @@ A company’s reporting system delivers hundreds of .csv files to an Amazon S3 b
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -3928,7 +3928,7 @@ A company runs a global web application on Amazon EC2 instances behind an Applic
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -4276,7 +4276,7 @@ A company has a three-tier application for image sharing. The application uses a
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -4313,7 +4313,7 @@ A company wants to experiment with individual AWS accounts for its engineer team
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -4331,7 +4331,7 @@ A solutions architect needs to design a new microservice for a company’s appli
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -4349,7 +4349,7 @@ A company previously migrated its data warehouse solution to AWS. The company al
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -4403,7 +4403,7 @@ A medical research lab produces data that is related to a new study. The lab wan
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -4476,7 +4476,7 @@ A company has deployed a database in Amazon RDS for MySQL. Due to increased tran
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AC
+Answer: C, E
 
 </details>
 
@@ -4530,7 +4530,7 @@ A company’s security team requests that network traffic be captured in VPC Flo
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
