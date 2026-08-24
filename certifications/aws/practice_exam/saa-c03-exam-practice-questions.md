@@ -4965,7 +4965,7 @@ A company runs an application on Amazon EC2 instances. The company needs to impl
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -5002,7 +5002,7 @@ A company has a multi-tier application deployed on several Amazon EC2 instances 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AC
+Answer: AD
 
 </details>
 
@@ -5039,7 +5039,7 @@ A company wants to create an application to store employee data in a hierarchica
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CD
+Answer: BE
 
 </details>
 
@@ -5057,7 +5057,7 @@ A company has an application that is backed by an Amazon DynamoDB table. The com
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -5075,7 +5075,7 @@ A company is using Amazon CloudFront with its website. The company has enabled l
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -5093,7 +5093,7 @@ A company runs a fieet of web servers using an Amazon RDS for PostgreSQL DB inst
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -5111,7 +5111,7 @@ A company runs a web application that is deployed on Amazon EC2 instances in the
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -5183,7 +5183,7 @@ A company has a static website that is hosted on Amazon CloudFront in front of A
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -5219,7 +5219,7 @@ A company is migrating a Linux-based web server group to AWS. The web servers mu
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -5237,7 +5237,7 @@ A company has an AWS Lambda function that needs read access to an Amazon S3 buck
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -5255,7 +5255,7 @@ A company hosts a web application on multiple Amazon EC2 instances. The EC2 inst
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -5274,7 +5274,7 @@ A media company uses Amazon CloudFront for its publicly available streaming vide
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CE
+Answer: AB
 
 </details>
 
@@ -5365,7 +5365,7 @@ A development team has launched a new application that is hosted on Amazon EC2 i
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: D
 
 </details>
 
@@ -5383,7 +5383,7 @@ A company deploys an application on five Amazon EC2 instances. An Application Lo
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -5401,7 +5401,7 @@ A company is running a critical business application on Amazon EC2 instances beh
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -5419,7 +5419,7 @@ A research laboratory needs to process approximately 8 TB of data. The laborator
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -5474,7 +5474,7 @@ A company wants to create a mobile app that allows users to stream slow-motion v
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: AC
 
 </details>
 
@@ -5564,7 +5564,7 @@ A company that primarily runs its application servers on premises has decided to
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -5601,7 +5601,7 @@ A solutions architect needs to optimize storage costs. The solutions architect m
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -5637,7 +5637,7 @@ A company is using AWS to design a web application that will process insurance q
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -5655,7 +5655,7 @@ A company has an application that runs on several Amazon EC2 instances. Each EC2
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -5709,7 +5709,7 @@ A company experienced a breach that affected several applications in its on-prem
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -5727,7 +5727,7 @@ A company uses an Amazon EC2 instance to run a script to poll for and process me
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -5782,7 +5782,7 @@ A company has hundreds of Amazon EC2 Linux-based instances in the AWS Cloud. Sys
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -5981,7 +5981,7 @@ A company is planning to store data on Amazon RDS DB instances. The company must
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -6053,7 +6053,7 @@ A company wants to give a customer the ability to use on-premises Microsoft Acti
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -6071,7 +6071,7 @@ A company is experiencing sudden increases in demand. The company needs to provi
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -6143,7 +6143,7 @@ A company has a custom application with embedded credentials that retrieves info
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -6161,7 +6161,7 @@ A media company hosts its website on AWS. The website application’s architectu
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -6179,7 +6179,7 @@ A company has an Amazon S3 data lake that is governed by AWS Lake Formation. The
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -6215,7 +6215,7 @@ A solutions architect is designing a company’s disaster recovery (DR) architec
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -6269,7 +6269,7 @@ A company has an aging network-attached storage (NAS) array in its data center. 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -6287,7 +6287,7 @@ A company has an application that is running on Amazon EC2 instances. A solution
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -6432,7 +6432,7 @@ A company is migrating an old application to AWS. The application runs a batch j
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -6487,7 +6487,7 @@ A social media company runs its application on Amazon EC2 instances behind an Ap
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -6523,7 +6523,7 @@ A company uses Amazon API Gateway to run a private gateway with two REST APIs in
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -6541,7 +6541,7 @@ A company hosts a multiplayer gaming application on AWS. The company wants the a
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -6560,7 +6560,7 @@ A company uses a payment processing system that requires messages for a particul
 <details>
 <summary>Reveal answer</summary>
 
-Answer: BD
+Answer: BE
 
 </details>
 
@@ -6724,7 +6724,7 @@ A company needs to create an Amazon Elastic Kubernetes Service (Amazon EKS) clus
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AE
+Answer: CD
 
 </details>
 
@@ -6796,7 +6796,7 @@ An ecommerce company is building a distributed application that involves several
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -6868,7 +6868,7 @@ A company hosts a frontend application that uses an Amazon API Gateway API backe
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -6886,7 +6886,7 @@ A company is migrating its on-premises workload to the AWS Cloud. The company al
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -6904,7 +6904,7 @@ A company hosts a three-tier web application that includes a PostgreSQL database
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -6958,7 +6958,7 @@ A company runs an application on Amazon EC2 Linux instances across multiple Avai
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -7049,7 +7049,7 @@ A company has a large dataset for its online advertising business stored in an A
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -7086,7 +7086,7 @@ A company needs a backup strategy for its three-tier stateless web application. 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: C
 
 </details>
 
@@ -7158,7 +7158,7 @@ An IAM user made several configuration changes to AWS resources in their company
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -7212,7 +7212,7 @@ A company needs to transfer 600 TB of data from its on-premises network-attached
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -7302,7 +7302,7 @@ A developer has an application that uses an AWS Lambda function to upload files 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -7376,7 +7376,7 @@ A company is implementing a shared storage solution for a gaming application tha
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -7412,7 +7412,7 @@ A solutions architect must migrate a Windows Internet Information Services (IIS)
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -7502,7 +7502,7 @@ A company has a business system that generates hundreds of reports each day. The
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -7594,7 +7594,7 @@ A company uses AWS Organizations with all features enabled and runs multiple Ama
 <details>
 <summary>Reveal answer</summary>
 
-Answer: AD
+Answer: AC
 
 </details>
 
@@ -7612,7 +7612,7 @@ A company wants to use an Amazon RDS for PostgreSQL DB cluster to simplify time-
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -7630,7 +7630,7 @@ A company runs a highly available SFTP service. The SFTP service uses two Amazon
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -7721,7 +7721,7 @@ A company needs to store data from its healthcare application. The application�
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -7884,7 +7884,7 @@ A company needs to migrate a MySQL database from its on-premises data center to 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -8137,7 +8137,7 @@ A company runs its application on an Oracle database. The company plans to quick
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: B
 
 </details>
 
@@ -8157,7 +8157,7 @@ A company has a three-tier web application that is in a single server. The compa
 <details>
 <summary>Reveal answer</summary>
 
-Answer: ACF
+Answer: CEF
 
 </details>
 
@@ -8213,7 +8213,7 @@ A company wants to implement a backup strategy for Amazon EC2 data and multiple 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: D
 
 </details>
 
@@ -8231,7 +8231,7 @@ A company has resources across multiple AWS Regions and accounts. A newly hired 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -8324,7 +8324,7 @@ A company uses AWS Organizations to run workloads within multiple AWS accounts. 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -8360,7 +8360,7 @@ A company is developing a mobile gaming app in a single AWS Region. The app runs
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -8756,7 +8756,7 @@ A company containerized a Windows job that runs on .NET 6 Framework under a Wind
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -8793,7 +8793,7 @@ A company is looking for a solution that can store video archives in AWS from ol
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: A
 
 </details>
 
@@ -9048,7 +9048,7 @@ A company needs to minimize the cost of its 1 Gbps AWS Direct Connect connection
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: D
 
 </details>
 
