@@ -136,6 +136,7 @@
 | AWS Systems Manager (SSM) | Hybrid operations toolset (Session Manager, Run Command, Patch Manager) | Remote management without SSH, patching server fleets |
 | AWS Backup | Centralized managed backup across AWS services | Cross-service backup policies, WORM vault lock |
 | AWS Trusted Advisor | Automated best-practice checks across an account | Cost, security, performance, and fault-tolerance reviews |
+| AWS X-Ray | Distributed tracing for analyzing/debugging apps | Tracing requests across microservices, latency bottleneck analysis |
 
 ### Disaster Recovery & Migration
 
@@ -145,6 +146,7 @@
 | AWS Database Migration Service (DMS) | Migrates databases while the source stays live | Homogeneous and heterogeneous database migrations |
 | AWS Schema Conversion Tool (SCT) | Converts database schemas between engines | Cross-engine migrations (e.g., Oracle → Aurora) |
 | AWS Application Discovery Service | Gathers on-prem server data for migration planning | Migration Hub inventory and dependency mapping |
+| AWS Workload Discovery on AWS | Visualizes on-prem/AWS workloads and their dependencies | Architecture diagramming and dependency mapping for migration planning |
 | AWS Application Migration Service (MGN) | Lift-and-shift server migration to AWS | Rehosting physical/virtual/cloud servers |
 | VM Import/Export | Import/export VM images between on-prem and EC2 | VM-based migration, DR repository strategy |
 | VMware Cloud on AWS | Runs the VMware SDDC stack on AWS infrastructure | Extending on-prem VMware environments into AWS |
@@ -170,76 +172,72 @@
 
 ## 2. Most Important Points (50 Bullets)
 
-**Identity & Security**
+> Ordered and weighted by actual exam frequency: see [aws-service-answer-frequency.md](practice_exam/aws-service-answer-frequency.md), generated from 1,019 practice questions. Bullet count per service is roughly proportional to how often that service appears in a correct answer, so the top 6 services (S3, EC2, Lambda, EC2 Auto Scaling, RDS, VPC) get the deepest coverage.
 
-1. IAM is global; use roles (not hardcoded keys) for EC2/Lambda to access other AWS services.
-2. Policy evaluation: an explicit Deny always wins; otherwise an Allow is needed at every applicable layer (SCP, resource, identity, boundary).
-3. Permission boundaries cap the max permissions of an IAM user/role; SCPs govern entire accounts via Organizations.
-4. KMS: AWS manages the keys for you; CloudHSM: AWS manages only the hardware, you fully own the keys.
-5. Secrets Manager auto-rotates secrets via Lambda and integrates natively with RDS credentials.
-6. AWS WAF filters Layer 7 (HTTP) threats on ALB/API Gateway/CloudFront; Shield protects against Layer 3/4 DDoS.
-7. GuardDuty uses ML on CloudTrail, VPC Flow Logs, and DNS logs to detect threats with no agents required.
-8. IAM Identity Center provides SSO across AWS accounts and SaaS apps via Permission Sets and attribute-based access.
-9. Amazon Inspector scans EC2 (via SSM), ECR images, and Lambda functions for known vulnerabilities.
+**Identity & Security — IAM, KMS**
 
-**Compute**
+1. IAM is global (not region-scoped); always prefer roles over hardcoded access keys for EC2/Lambda/ECS to call other AWS services.
+2. IAM policy evaluation: an explicit Deny always wins; otherwise an Allow must exist at every applicable layer (SCP, resource policy, identity policy, permissions boundary).
+3. KMS key types: AWS-owned (free, no visibility), AWS-managed (free, per-service), customer-managed (full control — rotation, key policies, priced); SSE-KMS gives a CloudTrail audit trail that SSE-S3 doesn't.
+4. Envelope encryption: KMS generates a data key used to encrypt data locally; only the small encrypted data key is ever sent to KMS, keeping large-object encryption fast and cheap.
 
-10. EC2 purchasing trades commitment for discount: On-Demand, Reserved/Savings Plans, or Spot (up to 90% off, interruptible).
-11. Security Groups are stateful and allow-only; NACLs are stateless and support explicit deny at the subnet level.
-12. Auto Scaling Groups keep EC2 instance count within a min/max/desired range, paired with a Load Balancer.
-13. Lambda is serverless, billed per request and duration, capped at 15-minute executions, needs VPC config for private resources.
-14. AWS Fargate removes all EC2 server management for ECS/EKS containers; you only define task CPU/RAM.
-15. ALB routes Layer 7 HTTP traffic by path/host; NLB handles Layer 4 traffic at millions of requests/sec with static IPs.
+**Compute — EC2, Lambda, EC2 Auto Scaling, ECS, Fargate, ALB**
 
-**Storage**
+5. EC2 purchasing trades commitment for discount: On-Demand, Reserved/Savings Plans (up to ~72% off for 1/3-yr terms), or Spot (up to 90% off, interruptible with a 2-minute warning).
+6. Security Groups are stateful, instance-level, allow-only; NACLs are stateless, subnet-level, and support explicit deny rules evaluated in rule-number order.
+7. EC2 instance store is ephemeral (lost on stop/terminate); EBS-backed instances persist data and support stop/start; AMIs snapshot the root EBS volume for reuse.
+8. Placement groups: Cluster (lowest latency, same AZ/rack), Spread (max 7 instances per AZ, isolated hardware), Partition (large distributed workloads split into logical partitions).
+9. Lambda is serverless, billed per invocation/duration in ms, capped at a 15-minute timeout, and only needs VPC config (via an ENI) to reach private resources like RDS.
+10. Lambda concurrency: reserved concurrency caps/guarantees capacity per function; provisioned concurrency pre-warms execution environments to eliminate cold starts.
+11. Lambda scales automatically per-request with no capacity planning; destinations and DLQs capture async invocation failures for retry/inspection.
+12. Lambda@Edge / CloudFront Functions run code at CloudFront edge locations to manipulate requests/responses without a round-trip to the origin.
+13. EC2 Auto Scaling Groups keep instance count within a min/max/desired range using launch templates and scaling policies (target tracking, step, scheduled).
+14. ASG health checks (EC2 or ELB) trigger replacement of unhealthy instances; lifecycle hooks pause instances in Pending/Terminating states for custom actions.
+15. ASG warm pools keep pre-initialized instances ready to cut scale-out latency; termination policies control which instance is removed first on scale-in.
+16. ECS orchestrates Docker containers as Tasks (task definition = image, CPU/RAM, roles) run on a Cluster; EC2 launch type means you manage/register instances via the ECS Agent, while Fargate launch type is fully serverless.
+17. ECS integrates with ALB for path-based routing to containers via dynamic port mapping, and supports Service Auto Scaling based on CloudWatch metrics (e.g., CPU/memory).
+18. Fargate removes all EC2 server management for ECS/EKS tasks — you only define per-task CPU/RAM, billed per vCPU/memory-second used (no idle server cost).
+19. Fargate scales by increasing task count, not instance count — ideal for spiky/unpredictable workloads needing least operational overhead.
+20. ALB operates at Layer 7, routing HTTP/HTTPS by path, host, header, or query string to different target groups (EC2, ECS, Lambda, or IP targets).
+21. ALB supports native TLS termination with ACM certificates, WebSocket/HTTP2, and sticky sessions via application-controlled cookies.
 
-16. S3 offers 11-nines durability across all storage classes; availability and retrieval cost vary by class.
-17. S3 replication (Cross Reg. Repl./Same Reg. Repl.) requires versioning on both buckets and only replicates new objects going forward.
-18. EBS is single-instance block storage; EFS is a shared NFS file system mountable by many instances across AZs.
-19. Snow Family devices move offline data faster than a network transfer when that transfer would take roughly a week or more.
-20. FSx offers managed third-party file systems: Windows File Server (SMB), Lustre (HPC), NetApp ONTAP, and OpenZFS.
-21. Storage Gateway bridges on-prem to S3/EBS-backed storage via File, Volume, or Tape Gateway modes.
+**Storage — S3, EBS, EFS, FSx**
 
-**Databases**
+22. S3 offers eleven-nines durability across all storage classes; availability, retrieval time/cost, and minimum storage duration vary by class — durability doesn't.
+23. S3 Lifecycle rules automate transitions between storage classes and expirations; Intelligent-Tiering auto-moves objects between access tiers with no retrieval fees.
+24. S3 Cross-Region/Same-Region Replication requires versioning on both buckets and only replicates new objects going forward (not retroactively).
+25. S3 Transfer Acceleration speeds long-distance uploads via CloudFront edge locations; Multipart Upload parallelizes and resumes large object uploads.
+26. S3 encryption options: SSE-S3 (AWS-owned keys), SSE-KMS (auditable, request-quota limited), SSE-C (customer-supplied keys); presigned URLs grant temporary access without changing the bucket policy.
+27. EBS is persistent block storage attached to a single EC2 instance in the same AZ; types: gp3/gp2 (general SSD), io1/io2 (high/provisioned IOPS, databases), st1 (throughput HDD), sc1 (cold HDD).
+28. EBS snapshots are incremental and stored in S3, can be copied across regions/accounts for DR, and Fast Snapshot Restore removes first-use latency.
+29. EFS is a managed, multi-AZ NFS file system mountable concurrently by many EC2/Linux instances (vs. EBS: single-instance, single-AZ).
+30. EFS offers Standard and Infrequent Access storage classes with Lifecycle Management, plus Bursting, Provisioned, and Elastic throughput modes.
+31. FSx provides managed third-party file systems: Windows File Server (SMB, AD-integrated), Lustre (HPC), NetApp ONTAP, and OpenZFS.
+32. FSx for Lustre links directly to an S3 bucket for high-throughput, low-latency processing of S3 data (e.g., ML training, big data workloads).
 
-22. RDS Multi-AZ gives synchronous failover for high availability; Read Replicas give asynchronous read scaling (up to 15).
-23. Aurora stores six copies across three AZs, fails over in under 30 seconds, and offers Global Database for multi-region reads.
-24. ElastiCache Redis supports HA, persistence, and replicas; Memcached only supports sharding, with no persistence.
-25. DynamoDB is a NoSQL store scaling to millions of requests/sec; DAX adds microsecond in-memory caching in front of it.
-26. Redshift is a columnar OLAP data warehouse; Redshift Spectrum queries S3 data directly without loading it first.
-27. Athena runs serverless SQL directly against S3 data; partitioning and columnar formats reduce scan cost.
+**Databases — RDS, DynamoDB, Aurora**
 
-**Networking**
+33. RDS Multi-AZ gives synchronous standby failover for HA (not read scaling); Read Replicas (up to 15, can cross-region) give asynchronous read scaling.
+34. RDS supports automated backups, manual snapshots, and point-in-time restore; storage auto scaling grows volumes automatically as usage nears the threshold.
+35. RDS Proxy pools and manages DB connections to prevent exhaustion from Lambda/serverless spikes and speeds up failover.
+36. DynamoDB is a fully managed NoSQL key-value/document store scaling to millions of requests/sec at single-digit millisecond latency; on-demand mode auto-scales, provisioned mode is cheaper for steady, predictable traffic.
+37. DAX adds a microsecond in-memory cache in front of DynamoDB; DynamoDB Streams + Lambda enable event-driven reactions to table changes; Global Tables give multi-region active-active replication.
+38. Aurora stores 6 copies of data across 3 AZs, self-heals, and fails over in under 30 seconds; Aurora Global Database replicates to secondary regions in under 1 second.
+39. Aurora Serverless v2 scales database capacity automatically for variable/intermittent workloads without managing instances.
 
-28. Route 53 is a highly available DNS service with the only 100% availability SLA, supporting many routing policies.
-29. VPC Peering is not transitive; Transit Gateway solves transitive routing across many VPCs at scale.
-30. Gateway VPC Endpoints (S3/DynamoDB) are free; Interface Endpoints cover other services via a priced ENI.
-31. CloudFront caches content globally at edge locations and secures private S3 origins with Origin Access Control.
-32. Global Accelerator proxies TCP/UDP traffic over AWS's private backbone using two static Anycast IPs (single IP behind multiple servers; traffic routed to closest), without caching.
-33. API Gateway fronts REST/HTTP/WebSocket APIs; Edge-Optimized routes through CloudFront, Regional and Private serve narrower audiences.
-34. Cognito User Pools handle sign-up/sign-in; Identity Pools exchange logins for temporary AWS credentials.
+**Networking — VPC, CloudFront, API Gateway**
 
-**Messaging & Integration**
+40. A VPC spans one region across multiple AZs; each subnet lives in exactly one AZ and is public/private based on whether its route table has an IGW route.
+41. Gateway VPC Endpoints (S3, DynamoDB) are free; Interface Endpoints (PrivateLink, priced ENI) cover most other AWS services for private connectivity.
+42. VPC Peering is not transitive (each pair needs its own connection); Transit Gateway provides hub-and-spoke transitive routing across many VPCs/VPNs/DX at scale.
+43. CloudFront caches content at edge locations globally, cutting latency and origin load; Origin Access Control (OAC) restricts S3 origins to CloudFront-only access.
+44. CloudFront Signed URLs/Cookies restrict access to private content; cache behaviors route different paths to different origins with different TTLs.
+45. API Gateway fronts REST, HTTP, and WebSocket APIs; Edge-Optimized routes through CloudFront, Regional serves a single region, Private is reachable only within a VPC via an interface endpoint.
+46. API Gateway supports throttling/usage plans/API keys, response caching, and Lambda authorizers or Cognito for authentication.
 
-35. SQS decouples producers/consumers with at-least-once delivery; FIFO queues add strict ordering at lower throughput.
-36. SNS fans out one published message to many subscribers, including SQS, Lambda, email, SMS, and HTTP endpoints.
-37. Kinesis Data Streams is real-time and replayable up to 365 days; Data Firehose is near-real-time with no replay.
-38. EventBridge is a serverless event bus routing schedule- and pattern-based events to many AWS destinations.
-39. Step Functions orchestrates multi-step workflows across Lambda and other AWS services with built-in retries and error handling.
+**Messaging & Integration — SQS, SNS**
 
-**Monitoring & DevOps**
-
-40. CloudWatch handles metrics, logs, and alarms; CloudTrail audits every API call made in an account.
-41. AWS Config tracks resource configuration compliance over time but does not block non-compliant actions.
-42. CloudFormation is declarative Infrastructure as Code; StackSets deploy the same template across many accounts/regions.
-43. Systems Manager Session Manager gives shell access without SSH, bastion hosts, or an open port 22.
-44. AWS Backup centralizes backup policies across many services; Vault Lock enforces WORM retention even against the root user.
-
-**DR, Migration & Cost**
-
-45. DR strategies scale by cost and RTO/RPO: Backup & Restore, Pilot Light, Warm Standby, then Multi-Site Active/Active.
-46. AWS DMS migrates databases while the source stays live; the Schema Conversion Tool handles cross-engine schema changes.
-47. Cost Explorer analyzes and forecasts spend; Cost Anomaly Detection uses ML to flag unusual spend automatically.
-48. Data transfer costs: same-AZ private IP traffic is free; cross-AZ, cross-region, and internet egress cost more.
-49. The Well-Architected Framework's six pillars — Operational Excellence, Security, Reliability, Performance, Cost, Sustainability — work as a synergy, not trade-offs.
-50. Exam questions are largely about matching scenario trigger words (e.g., "least operational overhead," "millisecond latency") to the right service.
+47. SQS decouples producers/consumers with at-least-once delivery and a default 4-day (max 14-day) retention; visibility timeout hides in-flight messages from other consumers.
+48. SQS FIFO queues guarantee strict ordering and exactly-once processing at lower throughput than Standard queues; DLQs capture messages that fail repeated processing.
+49. SNS fans out one published message to many subscribers at once — SQS, Lambda, email, SMS, HTTP/S endpoints — commonly paired with SQS for durable fan-out (the SNS+SQS fan-out pattern).
+50. SNS message filtering (via subscription filter policies) lets each subscriber receive only the subset of published messages relevant to it.

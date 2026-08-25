@@ -232,7 +232,12 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 - **EC2 Hibernate**: preserves the in-memory (RAM) state to a file on the root EBS volume (which must be encrypted) so the next start skips OS boot and app warm-up. Supported on specific instance families, RAM must be < 150 GB, not supported on bare metal, and an instance can't stay hibernated more than 60 days.
 - **EC2 Instance Store vs EBS**: instance store = ephemeral hardware-attached disk, better IOPS (starting from 200k IOPS to 3M IOPS), data lost on stop (not just terminate) — buffer/cache/scratch data, backups/replication are your responsibility; EBS = persistent network-attached block storage ("network USB stick"), bound to an AZ, billed for all provisioned capacity, can be detached and re-attached to another instance quickly.
 - **EBS volume types** (only gp2/gp3 and io1/io2 Block Express can be boot volumes):
-  - **gp2/gp3** (general-purpose SSD, 1 GiB–16 TiB): cost-effective, boot volumes/dev-test/virtual desktops. gp3 decouples IOPS (baseline 3,000, up to 16,000) and throughput (baseline 125 MiB/s, up to 1,000 MiB/s) from size; gp2 links IOPS to size (3 IOPS/GiB, bursts to 3,000, caps at 16,000 IOPS).
+  - **gp2/gp3** (general-purpose SSD, 1 GiB–16 TiB): cost-effective, boot volumes/dev-test/virtual desktops. 
+    - gp3 decouples IOPS (baseline 3,000, up to 16,000) and throughput (baseline 125 MiB/s, up to 1,000 MiB/s) from disk size;
+      - Pricing (2026): $0.08/GB + $0.005/IOPS 
+    - gp2 links IOPS to size (3 IOPS/GiB, bursts to 3,000, caps at 16,000 IOPS).
+      - Pricing (2026): $0.10GB
+    - For small disk size, `gp3` is almost most certainly **cheaper** than `gp2` (even at 100 IOPS).
   - **io1/io2 Block Express** (provisioned IOPS SSD, 4 GiB–16/64 TiB): sustained IOPS/sub-ms latency, critical DB workloads needing >16,000 IOPS; io2 Block Express reaches up to 256,000 IOPS and supports **EBS Multi-Attach** — same volume attached read/write to up to 16 instances in the same AZ (needs a cluster-aware file system, not XFS/EXT4).
   - **st1** (throughput-optimized HDD, 125 GiB–16 TiB, not bootable): big data, data warehouses, log processing; max 500 MiB/s, 500 IOPS.
   - **sc1** (cold HDD, 125 GiB–16 TiB, not bootable): infrequently accessed data, lowest cost; max 250 MiB/s, 250 IOPS.
@@ -339,7 +344,11 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 - **Fargate**: serverless compute engine for ECS/EKS — no EC2 instances to manage, pay per task.
   - **!!Popular on exam!!**
   - Fargate is part of ECS or EKS.
-  - Use case: Fargate when you don't want to manage underlying servers; EC2 launch type when you need more control over instance type/cost optimization at scale.
+  - Standard Fargate is slightly *more expensive* than the cheaper EC2 instances for web requests.
+  - Setting Fargate to 0 task for web requests will result in bad user exp. Takes 1 min to spin up new container to serve requests.
+  - Use case: 
+    1. Fargate when you don't want to manage underlying servers; EC2 launch type when you need more control over instance type/cost optimization at scale.
+    2. Bursty compute
 
 ### Elastic Beanstalk
 - A developer-centric PaaS view of deploying on AWS: solves the recurring problem of managing infra, deploying code, configuring DBs/load balancers, and scaling for what is usually the same underlying architecture (ALB + ASG). It's a managed service — AWS handles capacity provisioning, load balancing, scaling, health monitoring, instance configuration; you're only responsible for the application code. You still have full control over the configuration underneath. Beanstalk itself is free — you pay only for the underlying resources (EC2, RDS, etc.).
@@ -374,7 +383,12 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   - **No chaining**: bucket1→bucket2→bucket3 does not propagate bucket1's objects to bucket3.
 - **MFA Delete**: requires versioning enabled and only the bucket owner (root account) can enable/disable it; required to permanently delete an object version or suspend versioning; not required to enable versioning or list deleted versions.
 - **Glacier Vault Lock**: WORM (Write Once Read Many) models for compliance/data retention. Vault Lock policies, once locked, can never be changed or deleted. 
-- **S3 Object Lock**: Object Lock (needs versioning) supports **Compliance mode** (no one, including root, can overwrite/delete or loosen retention) and **Governance mode** (most users blocked, specific users can still override), a configurable **Retention Period** (extendable) and independent **Legal Hold** (indefinite protection, freely toggled via `s3:PutObjectLegalHold`).
+- **S3 Object Lock**: Object Lock (needs versioning) supports:
+  - **Compliance mode** (no one, including root, can overwrite/delete or loosen retention) and 
+  - **Governance mode** (most users blocked, specific users can still override), 
+  - a configurable **Retention Period** (extendable) and 
+  - independent **Legal Hold** (indefinite protection, freely toggled via `s3:PutObjectLegalHold`).
+  - To lock existing objects, use S3 Batch Ops - `PutObjectRetention`.
 
 #### S3 Storage Classes & Lifecycle
 - Storage classes are applicable to each S3 objects.
@@ -528,7 +542,10 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Great for **rapidly evolving schemas**.
 - **Standard-Infrequent Access (IA)** reduces cost by 60% but increase read/write cost by 25%. Performance is same as Standard.
   - Use case: logs, archive, analytics or data that is not accessed frequently
-- **Capacity modes**: **Provisioned** (default) — you specify Read Capacity Units (RCU) and Write Capacity Units (WCU) up front, need to plan capacity, can add auto-scaling on top. **On-Demand** — reads/writes auto-scale with the workload, no capacity planning, pay-per-use (more expensive), best for unpredictable workloads/steep sudden spikes.
+- **Capacity modes**: 
+  1. **Provisioned** (default) — you specify Read Capacity Units (RCU) and Write Capacity Units (WCU) up front, need to plan capacity, can add auto-scaling on top.
+    - Can make *auto-scaling* provisioned with Cloudwatch + Application Auto Scaling services. But, not as fast as On-Demand. 
+  2. **On-Demand** — reads/writes auto-scale with the workload, no capacity planning, pay-per-use (more expensive), best for unpredictable workloads/steep sudden spikes.
 - **DAX (DynamoDB Accelerator)**: fully managed, highly available, seamless in-memory cache sitting in front of DynamoDB — microsecond latency for cached data, no application logic changes needed (same DynamoDB API), 5-minute default TTL; caches individual objects and Query/Scan results. Different from ElastiCache in front of DynamoDB, which is typically used to cache computed/aggregated results rather than raw DynamoDB API calls.
 - **Streams**: an ordered stream of item-level create/update/delete events on a table. **DynamoDB Streams** (24h retention, limited consumers, processed via Lambda triggers or the DynamoDB Streams Kinesis Adapter) vs the newer **Kinesis Data Streams for DynamoDB** (up to 1 year retention, many more consumers, processed via Lambda, Kinesis Data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL). Use cases: react to changes in real time (e.g. welcome email), real-time usage analytics, populate derivative tables, cross-region replication, invoke Lambda on changes.
 - **Global Tables**: active-active, two-way replication across regions for low-latency multi-region access; applications can read AND write in any participating region; requires DynamoDB Streams enabled as a prerequisite.
@@ -934,6 +951,7 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - **Patch Manager**: automates OS/native-application/security patching across EC2 and on-prem servers (Linux, macOS, Windows) 
   - cannot patch third-party app; usually only package manager related
   - patch on-demand or on a schedule via **Maintenance Windows**; 
+  - To manage EC2 instances, need to either: (i) enable `Default Host Configuration Management` - for whole account & low effort or (ii) add `AmazonSSMManagedInstanceCore` to IAM role policy - for more control.
   - scans instances and generates a patch-compliance report of missing patches.
 - **Maintenance Windows**: defines a schedule (+ duration, registered instances, registered tasks) for performing actions like patching, driver updates, or software installs — e.g. trigger Run Command every 24 hours to update a fleet.
 - **Automation**: simplifies common maintenance/deployment tasks (restart instances, create an AMI, take an EBS snapshot) via **Automation Runbooks** (pre-built or custom SSM documents); triggered manually (Console/CLI/SDK), via EventBridge, on a Maintenance Window schedule, or by AWS Config for rule remediations.
@@ -951,7 +969,8 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 
 ### AWS Backup
 - Fully managed, centralized backup across many AWS services (EC2/EBS, S3, RDS all engines/Aurora/DynamoDB, DocumentDB, Neptune, EFS, FSx for Lustre & Windows File Server, Storage Gateway Volume Gateway) — no custom scripts or manual processes needed; supports cross-region and cross-account backups and Point-In-Time Recovery for supported services.
-- **Backup Plans**: policies defining backup frequency (every 12h, daily, weekly, monthly, or a cron expression), backup window, transition to cold storage (never/days/weeks/months/years), and retention period (always/days/weeks/months/years) — then assign AWS resources to the plan; backups land automatically in an S3-backed vault.
+- **Backup Plans**: policies defining backup frequency (every 12h, daily, weekly, monthly, or a cron expression), backup window, transition to cold storage (never/days/weeks/months/years), and retention period (always/days/weeks/months/years) — then *assign AWS resources to the plan*; backups land automatically in an S3-backed vault.
+  - Only resources in the Backup Plan will be backed up
 - **AWS Backup Vault Lock**: enforces a WORM (Write Once Read Many) state on everything in a backup vault — protects against inadvertent or malicious deletion and against retention periods being shortened; when enabled, **even the root user cannot delete backups**.
 
 > **Also relevant (lower exam frequency)**: Amazon Inspector, AWS Firewall Manager, Amazon Macie — see the companion Additional Topics guide (Security section).

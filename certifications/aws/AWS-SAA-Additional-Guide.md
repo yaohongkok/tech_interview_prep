@@ -197,7 +197,7 @@
 ## 3. Additional Storage Services
 
 ### Amazon FSx
-- Family of fully managed, 3rd-party high-performance file systems on AWS.
+- Family of fully managed, 3rd-party high-performance *network* file systems on AWS.
 - Exists to lift-and-shift workloads needing a specific file system's protocol/features (SMB, Lustre, ONTAP, ZFS), unlike generic S3/EFS. i.e. Windows apps.
 - **FSx for Windows File Server**: managed Windows share (SMB, Windows NTFS), Microsoft AD integration, ACLs, user quotas, supports Microsoft DFS Namespaces (group multiple file systems), can be mounted on Linux EC2 too; SSD (latency-sensitive: DBs, media processing) or HDD (broad workloads: home dirs, CMS) storage; scales to 10s of GB/s and 100s of PB; reachable from on-prem via VPN/Direct Connect; Multi-AZ option; daily backups to S3.
 - **FSx for Lustre**: "Lustre" = Linux + cluster — a parallel distributed file system for large-scale/HPC computing (ML, HPC, video processing, financial modeling, EDA); scales to 100s of GB/s, millions of IOPS, sub-ms latency; SSD (low-latency, small/random I/O) or HDD (throughput-intensive, large/sequential I/O); can mount an S3 bucket as a Lustre file system and write compute output back to S3; usable from on-prem via VPN/Direct Connect. Deployment options: **Scratch** (temporary, not replicated — lost if the file server fails, high burst throughput, short-term/cost-optimized processing) vs **Persistent** (long-term, replicated within the same AZ, failed files replaced within minutes, for sensitive/long-term data).
@@ -255,6 +255,7 @@
 
 ### Amazon Managed Service for Apache Flink & Amazon MSK
 - **Amazon MSK (Managed Streaming for Apache Kafka)**: an alternative to Kinesis — fully managed Kafka, creates/manages both broker and Zookeeper nodes, deployed in your VPC across up to 3 AZs for HA, auto-recovers from common Kafka failures, data stored on EBS volumes for as long as you want. **MSK Serverless** removes capacity management entirely (auto-provisions/scales compute & storage). Kafka model: producers write to a **topic** on a **broker**, which replicates across brokers; consumers poll from the topic.
+  - When hosting MSK, you don't need any load balancers. It is also secure to host it publicly. No need to worry about VPC.
   - **Kinesis Data Streams vs MSK**: Kinesis — 1MB message size limit, streams organized into shards (splittable/mergeable), TLS in-flight + KMS at-rest encryption. MSK — 1MB default message size (configurable higher, e.g. 10MB), topics organized into partitions (can only be added to, not shrunk), PLAINTEXT or TLS in-flight + KMS at-rest encryption. MSK consumers include Managed Service for Apache Flink, Glue Streaming ETL, Lambda, and apps on EC2/ECS/EKS.
 - **Amazon Managed Service for Apache Flink** (formerly Kinesis Data Analytics for Apache Flink): runs any Apache Flink (Java/Scala/SQL stream-processing framework) application on a managed cluster — provisioned compute, parallel computation, automatic scaling, application backups via checkpoints/snapshots. Reads from Kinesis Data Streams or Amazon MSK — **not** from Kinesis Data Firehose.
   - Apache Flink: a framework for stateful processing of unbounded (streaming) and bounded (batch) data, supporting event-time processing, exactly-once state consistency, and windowed aggregations at low latency.
