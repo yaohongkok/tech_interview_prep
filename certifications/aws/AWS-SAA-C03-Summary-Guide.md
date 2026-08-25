@@ -34,6 +34,7 @@
 | AWS DataSync | 1-time/scheduled data transfer between on-prem and cloud storage systems | Migrating large datasets, ongoing sync |
 
 
+
 ### Compute
 
 | Service | What It's Used For | Common Use Cases |
@@ -96,6 +97,15 @@
 | Amazon MQ | Managed RabbitMQ/ActiveMQ message broker | Migrating on-prem apps that use open messaging protocols |
 | Amazon SES | Managed email sending/receiving service | Transactional and marketing email |
 | Amazon Pinpoint | Two-way marketing communications (email/SMS/push) | Targeted, scheduled marketing campaigns |
+
+
+### Caching
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| Amazon ElastiCache | Managed in-memory Redis/Memcached | Caching, session storage, gaming leaderboards |
+| Amazon DynamoDB Accelerator (DAX) | Microsecond in-memory cache for DynamoDB | Read-heavy/bursty DynamoDB workloads needing microsecond latency |
+| API Gateway Response Caching | Caches API responses at the API Gateway stage level | Reducing backend load/latency for repeated API calls |
 
 
 ### Identity, Access & Security
@@ -234,7 +244,7 @@
 
 **Databases — RDS, DynamoDB, Aurora**
 
-29. RDS Multi-AZ gives synchronous standby failover for HA (not read scaling); Read Replicas (up to 15, can cross-region) give asynchronous read scaling.
+29. *RDS Multi-AZ* gives *synchronous* standby failover for HA (not read scaling) within region; *Read Replicas* (up to 15, can *cross-region*) give *asynchronous* *read scaling*.
 30. RDS supports automated backups, manual snapshots, and point-in-time restore; storage auto scaling grows volumes automatically as usage nears the threshold.
 31. RDS Proxy pools and manages DB connections to prevent exhaustion from Lambda/serverless spikes and speeds up failover.
 32. DynamoDB is a fully managed NoSQL key-value/document store scaling to millions of requests/sec at single-digit millisecond latency; on-demand mode auto-scales, provisioned mode is cheaper for steady, predictable traffic.
