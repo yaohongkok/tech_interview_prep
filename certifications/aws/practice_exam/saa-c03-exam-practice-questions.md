@@ -11287,7 +11287,7 @@ A company is creating a new web application for its subscribers. The application
 <details>
 <summary>Reveal answer</summary>
 
-Answer: CD
+Answer: AD
 
 </details>
 
@@ -13429,6 +13429,8 @@ A company migrated millions of archival files to Amazon S3. A solutions architec
 <summary>Reveal answer</summary>
 
 Answer: A
+
+Note: Answer not completely correct. SSE-C is encrypted during upload where the key is attached to the request. Ideally, key should be uploaded to KMS then just use SSE-KMS instead. The rest is correct procedure.
 
 </details>
 
