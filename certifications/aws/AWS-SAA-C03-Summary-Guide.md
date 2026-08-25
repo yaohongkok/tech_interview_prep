@@ -6,14 +6,106 @@
 
 ## 1. AWS Services Covered
 
+### Storage
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| **Amazon S3** [#1 pop] | Object storage with virtually unlimited scale | Data lakes, backups, static website hosting, archiving |
+| S3 Storage Classes (*Standard/IA/One Zone-IA/Glacier/Deep Archive/Intelligent-Tiering*) | Tiers of S3 trading off cost, retrieval time, and resiliency | Cost optimization by access pattern, long-term archival |
+| S3 *Lifecycle* Policies | Automated rules to transition/expire objects between storage classes | Auto-archiving old data, cleaning up incomplete multipart uploads |
+| S3 *Versioning* | Keeps multiple variants of an object in the same bucket | Protecting against accidental overwrite/delete, rollback |
+| S3 Object *Lock* | WORM (write-once-read-many) protection on object versions | Regulatory *compliance*, ransomware protection |
+| S3 Replication (CRR/SRR) | Automatic, asynchronous copying of objects across/within regions | DR, latency reduction, compliance data residency |
+| S3 Transfer Acceleration | Speeds up uploads to S3 via CloudFront edge locations | Long-distance/global uploads from clients |
+| S3 Access Points | Named network endpoints with their own policy for shared buckets | Simplifying access management for shared datasets |
+| S3 Multi-Region Access Points | Single global endpoint routing to the closest bucket replica | Global applications needing low-latency multi-region S3 access |
+| S3 Object Lambda | Runs Lambda functions to modify S3 GET responses on the fly | Redacting PII, resizing images, format conversion on retrieval |
+| S3 Batch Operations | Performs large-scale bulk actions on existing objects | Mass tagging, ACL updates, Lambda invocation across billions of objects |
+| S3 Select / Glacier Select | Retrieves a subset of object data using SQL-like queries | Reducing data transfer for analytics on large CSV/JSON/Parquet files |
+| S3 Event Notifications | Triggers on object events (create/delete/restore) | Invoking Lambda/SQS/SNS on upload, event-driven pipelines |
+| S3 Storage Lens | Organization-wide visibility into S3 usage and activity metrics | Identifying cost-saving opportunities, usage auditing |
+| S3 Access Analyzer / Block Public Access | Analyzes and prevents unintended public bucket exposure | Security audits, preventing accidental public data leaks |
+| Amazon EBS | Persistent block storage for a single EC2 instance | Boot volumes, databases, high-IOPS workloads |
+| Amazon EFS | Managed NFS shared across many EC2 instances/AZs | Shared content storage, CMS, home directories |
+| Snow Family (Snowball / Snowcone / Snowmobile) | Physical devices for offline bulk data transfer/edge compute | Large one-time migrations, edge sites with poor connectivity |
+| Amazon FSx | Managed third-party file systems (Windows/Lustre/ONTAP/OpenZFS) | HPC, Windows shares, NetApp/ZFS lift-and-shift |
+| AWS Storage Gateway | Bridges on-prem environments to S3/EBS-backed storage | Hybrid backup, tiered storage, tape-backup replacement |
+| AWS Transfer Family | Managed FTP/FTPS/SFTP endpoints into S3/EFS | Legacy file-transfer protocol integrations |
+| AWS DataSync | Fast data transfer between on-prem and cloud storage systems | Migrating large datasets, ongoing sync |
+
+
+### Compute
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| **EC2** [#2 pop] | Virtual machines with configurable OS/CPU/RAM/storage | General-purpose hosting, web servers, batch jobs, HPC |
+| **Auto Scaling** Groups (ASG) [#4 pop] | Automatically adjusts EC2 instance count to meet demand | Elastic horizontal scaling, self-healing fleets |
+| Elastic Load Balancing (ALB/NLB/GWLB/CLB) | Distributes traffic across targets with health checks | Microservices routing (ALB), high-throughput TCP (NLB), 3rd-party appliances (GWLB) |
+| AWS **Lambda** [#3 pop] | Runs code without managing servers, billed per invocation | Event-driven microservices, glue logic, scheduled tasks |
+| Amazon *ECS* [#13 pop] | AWS-native container orchestration | Running Docker containers on EC2 or Fargate |
+| Amazon EKS | Managed Kubernetes control plane | Migrating/running Kubernetes workloads on AWS |
+| AWS Fargate | Serverless compute engine for ECS/EKS tasks | Running containers without managing EC2 instances |
+| AWS Elastic Beanstalk | PaaS that provisions/manages infra for your app code | Fast deployment of web apps without infra management |
+| AWS Batch | Fully managed batch job scheduling and compute provisioning | Large-scale batch/ETL processing jobs |
+| AWS Outposts | Extends AWS infrastructure and services to on-prem hardware | Low-latency on-prem processing, data residency |
+
+
+### Networking & Content Delivery
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| Amazon Route 53 | Managed DNS and domain registration | Traffic routing, health-check-based failover |
+| *Amazon VPC* [#6 pop] | Isolated virtual network for AWS resources | Custom network topology, subnetting, security |
+| *Amazon CloudFront* [#7 pop] | Global content delivery network (CDN) | Low-latency content delivery, DDoS mitigation |
+| AWS Global Accelerator | Static Anycast IPs routing traffic over the AWS backbone | *Non-HTTP*, *multi-region routing*, fast regional *failover* |
+| Amazon API Gateway | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
+| Amazon Cognito | User authentication for web/mobile apps | App login, temporary AWS credentials for end users |
+| AWS Direct Connect | Dedicated private network link to AWS | High-bandwidth, low-latency hybrid connectivity |
+| AWS Site-to-Site VPN | Encrypted IPsec connection to a VPC over the internet | Quick/interim hybrid connectivity, DX backup |
+| AWS Transit Gateway | Hub-and-spoke transitive routing across VPCs/VPNs/DX | Simplifying networking at scale across many VPCs |
+| AWS Network Firewall | Managed network firewall for a VPC | Layer 3–7 traffic filtering and intrusion prevention |
+
+
+### Databases
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| **Amazon RDS** [#5 pop] | Managed relational databases (multiple engines) | OLTP apps needing HA and automated backups |
+| *Amazon Aurora* [#10 pop] | AWS-proprietary MySQL/PostgreSQL-compatible database | High-performance, auto-scaling relational workloads |
+| Amazon ElastiCache | Managed in-memory Redis/Memcached | Caching, session storage, gaming leaderboards |
+| *Amazon DynamoDB* [#9 pop] | Managed NoSQL key-value/document store | High-scale web/mobile apps, gaming |
+| Amazon Redshift | Columnar OLAP data warehouse | Business intelligence, large analytical queries |
+| Amazon DocumentDB | MongoDB-compatible managed NoSQL database | JSON document storage and querying |
+| Amazon Neptune | Managed graph database | Social networks, fraud detection, recommendation engines |
+| Amazon Keyspaces | Managed Cassandra-compatible database | IoT device data, time-series data at scale |
+| Amazon Timestream | Managed time-series database | IoT/operational metrics, real-time analytics |
+| Amazon QLDB | Immutable, cryptographically verifiable ledger database | Ledger/transaction history requiring tamper-evidence |
+
+
+### Application Integration & Messaging
+
+| Service | What It's Used For | Common Use Cases |
+|---|---|---|
+| *Amazon SQS* [#8 pop] | Managed message queue | Decoupling producers/consumers, buffering load spikes |
+| Amazon SNS | Pub/sub notification service | Fan-out messaging, alerting |
+| Amazon Kinesis Data Streams | Real-time data streaming and processing | Clickstream/log ingestion, real-time analytics |
+| MS Apache Flink/Amazon Kinesis Data Analytics | Processes real-time streaming data using SQL or Apache Flink | Real-time analytics, live dashboards, time series analytics |
+| Amazon Data Firehose | Near-real-time streaming delivery to storage/analytics targets | Loading streaming data into S3/Redshift/OpenSearch |
+| Amazon EventBridge | Serverless event bus | Event-driven architectures, scheduled jobs |
+| AWS Step Functions | Visual workflow orchestration (state machines) | Multi-step business processes, order fulfillment |
+| Amazon MQ | Managed RabbitMQ/ActiveMQ message broker | Migrating on-prem apps that use open messaging protocols |
+| Amazon SES | Managed email sending/receiving service | Transactional and marketing email |
+| Amazon Pinpoint | Two-way marketing communications (email/SMS/push) | Targeted, scheduled marketing campaigns |
+
+
 ### Identity, Access & Security
 
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
-| IAM | Manage users, groups, roles, and permission policies | Least-privilege access control, cross-account roles, MFA enforcement |
+| *IAM* [#11 pop] | Manage users, groups, roles, and permission policies | Least-privilege access control, cross-account roles, MFA enforcement |
 | AWS Organizations | Centrally manage multiple AWS accounts with consolidated billing | Multi-account governance, Service Control Policy (SCP) guardrails |
 | AWS Control Tower | Automated setup/governance of a secure multi-account landing zone | Enterprise multi-account environments with guardrails |
-| AWS KMS | AWS-managed encryption key creation, rotation, and usage auditing | Encrypting S3/EBS/RDS data (SSE-KMS), envelope encryption |
+| AWS KMS [#12 pop] | AWS-managed encryption key creation, rotation, and usage auditing | Encrypting S3/EBS/RDS data (SSE-KMS), envelope encryption |
 | AWS CloudHSM | Dedicated, single-tenant hardware security modules you fully control | Compliance needing full key custody, Oracle TDE, Redshift encryption |
 | AWS Secrets Manager | Store and auto-rotate secrets like DB credentials | RDS credential rotation, multi-region secret replication |
 | SSM Parameter Store | Secure hierarchical storage for config values and secrets | App configuration, KMS-encrypted secrets, expiration policies |
@@ -27,48 +119,6 @@
 | AWS IAM Identity Center | Single sign-on across AWS accounts and business apps | Workforce SSO, permission sets, attribute-based access control |
 | AWS Directory Service (Managed AD / AD Connector / Simple AD) | Managed Microsoft Active Directory options in AWS | Windows workload auth, hybrid AD trust relationships |
 
-### Compute
-
-| Service | What It's Used For | Common Use Cases |
-|---|---|---|
-| EC2 | Virtual machines with configurable OS/CPU/RAM/storage | General-purpose hosting, web servers, batch jobs, HPC |
-| Auto Scaling Groups (ASG) | Automatically adjusts EC2 instance count to meet demand | Elastic horizontal scaling, self-healing fleets |
-| Elastic Load Balancing (ALB/NLB/GWLB/CLB) | Distributes traffic across targets with health checks | Microservices routing (ALB), high-throughput TCP (NLB), 3rd-party appliances (GWLB) |
-| AWS Lambda | Runs code without managing servers, billed per invocation | Event-driven microservices, glue logic, scheduled tasks |
-| Amazon ECS | AWS-native container orchestration | Running Docker containers on EC2 or Fargate |
-| Amazon EKS | Managed Kubernetes control plane | Migrating/running Kubernetes workloads on AWS |
-| AWS Fargate | Serverless compute engine for ECS/EKS tasks | Running containers without managing EC2 instances |
-| AWS Elastic Beanstalk | PaaS that provisions/manages infra for your app code | Fast deployment of web apps without infra management |
-| AWS Batch | Fully managed batch job scheduling and compute provisioning | Large-scale batch/ETL processing jobs |
-| AWS Outposts | Extends AWS infrastructure and services to on-prem hardware | Low-latency on-prem processing, data residency |
-
-### Storage
-
-| Service | What It's Used For | Common Use Cases |
-|---|---|---|
-| Amazon S3 | Object storage with virtually unlimited scale | Data lakes, backups, static website hosting, archiving |
-| Amazon EBS | Persistent block storage for a single EC2 instance | Boot volumes, databases, high-IOPS workloads |
-| Amazon EFS | Managed NFS shared across many EC2 instances/AZs | Shared content storage, CMS, home directories |
-| Snow Family (Snowball / Snowcone / Snowmobile) | Physical devices for offline bulk data transfer/edge compute | Large one-time migrations, edge sites with poor connectivity |
-| Amazon FSx | Managed third-party file systems (Windows/Lustre/ONTAP/OpenZFS) | HPC, Windows shares, NetApp/ZFS lift-and-shift |
-| AWS Storage Gateway | Bridges on-prem environments to S3/EBS-backed storage | Hybrid backup, tiered storage, tape-backup replacement |
-| AWS Transfer Family | Managed FTP/FTPS/SFTP endpoints into S3/EFS | Legacy file-transfer protocol integrations |
-| AWS DataSync | Fast data transfer between on-prem and cloud storage systems | Migrating large datasets, ongoing sync |
-
-### Databases
-
-| Service | What It's Used For | Common Use Cases |
-|---|---|---|
-| Amazon RDS | Managed relational databases (multiple engines) | OLTP apps needing HA and automated backups |
-| Amazon Aurora | AWS-proprietary MySQL/PostgreSQL-compatible database | High-performance, auto-scaling relational workloads |
-| Amazon ElastiCache | Managed in-memory Redis/Memcached | Caching, session storage, gaming leaderboards |
-| Amazon DynamoDB | Managed NoSQL key-value/document store | High-scale web/mobile apps, gaming |
-| Amazon Redshift | Columnar OLAP data warehouse | Business intelligence, large analytical queries |
-| Amazon DocumentDB | MongoDB-compatible managed NoSQL database | JSON document storage and querying |
-| Amazon Neptune | Managed graph database | Social networks, fraud detection, recommendation engines |
-| Amazon Keyspaces | Managed Cassandra-compatible database | IoT device data, time-series data at scale |
-| Amazon Timestream | Managed time-series database | IoT/operational metrics, real-time analytics |
-| Amazon QLDB | Immutable, cryptographically verifiable ledger database | Ledger/transaction history requiring tamper-evidence |
 
 ### Analytics & Machine Learning
 
@@ -95,35 +145,6 @@
 | Amazon Personalize | Real-time personalized recommendations | Product recommendations, targeted marketing |
 | Amazon Textract | Extract text/forms/tables from scanned documents | Invoice, medical record, and tax form processing |
 
-### Networking & Content Delivery
-
-| Service | What It's Used For | Common Use Cases |
-|---|---|---|
-| Amazon Route 53 | Managed DNS and domain registration | Traffic routing, health-check-based failover |
-| Amazon VPC | Isolated virtual network for AWS resources | Custom network topology, subnetting, security |
-| Amazon CloudFront | Global content delivery network (CDN) | Low-latency content delivery, DDoS mitigation |
-| AWS Global Accelerator | Static Anycast IPs routing traffic over the AWS backbone | *Non-HTTP*, *multi-region routing*, fast regional *failover* |
-| Amazon API Gateway | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
-| Amazon Cognito | User authentication for web/mobile apps | App login, temporary AWS credentials for end users |
-| AWS Direct Connect | Dedicated private network link to AWS | High-bandwidth, low-latency hybrid connectivity |
-| AWS Site-to-Site VPN | Encrypted IPsec connection to a VPC over the internet | Quick/interim hybrid connectivity, DX backup |
-| AWS Transit Gateway | Hub-and-spoke transitive routing across VPCs/VPNs/DX | Simplifying networking at scale across many VPCs |
-| AWS Network Firewall | Managed network firewall for a VPC | Layer 3–7 traffic filtering and intrusion prevention |
-
-### Application Integration & Messaging
-
-| Service | What It's Used For | Common Use Cases |
-|---|---|---|
-| Amazon SQS | Managed message queue | Decoupling producers/consumers, buffering load spikes |
-| Amazon SNS | Pub/sub notification service | Fan-out messaging, alerting |
-| Amazon Kinesis Data Streams | Real-time data streaming and processing | Clickstream/log ingestion, real-time analytics |
-| MS Apache Flink/Amazon Kinesis Data Analytics | Processes real-time streaming data using SQL or Apache Flink | Real-time analytics, live dashboards, time series analytics |
-| Amazon Data Firehose | Near-real-time streaming delivery to storage/analytics targets | Loading streaming data into S3/Redshift/OpenSearch |
-| Amazon EventBridge | Serverless event bus | Event-driven architectures, scheduled jobs |
-| AWS Step Functions | Visual workflow orchestration (state machines) | Multi-step business processes, order fulfillment |
-| Amazon MQ | Managed RabbitMQ/ActiveMQ message broker | Migrating on-prem apps that use open messaging protocols |
-| Amazon SES | Managed email sending/receiving service | Transactional and marketing email |
-| Amazon Pinpoint | Two-way marketing communications (email/SMS/push) | Targeted, scheduled marketing campaigns |
 
 ### Monitoring, Management & DevOps
 
@@ -137,6 +158,7 @@
 | AWS Backup | Centralized managed backup across AWS services | Cross-service backup policies, WORM vault lock |
 | AWS Trusted Advisor | Automated best-practice checks across an account | Cost, security, performance, and fault-tolerance reviews |
 | AWS X-Ray | Distributed tracing for analyzing/debugging apps | Tracing requests across microservices, latency bottleneck analysis |
+
 
 ### Disaster Recovery & Migration
 
