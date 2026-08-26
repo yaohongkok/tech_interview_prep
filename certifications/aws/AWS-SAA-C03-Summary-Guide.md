@@ -25,10 +25,10 @@
 | S3 Event Notifications | Triggers on object events (create/delete/restore) | Invoking Lambda/SQS/SNS on upload, event-driven pipelines |
 | S3 Storage Lens | Organization-wide visibility into S3 usage and activity metrics | Identifying cost-saving opportunities, usage auditing |
 | S3 Access Analyzer / Block Public Access | Analyzes and prevents unintended public bucket exposure | Security audits, preventing accidental public data leaks |
-| Amazon EBS | Persistent block storage for a single EC2 instance | Boot volumes, databases, high-IOPS workloads |
-| Amazon EFS | Managed NFS shared across many EC2 instances/AZs | Shared content storage, CMS, home directories |
+| Amazon EBS [#18 pop] | Persistent block storage for a single EC2 instance | Boot volumes, databases, high-IOPS workloads |
+| Amazon EFS [#19 pop] | Managed NFS shared across many EC2 instances/AZs | Shared content storage, CMS, home directories |
 | Snow Family (Snowball / Snowcone / Snowmobile) | Physical devices for offline bulk data transfer/edge compute | Large one-time migrations, edge sites with poor connectivity |
-| Amazon FSx | Managed third-party file systems (Windows/Lustre/ONTAP/OpenZFS) | HPC, Windows shares, NetApp/ZFS lift-and-shift |
+| Amazon FSx [#16 pop] | Managed third-party file systems (Windows/Lustre/ONTAP/OpenZFS) | HPC, Windows shares, NetApp/ZFS lift-and-shift |
 | AWS Storage Gateway | Ongoing repl. on-prem environments to S3/EBS-backed storage | Hybrid backup, tiered storage, tape-backup replacement |
 | AWS Transfer Family | Managed FTP/FTPS/SFTP endpoints into S3/EFS | Legacy file-transfer protocol integrations |
 | AWS DataSync | 1-time/scheduled data transfer between on-prem and cloud storage systems | Migrating large datasets, ongoing sync |
@@ -41,11 +41,11 @@
 |---|---|---|
 | **EC2** [#2 pop] | Virtual machines with configurable OS/CPU/RAM/storage | General-purpose hosting, web servers, batch jobs, HPC |
 | **Auto Scaling** Groups (ASG) [#4 pop] | Automatically adjusts EC2 instance count to meet demand | Elastic horizontal scaling, self-healing fleets |
-| Elastic Load Balancing (ALB/NLB/GWLB/CLB) | Distributes traffic across targets with health checks | HTTPS routing (ALB), high-throughput TCP/UDP (NLB), 3rd-party sec. appliances (GWLB) |
+| Elastic Load Balancing (ALB/NLB/GWLB/CLB) [#14 pop] | Distributes traffic across targets with health checks | HTTPS routing (ALB), high-throughput TCP/UDP (NLB), 3rd-party sec. appliances (GWLB) |
 | AWS **Lambda** [#3 pop] | Runs code without managing servers, billed per invocation | Event-driven microservices, glue logic, scheduled tasks |
 | Amazon *ECS* [#13 pop] | AWS-native container orchestration | Running Docker containers on EC2 or Fargate |
 | Amazon EKS | Managed Kubernetes control plane | Migrating/running Kubernetes workloads on AWS |
-| AWS Fargate | Serverless compute engine for ECS/EKS tasks | Running containers without managing EC2 instances |
+| AWS Fargate [#17 pop] | Serverless compute engine for ECS/EKS tasks | Running containers without managing EC2 instances |
 | AWS Elastic Beanstalk | PaaS that provisions/manages infra for your app code | Fast deployment of web apps without infra management |
 | AWS Batch | Fully managed batch job scheduling and compute provisioning | Large-scale batch/ETL processing jobs |
 | AWS Outposts | AWS *on-prem* infrastructure and services | Low-latency on-prem processing, data residency |
@@ -55,11 +55,11 @@
 
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
-| Amazon Route 53 | Managed DNS and domain registration | Traffic routing, health-check-based failover |
+| Amazon Route 53 [#24 pop] | Managed DNS and domain registration | Traffic routing, health-check-based failover |
 | *Amazon VPC* [#6 pop] | Isolated virtual network for AWS resources | Custom network topology, subnetting, security |
 | *Amazon CloudFront* [#7 pop] | Global content delivery network (CDN) | Low-latency content delivery, DDoS mitigation |
 | AWS Global Accelerator | Static Anycast IPs routing traffic over the AWS backbone (for EC2 stuff) | *Non-HTTP*, *multi-region routing*, fast regional *failover* |
-| Amazon API Gateway | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
+| Amazon API Gateway [#15 pop] | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
 | Amazon Cognito | User authentication for web/mobile apps | App login, temporary AWS credentials for end users |
 | AWS Direct Connect | Dedicated private network link to AWS | High-bandwidth, low-latency hybrid connectivity |
 | AWS Site-to-Site VPN | Encrypted IPsec connection to a VPC over the internet | Quick/interim hybrid (on-prem VPN) connectivity, DX backup |
@@ -88,11 +88,11 @@
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
 | *Amazon SQS* [#8 pop] | Managed message queue | Decoupling producers/consumers, buffering load spikes |
-| Amazon SNS | Pub/sub notification service | Fan-out messaging, alerting |
+| Amazon SNS  [#20 pop] | Pub/sub notification service | Fan-out messaging, alerting |
 | Amazon Kinesis Data Streams | Real-time data streaming and processing | Clickstream/log ingestion, real-time analytics |
 | MS Apache Flink/Amazon Kinesis Data Analytics | Processes real-time streaming data using SQL or Apache Flink | Real-time analytics, live dashboards, time series analytics |
 | Amazon Data Firehose | Near-real-time streaming delivery to storage/analytics targets | Loading streaming data into S3/Redshift/OpenSearch |
-| Amazon EventBridge | Serverless event bus | Event-driven architectures, scheduled jobs |
+| Amazon EventBridge [#21 pop] | Serverless event bus | Event-driven architectures, scheduled jobs |
 | AWS Step Functions | Visual workflow orchestration (state machines) | Multi-step business processes, order fulfillment |
 | Amazon MQ | Managed RabbitMQ/ActiveMQ message broker | Migrating on-prem apps that use open messaging protocols |
 | Amazon SES | Managed email sending/receiving service | Transactional and marketing email |
@@ -120,7 +120,7 @@
 | AWS Secrets Manager | Store and auto-rotate secrets like DB credentials | RDS credential rotation, multi-region secret replication |
 | SSM Parameter Store | Secure hierarchical storage for config values and secrets | App configuration, KMS-encrypted secrets, expiration policies |
 | AWS Certificate Manager (ACM) | Provision and auto-renew TLS/SSL certificates | HTTPS on ALB/CloudFront/API Gateway |
-| AWS WAF | Layer 7 firewall filtering HTTP requests | Blocking SQLi/XSS, rate limiting, geo-blocking |
+| AWS WAF [#25 pop] | Layer 7 firewall filtering HTTP requests | Blocking SQLi/XSS, rate limiting, geo-blocking |
 | AWS Shield | DDoS protection (Layer 3/4, and Layer 7 with Advanced) | Protecting EC2/ELB/CloudFront from DDoS attacks |
 | AWS Firewall Manager | *Centrally manage* WAF/Shield/Security Group rules org-wide | Multi-account security policy compliance |
 | Amazon GuardDuty | ML-based threat detection across CloudTrail/VPC/DNS logs | Detecting compromised instances, crypto-mining, anomalous API calls |
@@ -134,7 +134,7 @@
 
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
-| Amazon Athena | Serverless SQL queries directly on S3 data | Ad hoc analysis of S3 data, log querying |
+| Amazon Athena [#22 pop] | Serverless SQL queries directly on S3 data | Ad hoc analysis of S3 data, log querying |
 | Amazon OpenSearch Service | Managed search/analytics engine (search any field) | Full-text search, log analytics dashboards |
 | Amazon EMR | Managed *Hadoop/Spark* clusters for big data processing | Large-scale data processing, ML training |
 | Amazon QuickSight | Serverless, ML-powered BI dashboards | Business analytics, embeddable visualizations |
@@ -160,7 +160,7 @@
 
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
-| Amazon CloudWatch | Metrics, logs, dashboards, and alarms | Monitoring performance, triggering Auto Scaling |
+| Amazon CloudWatch [#23 pop] | Metrics, logs, dashboards, and alarms | Monitoring performance, triggering Auto Scaling |
 | AWS CloudTrail | Logs every API call made in an account | Governance and security auditing |
 | AWS Config | Tracks resource configuration and compliance over time | Compliance auditing, configuration drift detection |
 | AWS CloudFormation | Infrastructure as Code via declarative templates | Repeatable, version-controlled infrastructure deployment |
