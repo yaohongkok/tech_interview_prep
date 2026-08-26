@@ -74,8 +74,6 @@
 10. [Cost Optimization Concepts](#10-cost-optimization-concepts)
 11. [AWS Well-Architected Framework (conceptual, tested throughout)](#11-aws-well-architected-framework-conceptual-tested-throughout)
     - [Trusted Advisor](#trusted-advisor)
-12. [Quick Decision Cheat-Sheet](#12-quick-decision-cheat-sheet)
-13. [Suggested Study Approach](#13-suggested-study-approach)
 
 ---
 
@@ -1258,43 +1256,3 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 
 ---
 
-## 12. Quick Decision Cheat-Sheet
-
-| Need | Use |
-|---|---|
-| Object storage, static assets, data lake | S3 |
-| Block storage for a single EC2 instance | EBS |
-| Shared file storage across many Linux instances | EFS |
-| Relational DB, need HA | RDS Multi-AZ |
-| Relational DB, need read scaling | RDS Read Replica |
-| High-performance, auto-scaling relational DB | Aurora |
-| NoSQL, massive scale, low latency | DynamoDB |
-| In-memory caching layer | ElastiCache |
-| Data warehouse / analytics (OLAP) | Redshift |
-| Decouple services / buffer messages | SQS |
-| Broadcast to multiple subscribers | SNS |
-| Event-driven routing between many sources | EventBridge |
-| Serverless compute, event-triggered | Lambda |
-| Container orchestration, no server management | ECS/EKS + Fargate |
-| Global content delivery / caching | CloudFront |
-| DNS routing & failover | Route 53 |
-| Private connectivity to AWS services (no internet) | VPC Endpoints |
-| Dedicated private connection to AWS | Direct Connect |
-| Quick encrypted connection to AWS | Site-to-Site VPN |
-| Centralized multi-account governance | Organizations + SCPs |
-| Auditing API activity | CloudTrail |
-| Monitoring metrics & alarms | CloudWatch |
-| Infrastructure as Code | CloudFormation |
-| Large-scale offline data transfer | Snow Family |
-| Encryption key management with audit trail | KMS (SSE-KMS) |
-| Auto-rotating secrets (DB credentials) | Secrets Manager |
-
----
-
-## 13. Suggested Study Approach
-
-1. Go through each domain above and make sure you can articulate the **use case trigger words** in exam questions (e.g., "multiple AZs," "unpredictable traffic," "least operational overhead," "lowest cost," "millisecond latency") — the SAA-C03 exam is largely about matching scenario language to the right service.
-2. Do hands-on labs for: VPC design (public/private subnets, NAT, IGW), S3 lifecycle policies, RDS Multi-AZ vs Read Replica setup, and an Auto Scaling Group behind an ALB.
-3. Take official AWS practice questions and full-length practice exams; review every wrong answer to understand *why* the "obviously right" distractor was wrong.
-4. Review whitepapers: **AWS Well-Architected Framework** and **Disaster Recovery on AWS** — both are conceptually tested throughout, not just in a dedicated section.
-5. Once comfortable with the core services above, work through the companion [AWS-SAA-C03-Study-Guide-Additional.md](AWS-SAA-C03-Study-Guide-Additional.md) to round out coverage of the less frequently tested services.
