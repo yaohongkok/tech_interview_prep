@@ -15,10 +15,8 @@
    - [Amazon Inspector](#amazon-inspector)
    - [AWS Macie](#aws-macie)
 3. [Additional Storage Services](#3-additional-storage-services)
-   - [Amazon FSx](#amazon-fsx)
    - [AWS Transfer Family](#aws-transfer-family)
 4. [Data & Analytics](#4-data--analytics)
-   - [Amazon Athena](#amazon-athena)
    - [Amazon OpenSearch Service](#amazon-opensearch-service)
    - [Amazon EMR (Elastic MapReduce)](#amazon-emr-elastic-mapreduce)
    - [Amazon QuickSight](#amazon-quicksight)
@@ -196,20 +194,6 @@
 
 ## 3. Additional Storage Services
 
-### Amazon FSx
-- Family of fully managed, 3rd-party high-performance *network* file systems on AWS.
-- Exists to lift-and-shift workloads needing a specific file system's protocol/features (SMB, Lustre, ONTAP, ZFS), unlike generic S3/EFS. i.e. Windows apps.
-- **FSx for Windows File Server**: managed Windows share (SMB, Windows NTFS), Microsoft AD integration, ACLs, user quotas, supports Microsoft DFS Namespaces (group multiple file systems), can be mounted on Linux EC2 too; SSD (latency-sensitive: DBs, media processing) or HDD (broad workloads: home dirs, CMS) storage; scales to 10s of GB/s and 100s of PB; reachable from on-prem via VPN/Direct Connect; Multi-AZ option; daily backups to S3.
-- **FSx for Lustre**: "Lustre" = Linux + cluster — a parallel distributed file system for large-scale/HPC computing (ML, HPC, video processing, financial modeling, EDA); scales to 100s of GB/s, millions of IOPS, sub-ms latency; SSD (low-latency, small/random I/O) or HDD (throughput-intensive, large/sequential I/O); can mount an S3 bucket as a Lustre file system and write compute output back to S3; usable from on-prem via VPN/Direct Connect. Deployment options: **Scratch** (temporary, not replicated — lost if the file server fails, high burst throughput, short-term/cost-optimized processing) vs **Persistent** (long-term, replicated within the same AZ, failed files replaced within minutes, for sensitive/long-term data).
-- **FSx for NetApp ONTAP**: managed NetApp ONTAP file system, compatible with NFS/SMB/iSCSI; used to lift-and-shift workloads already running on ONTAP/NAS; works with Linux, Windows, macOS, VMware Cloud on AWS, WorkSpaces, AppStream 2.0, EC2/ECS/EKS; storage auto-shrinks/grows; snapshots, replication, compression, dedup, and instantaneous point-in-time cloning (handy for spinning up test copies).
-- **FSx for OpenZFS**: managed OpenZFS file system, compatible with NFS (v3/v4/v4.1/v4.2); used to lift-and-shift workloads already running on ZFS; works with Linux, Windows, macOS, VMware Cloud on AWS, WorkSpaces, AppStream 2.0, EC2/ECS/EKS; storage auto-shrinks/grows; snapshots, replication, compression, dedup, and instantaneous point-in-time cloning; reaches up to 1,000,000 IOPS at <0.5ms latency.
-- **When to use which**: 
-  - Windows File Server for SMB/Windows-native apps needing AD integration; 
-  - Lustre for HPC/ML workloads needing massive throughput and tight S3 integration; 
-  - NetApp ONTAP for migrating existing NetApp/NAS workloads or needing multi-protocol (NFS/SMB/iSCSI) access;
-  - OpenZFS for migrating existing ZFS workloads or needing the highest IOPS at the lowest latency among the four.
-- **Native storage option summary**: Block = EBS, EC2 Instance Store. File = EFS, FSx. Object = S3, S3 Glacier.
-
 
 ### AWS Transfer Family
 - Fully managed **FTP/FTPS/SFTP endpoints** for file transfer into and out of **S3 or EFS**. 
@@ -225,11 +209,6 @@
 ---
 
 ## 4. Data & Analytics
-
-### Amazon Athena
-- Serverless query service to analyze data directly in S3 using standard SQL (built on Presto) — no infrastructure to provision. Supports CSV, JSON, ORC, Avro, Parquet. Pricing: $5.00 per TB of data scanned. Commonly paired with QuickSight for reporting/dashboards. Also used to query VPC Flow Logs, ELB logs, and CloudTrail trails. Exam trigger: "analyze data in S3 with serverless SQL" → Athena.
-- **Performance/cost tips**: use **columnar formats** (Parquet or ORC, converted via Glue) to scan less data; **compress** data (bzip2, gzip, lz4, snappy, zlip, zstd) for smaller scans; **partition** S3 datasets by virtual columns in the key path (e.g. `s3://bucket/table/year=1991/month=1/day=1/`) so queries skip irrelevant prefixes; use **larger files** (>128MB) to cut per-file overhead.
-- **Federated Query**: run SQL across relational, non-relational, object, and custom/on-prem data sources (ElastiCache, DocumentDB, DynamoDB, RDS, Aurora, SQL Server, MySQL, HBase-on-EMR) via Lambda-based Data Source Connectors, storing results back in S3 — lets Athena act as a single SQL layer over heterogeneous sources.
 
 ### Amazon OpenSearch Service
 - Successor to Amazon ElasticSearch. DynamoDB only supports lookups by primary key or index; OpenSearch lets you search **any field**, including partial matches — commonly used as a search complement layered in front of another database. Two modes: managed cluster or serverless. No native SQL (available via a plugin). Ingests from Kinesis Data Firehose, AWS IoT, and CloudWatch Logs; secured via Cognito & IAM, KMS encryption, TLS; ships with OpenSearch Dashboards for visualization.
