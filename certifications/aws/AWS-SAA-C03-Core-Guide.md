@@ -114,54 +114,89 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 #### S3 Storage Classes & Lifecycle
 - Storage classes are applicable to each S3 objects.
-- **Storage Classes** (durability 99.999999999% for all) types: 
-  - **Standard** (99.99% availability, ≥3 AZ, frequently accessed data — big data, mobile/gaming apps, content distribution); 
-  - **Standard-IA(Infrequent Acess)** (99.9% availability, ≥3 AZ, min 30-day storage charge, min 128KB billable size, per-GB retrieval fee — DR, backups); 
-  - **One Zone-IA** (single AZ, 99.5% availability, data lost if the AZ is destroyed — secondary backup copies or easily recreatable data); 
-  - **Glacier Instant Retrieval** (milliseconds, min 90-day storage, for data accessed ~once/quarter); 
-  - **Glacier Flexible Retrieval**, formerly "Glacier" (Expedited 1–5 min, Standard 3–5h, Bulk 5–12h free, min 90-day storage); 
-  - **Glacier Deep Archive** (Standard 12h, Bulk 48h, min 180-day storage, cheapest, long-term retention); 
-  - **S3 Express One Zone** (single-AZ directory bucket, single-digit-ms latency, up to 10x faster/50% cheaper than Standard for high-throughput/latency-sensitive workloads — AI/ML training, financial modeling, HPC; best paired with co-located compute and SageMaker/Athena/EMR/Glue).
-  - **Intelligent-Tiering** (small monthly monitoring/auto-tiering fee, no retrieval charges, auto-moves objects between Frequent/Infrequent(30d)/Archive Instant(90d)/Archive(90d+, optional)/Deep Archive(180d+, optional) tiers); 
-- **Moving between classes & Lifecycle Rules**: manual or automated via Lifecycle configuration (scoped to a prefix and/or object tags). **Transition actions** move objects to a cheaper class after N days (e.g. Standard→Standard-IA at 60 days→Glacier at 6 months). **Expiration actions** delete objects after N days — access logs after 365 days, old versions once versioning is enabled, or incomplete multipart uploads. **S3 Analytics – Storage Class Analysis** recommends Standard↔Standard-IA transitions (not One Zone-IA or Glacier), report updates daily, 24–48h to see data — good first step before writing lifecycle rules.
+- **Storage Classes** — durability is 99.999999999% (11 nines) for all classes; differences are availability, AZ spread, retrieval time/cost, and minimum storage commitments:
+
+| Storage Class | Availability | AZs | Retrieval Time | Min Storage Duration | Other Min/Fees | Use Case |
+|---|---|---|---|---|---|---|
+| **Standard** | 99.99% | ≥3 | Milliseconds | None | None | Frequently accessed data — big data, mobile/gaming apps, content distribution |
+| **Standard-IA** (Infrequent Access) | 99.9% | ≥3 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee | DR & backups |
+| **One Zone-IA** | 99.5% | 1 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee; data lost if the AZ is destroyed | Secondary backup copies or easily recreatable data |
+| **Glacier Instant Retrieval** | 99.9% | ≥3 | Milliseconds | 90 days | Per-GB retrieval fee | Archive data accessed ~once/quarter |
+| **Glacier Flexible Retrieval** (formerly "Glacier") | 99.99% | ≥3 | Expedited 1–5 min, Standard 3–5h, Bulk 5–12h (free) | 90 days | Per-GB retrieval fee (except Bulk) | Archives where retrieval isn't urgent |
+| **Glacier Deep Archive** | 99.99% | ≥3 | Standard 12h, Bulk 48h | 180 days | Cheapest storage class | Long-term retention/compliance archives |
+| **S3 Express One Zone** | 99.95% | 1 | Single-digit ms | None | Directory bucket; up to 10x faster/50% cheaper than Standard for high-throughput workloads | AI/ML training, financial modeling, HPC — best paired with co-located compute and SageMaker/Athena/EMR/Glue |
+| **Intelligent-Tiering** | 99.9% | ≥3 | Milliseconds (Frequent/Infrequent/Instant tiers) | None | Small monthly monitoring/auto-tiering fee, no retrieval charges | Unknown/changing access patterns — auto-moves objects between Frequent/Infrequent(30d)/Archive Instant(90d)/Archive(90d+, optional)/Deep Archive(180d+, optional) tiers |
+
+- **Moving between classes & Lifecycle Rules**: manual or automated via Lifecycle configuration (scoped to a prefix and/or object tags). 
+  - **Transition actions** move objects to a cheaper class after N days (e.g. Standard → Standard-IA at 60 days → Glacier at 6 months). 
+  - **Expiration actions** delete objects after N days — access logs after 365 days, old versions once versioning is enabled, or incomplete multipart uploads. 
+  - **S3 Analytics – Storage Class Analysis** recommends Standard↔Standard-IA transitions (not One Zone-IA or Glacier), report updates daily, 24–48h to see data. 
 
 #### S3 Security & Access Control
-- **Security**: 
-  - user-based (IAM policies) and resource-based (**Bucket Policies** — JSON with Resource/Effect/Action/Principal, allow cross-account/public access) and Object/Bucket ACLs (finer-grained, legacy, can be disabled). 
-    - (An IAM principal can access an object if the IAM permissions ***OR*** the resource policy allow it) ***AND*** there's no explicit Deny. 
+- **Security** for S3:
+  - 3 ways to control:
+    1. *IAM policies*
+    2. *Bucket policies*: JSON with Resource/Effect/Action/Principal, allow cross-account/public access
+    3. *Object/Bucket ACLs*: finer-grained, legacy, can be disabled 
+  - Example: (An IAM principal can access an object if the IAM permissions ***OR*** the resource policy allow it) ***AND*** there's no explicit Deny. 
   - **Block Public Access** settings (four toggles) exist to prevent accidental data leaks and can be set account-wide.
   - Can create bucket policy using Amazon Policy Generator tool.
-- **CORS (!!popular in exam!!)**: browser mechanism controlling cross-origin requests (origin = scheme+host+port); 
-  - a cross-origin request from a browser against an S3 bucket needs the bucket's CORS configuration to return the right `Access-Control-Allow-Origin`/`-Methods` headers, or the browser blocks it
+- **CORS (!!popular in exam!!)**: a cross-origin request from a browser against an S3 bucket needs the bucket's CORS configuration to return the right `Access-Control-Allow-Origin`/`-Methods` headers, or the browser blocks it
   - common exam scenario is a static site in one bucket calling assets in another.
-- **S3 Access Logs**: logs every request (any account, authorized or denied) to a separate logging bucket in the **same region** — never point the logging bucket at itself (creates an infinite logging loop that grows the bucket exponentially).
-- **Pre-Signed URLs**: generated via Console (1 min–12h expiry), CLI (`--expires-in` seconds, default 3600, max 604800 ≈168h), or SDK; the holder inherits the permissions (GET/PUT) of whoever generated the URL — use cases: letting only logged-in users download premium content, dynamically generated download links, temporary upload access to a precise key.
+- **S3 Access Logs**: logs every request (any account, authorized or denied) to a *separate* logging bucket in the **same region**
+  - never point the logging bucket at itself (creates an infinite logging loop that grows the bucket exponentially).
+- **Pre-Signed URLs**: 
+  - the holder inherits the permissions (GET/PUT) of whoever generated the URL
+  - generated via: 
+    1. Console: 1 min–12h expiry, 
+    2. CLI: `--expires-in` seconds, default 3600, max 604800 ≈168h, or 
+    3. SDK 
+  - use cases: letting only logged-in users *download premium content*, *dynamically* generated *download links*, *temporary upload* access to a precise key.
 - **S3 Access Points**: named endpoints (each with its own DNS name and access-point policy) simplifying security management for large/shared buckets — e.g. a Finance access point granting R/W to `/finance/*`, a Sales access point to `/sales/*`, an Analytics access point read-only on the whole bucket, all layered under one simple bucket policy. A **VPC Origin** access point restricts access to only within a specific VPC (requires a Gateway/Interface VPC Endpoint whose policy also allows the target bucket/access point).
 
 #### S3 Encryption
 - **S3 Encryption**: 
   - Types:
-      1. **SSE-S3** (AWS-owned/managed keys, AES-256, enabled by default for all new buckets/objects, header `x-amz-server-side-encryption: AES256`); 
-      2. **SSE-KMS** (KMS-managed keys, adds user control + CloudTrail audit of key usage, header `aws:kms` — but uploads/downloads call the KMS `GenerateDataKey`/`Decrypt` APIs.
-        - Count against regional ***KMS request quotas***, so very high-throughput workloads can be throttled, request a quota increase if needed); 
-      3. **SSE-C** (customer-fully-managed keys outside AWS, S3 never stores the key, key must be passed in headers on every HTTPS request — HTTPS mandatory); 
+      1. **SSE-S3**: AWS-owned/managed keys, AES-256. Enabled by default for all new buckets/objects, header `x-amz-server-side-encryption: AES256`; 
+      2. **SSE-KMS**: KMS-managed keys, adds user control + CloudTrail audit of key usage, header `aws:kms` — but uploads/downloads call the KMS `GenerateDataKey`/`Decrypt` APIs.
+        - Count against regional *KMS request quotas*, so very high-throughput workloads can be throttled, request a quota increase if needed; 
+      3. **SSE-C**: customer-fully-managed keys outside AWS. S3 never stores the key. Key must be passed in headers on every HTTPS request — HTTPS mandatory; 
       4. **Client-Side Encryption** (client encrypts before upload / decrypts after download using a library like the Amazon S3 Encryption Client, customer manages the whole key lifecycle). 
   - Default encryption (SSE-S3) applies automatically, but a bucket policy can force stronger encryption by denying `PutObject` calls missing the right encryption header/condition — bucket policies are evaluated before default encryption.
-- **Encryption in transit**: S3 exposes both an HTTP (unencrypted) and HTTPS (TLS) endpoint; HTTPS is recommended (mandatory for SSE-C); force HTTPS-only access with a bucket policy statement that `Deny`s all actions when condition `aws:SecureTransport == false` (i.e. blocks any request that is NOT over HTTPS).
+- **Encryption in transit**: 
+  - S3 exposes both an *HTTP* (unencrypted) and *HTTPS* (TLS) endpoint; 
+  - HTTPS is recommended (mandatory for SSE-C); 
+  - *force HTTPS-only access* with a bucket policy statement that `Deny`s all actions when condition `aws:SecureTransport == false` (i.e. blocks any request that is NOT over HTTPS).
 
 #### S3 Performance & Operations
 - **Performance**: 
-  - baseline ~100–200ms latency, at least 3,500 PUT/COPY/POST/DELETE or 5,500 GET/HEAD requests/second **per prefix** (no limit on number of prefixes — spread keys across prefixes to multiply throughput). 
+  - baseline ~100–200ms latency, at least 3,500 PUT/COPY/POST/DELETE or 5,500 GET/HEAD requests/second *per prefix* (no limit on number of prefixes — spread keys across prefixes to multiply throughput). 
     - Prefix: Basically the lowest level folder. E.g. 4 folders will allow for 5.5k*4 requests/second.
-  - Upload speed up techniques:
+  - *Upload speed up* techniques:
     - **Multi-Part Upload** parallelizes upload of one large file (recommended >100MB, required >5GB). 
     - **S3 Transfer Acceleration** routes uploads through the nearest CloudFront edge location over the fast private AWS backbone to the bucket's region — compatible with multipart upload. 
-  - Download speed up: **Byte-Range Fetches** parallelize/speed up GETs by requesting specific byte ranges, or fetch just part of an object (e.g. a file header), improving resilience to failures.
+  - *Download speed up*: Use Range HTTP request:
+    - **Byte-Range Fetches** parallelize/speed up GETs by requesting specific byte ranges, or 
+    - **File Header** (map of file byte range like ZIP) to fetch just part of an object , 
+    - Range HTTP request improves resilience to failures.
 - **S3 Requester Pays**: the requester (not the bucket owner) pays for the request + data transfer, useful for sharing large datasets across accounts; the requester must be an authenticated AWS principal (no anonymous access).
-- **Event Notifications**: `S3:ObjectCreated`, `ObjectRemoved`, `ObjectRestore`, `Replication`, etc., with object-name filtering (e.g. `*.jpg`), delivered typically within seconds; fan out to SNS, SQS, or Lambda (each needs a resource policy allowing `s3.amazonaws.com` to invoke it, scoped via `aws:SourceArn` to the bucket) — use case: generating thumbnails on upload. **Amazon EventBridge** as a destination adds advanced JSON-rule filtering (metadata, object size, name), more destination types (18+ services, e.g. Step Functions, Kinesis), and archive/replay/reliable-delivery capabilities.
-- **S3 Batch Operations**: run one action (encrypt un-encrypted objects, copy between buckets, modify metadata/ACLs/tags, restore from Glacier, invoke a Lambda per object) across a large list of existing objects in one job, with retries/progress tracking/completion notifications/reports — commonly driven by an S3 Inventory object list filtered through Athena.
-- **S3 Object Lambda**: chains a Lambda function in front of GET via an S3 Object Lambda Access Point (built on a supporting S3 Access Point) to transform objects on the fly without duplicating data. 
-  - Use cases: redacting PII for non-prod/analytics, format conversion (XML→JSON), on-the-fly resizing/watermarking based on the caller.
+- **Event Notifications**: 
+  - delivered typically within seconds
+  - use case: generating thumbnails on upload.
+  - `S3:ObjectCreated`, `ObjectRemoved`, `ObjectRestore`, `Replication`, etc., with object-name filtering (e.g. `*.jpg`); 
+  - fan out to *SNS, SQS, or Lambda* (each needs a resource policy allowing `s3.amazonaws.com` to invoke it, scoped via `aws:SourceArn` to the bucket)
+  - **Amazon EventBridge** as a destination adds advanced JSON-rule filtering (metadata, object size, name), more destination types (18+ services, e.g. Step Functions, Kinesis) and archive/replay/reliable-delivery capabilities.
+- **S3 Batch Operations**: 
+  - run one action across a large list of existing objects in one job, with retries/progress tracking/completion notifications/reports
+  - Example operations: 
+    1. encrypt, un-encrypted objects, 
+    2. copy between buckets, 
+    3. modify metadata/ACLs/tags, 
+    4. *restore* from Glacier, 
+    5. invoke a Lambda per object 
+  - commonly driven by an *S3 Inventory object list* filtered through *Athena*.
+- **S3 Object Lambda**: chains a Lambda function in front of GET via an S3 Object Lambda Access Point (built on a supporting S3 Access Point) to *transform objects on the fly* without duplicating data. 
+  - Use cases: *redacting PII* for non-prod/analytics, *format conversion* (XML→JSON), on-the-fly *resizing/watermarking* based on the caller.
 
 ### Amazon FSx
 
@@ -198,38 +233,28 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - vs EBS: EBS = single instance, single AZ; EFS = multiple instances, multiple AZs.
 
 ### Snow Family
-- Highly secure, portable, offline devices to collect/process data at the edge and migrate data into/out of AWS — the rule of thumb: if a transfer would ***take more than about a week over your network, ship a Snowball*** instead. Example: at 100Mbps, 100TB takes ~124 days over the wire vs ~12 days via Snowball; at 10Gbps it drops to 30 hours online, so the crossover point depends on your actual bandwidth.
-- **Snowball Edge**: Storage Optimized (104 vCPUs, 416GB RAM, 210TB SSD) or Compute Optimized (104 vCPUs, 416GB RAM, 28TB SSD) — order a device, load it (client ↔ device), ship it back, AWS imports into an S3 bucket. Cannot import directly into Glacier — land in S3 first, then use an S3 Lifecycle policy to transition into Glacier.
-- **Edge Computing with Snowball Edge**: process data right where it's created (a truck, a ship, an underground mine — limited internet/compute on site) by running EC2 instances or Lambda functions directly on the device; use cases: data preprocessing, machine learning, media transcoding at the edge.
-- **Snowcone / Snowmobile**: Snowcone is a smaller/lighter edge device for tighter spaces; Snowmobile is a shipping-container-scale truck for genuinely exabyte-scale migrations. Use case: petabyte(+)-scale migration where neither the network nor a single Snowball Edge suffices.
+- Secure, portable offline devices for edge data collection/processing and migrating data into/out of AWS. Rule of thumb: if a transfer would take over ~1 week on your network, ship a Snowball instead.
+- **Snowball Edge**: Storage Optimized (104 vCPUs, 416GB RAM, 210TB SSD) or Compute Optimized (104 vCPUs, 416GB RAM, 28TB SSD). Order it, load it, ship it back — AWS imports into S3 (not directly into Glacier; use a lifecycle policy to transition after).
+- **Edge Computing with Snowball Edge**: run EC2/Lambda directly on the device to process data on-site (trucks, ships, mines) — preprocessing, ML, media transcoding.
+- **Snowcone / Snowmobile**: Snowcone = smaller edge device for tight spaces. Snowmobile = truck-scale, for exabyte migrations too big for Snowball Edge.
 
 ### AWS Storage Gateway
-- Bridges on-premises environments to AWS storage (since S3 is a proprietary API, not NFS-compatible, on its own)
-- deployed as a VM (VMware/Hyper-V/KVM) on-prem, encrypts data in transit over the internet or Direct Connect. 
+- Bridges on-prem environments to AWS storage (S3 isn't NFS-compatible on its own). Deployed as a VM (VMware/Hyper-V/KVM) on-prem or as an EC2 instance; encrypts data in transit.
 - Use cases: disaster recovery, backup & restore, tiered storage, low-latency on-prem cache of cloud data.
-- **S3 File Gateway**: exposes S3 buckets over NFS/SMB, caches most-recently-used data locally, supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (transition to Glacier via a lifecycle policy since Glacier/Deep Archive aren't directly supported), per-gateway IAM role for bucket access, SMB integrates with Active Directory for auth.
-- **Volume Gateway**: block storage over Internet Small Computer Systems Interface (iSCSI). Final artifacts are EBS snapshots (which can restore on-prem volumes) and they go thru S3. 
-  - **Cached volumes**: entire dataset in S3, only recently used data cached locally (low latency for hot data). 
-  - **Stored volumes**: entire dataset kept on-prem, scheduled/async backups to S3 as EBS snapshots.
-- **Tape Gateway**: Virtual Tape Library (VTL) backed by S3 and Glacier for companies with existing physical-tape backup processes/software — same workflow, iSCSI interface, "eject" a tape to archive it into S3/Glacier. Usually, final artifacts are in Glacier (going through S3).
-- Storage gateways provides hosting options. ***VMWare ESXi, Microsoft Hyper-V, Linux KVMs*** are options that users can host on-premise. Users can also choose EC2, which is on the cloud.
+- **S3 File Gateway**: exposes S3 over NFS/SMB, caches recently-used data locally. Supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (Glacier needs a lifecycle policy). Per-gateway IAM role for bucket access; SMB integrates with AD for auth.
+- **Volume Gateway**: block storage over iSCSI, backed by EBS snapshots via S3. **Cached volumes** keep the full dataset in S3, caching only hot data locally. **Stored volumes** keep the full dataset on-prem, with scheduled backups to S3.
+- **Tape Gateway**: a Virtual Tape Library (VTL) backed by S3/Glacier for existing tape-backup workflows — iSCSI interface, "eject" a tape to archive it.
+- Hosting options: on-prem via VMware ESXi, Microsoft Hyper-V, or Linux KVM, or on the cloud via EC2.
 
 
 ### AWS DataSync
 - **!!Popular on Exam!!**
-- Moves ***large*** amounts of data to/from ***on-prem*** or ***another cloud*** (NFS, SMB, HDFS, S3 API — requires a DataSync Agent on-prem) or directly between ***AWS storage services*** (S3, EFS, FSx — no agent needed). 
-  - **Preserves file permissions and metadata (NFS POSIX, SMB)**. This is the only service that can do this! 
-  - Replication tasks can be ***scheduled hourly/daily/weekly***; one agent task can use up to 10 Gbps, with an optional bandwidth limit. 
-  - To quickly estimate time taken to move data, the formula is roughly:
-    - Days Taken =~ (Data Size / Effective Internet Speed)/10^5
-    - 10^5 =~ (3600s * 24hr / 8b)
-    - 8b is required to convert internet speed from `b/s` to `B/s`
-  - Can sync to any S3 storage class including Glacier.
-  - **DataSync vs. Storage Gateway vs. Snowball/DMS**: 
-    - DataSync is for a ***one-time or scheduled bulk migration/sync*** of files (moves the data, then it's done) 
-    - vs. **Storage Gateway**, which is for ***ongoing, transparent access*** to AWS storage from on-prem apps (presents S3/EBS/tape as a local NFS/SMB/iSCSI/VTL endpoint, with local caching). 
-    - Vs. **Snowball**, which is offline/physical transfer for when the transfer would take too long over the network (no live network path at all). 
-    - Vs. **DMS** (Database Migration Service), which is specifically for ***databases*** (homogeneous/heterogeneous, with CDC replication), not file/object data.
+- Moves large amounts of data to/from on-prem or another cloud (NFS, SMB, HDFS, S3 API — needs a DataSync Agent) or directly between AWS storage services (S3, EFS, FSx — no agent needed).
+  - **Preserves file permissions and metadata (NFS POSIX, SMB)** — the only service that does this.
+  - Tasks can run on a schedule (hourly/daily/weekly); one agent uses up to 10 Gbps, with an optional bandwidth cap.
+  - Rough time estimate: Days ≈ (Data Size / Effective Internet Speed) / 10^5, where 10^5 ≈ (3600s × 24hr / 8b) converts speed from b/s to B/s.
+  - Can sync to any S3 storage class, including Glacier.
+  - **vs. Storage Gateway/Snowball/DMS**: DataSync does one-time/scheduled bulk file sync. Storage Gateway gives ongoing transparent access to AWS storage from on-prem apps. Snowball is offline/physical transfer for when network transfer is too slow. DMS is specifically for databases (CDC replication), not files.
 
 ### Additional Topics
 
@@ -244,8 +269,17 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#2 pop]**
 
-- **Sizing & config options**: OS (Linux/Windows/Mac), CPU, RAM, storage (network-attached: EBS/EFS, or hardware: Instance Store), network card speed & public IP, firewall rules (security group), and a bootstrap script (**EC2 User Data**) run once, as root, on first launch — used to install updates/software, download files, or any first-boot automation.
-- **Instance type naming**: e.g. `m5.2xlarge` = `[instance class][generation].[size]`. Families: **General Purpose** (t/m-series — balanced compute/memory/network, web servers, code repos), **Compute Optimized** (c-series — batch processing, media transcoding, HPC, gaming, ML inference), **Memory Optimized** (r/x-series — in-memory DBs, BI, real-time big-data processing), **Storage Optimized** (i/d-series — high sequential read/write IOPS, OLTP, NoSQL, data warehousing, distributed file systems).
+- **Sizing & config options**: 
+  - OS (Linux/Windows/Mac), 
+  - CPU, RAM, 
+  - storage (network-attached: EBS/EFS, or hardware: Instance Store), 
+  - network card speed & public IP, firewall rules (security group), and 
+  - a bootstrap script (**EC2 User Data**) run once, as root, on first launch — used to install updates/software, download files, or any first-boot automation.
+- **Instance type naming**: e.g. `m5.2xlarge` = `[instance class][generation].[size]`. Families: 
+  1. **General Purpose** (t/m-series — balanced compute/memory/network, web servers, code repos), 
+  2. **Compute Optimized** (c-series — batch processing, media transcoding, HPC, gaming, ML inference), 
+  3. **Memory Optimized** (r/x-series — in-memory DBs, BI, real-time big-data processing), 
+  4. **Storage Optimized** (i/d-series — high sequential read/write IOPS, OLTP, NoSQL, data warehousing, distributed file systems).
 - **Security Groups**: stateful firewall at the instance level; **allow rules only** (no explicit deny), can reference by IP or by another security group; can attach to multiple instances; locked to a region/VPC combination; live "outside" the instance (blocked traffic never reaches it). All inbound traffic blocked by default, all outbound allowed by default. A connection **timeout** usually means a security group issue; **connection refused** means the app isn't running or errored.
 - **EC2 Instance Connect**: browser-based SSH using a temporary AWS-uploaded key (no local key file needed) — works out-of-the-box only with Amazon Linux 2, and port 22 must still be open.
 - **Purchasing options**:
@@ -277,9 +311,9 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **EFS** is another powerful network drive that can attached to multiple EC2 instances across multiple AZ. See the section `Storage` for more info.
 
 ### Scalability & High Availability (concepts)
-- **Vertical scaling**: increase an instance's size (scale up/down), e.g. t2.nano → u-12tb1.metal. Common for non-distributed systems like a single database (RDS, ElastiCache scale vertically); hardware ceiling applies.
-- **Horizontal scaling (elasticity)**: increase/decrease the number of instances (scale out/in) — implies a distributed system. Achieved with an Auto Scaling Group, typically paired with a Load Balancer.
-- **High Availability**: run the same application across ≥2 AZs to survive a data-center loss. Can be **passive** (e.g. RDS Multi-AZ failover) or **active** (e.g. horizontal scaling across AZs).
+- **Vertical scaling**: increase an instance's size (e.g. t2.nano → u-12tb1.metal). Used for non-distributed systems like a single DB (RDS, ElastiCache); hits a hardware ceiling.
+- **Horizontal scaling (elasticity)**: add/remove instances — implies a distributed system, typically an ASG + Load Balancer.
+- **High Availability**: run the app across ≥2 AZs to survive a data-center loss. Can be passive (RDS Multi-AZ failover) or active (horizontal scaling across AZs).
 
 ### Auto Scaling Groups (ASG)
 
@@ -354,14 +388,11 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Use case: event-driven microservices, glue logic, image processing on S3 upload, cron-like scheduled tasks (EventBridge schedule → Lambda).
 
 ### Docker fundamentals
-- Docker packages apps into **containers** that run identically on any machine/OS
-  1. no compatibility issues
-  2. less maintenance work
-  3. works with any language/technology
-- Unlike a VM (guest OS + hypervisor per app), containers share the host OS/kernel via the Docker daemon, so many containers fit on one server with less overhead. 
-- Use cases: microservices, lift-and-shift from on-prem. 
-- A `Dockerfile` **builds** into a Docker **image**, which is **run** as a container; images are **push**ed to / **pull**ed from a Docker **repository**:**Docker Hub** (public, base images for most OS/technologies) or **Amazon ECR** (Elastic Container Registry — private repos, plus a public Amazon ECR Public Gallery). 
-  - ECR is backed by S3, fully integrated with ECS, access controlled via IAM (permission errors → check the IAM policy), and supports image vulnerability scanning, versioning/tags, and lifecycle policies.
+- Docker packages apps into **containers** that run identically on any machine/OS — no compatibility issues, less maintenance, works with any language.
+- Unlike a VM (guest OS + hypervisor per app), containers share the host OS/kernel via the Docker daemon, so more fit on one server.
+- Use cases: microservices, lift-and-shift from on-prem.
+- A `Dockerfile` **builds** an **image**, which **runs** as a container. Images are pushed/pulled to a **repository**: **Docker Hub** (public) or **Amazon ECR** (private, plus a public Gallery).
+  - ECR is backed by S3, integrates with ECS, uses IAM for access, and supports vulnerability scanning, tags, and lifecycle policies.
 
 ### ECS (Elastic Container Service)
 
@@ -397,16 +428,16 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   2. Bursty compute
 
 ### EKS (Elastic Kubernetes Service)
-- Managed control plane for **Kubernetes**, the open-source system for automated deployment/scaling/management of containerized apps — an alternative to ECS with the same goal but a different (Kubernetes-native) API. Kubernetes is cloud-agnostic (runs on any cloud or on-prem), so EKS is the natural migration target if a company already runs Kubernetes elsewhere; deploy one EKS cluster per region for multi-region; collect logs/metrics via CloudWatch Container Insights.
-- **Node types**: Managed Node Groups (EKS creates/manages EC2 nodes for you inside an ASG, On-Demand or Spot), Self-Managed Nodes (you create/register the nodes yourself, typically from the Amazon EKS Optimized AMI, still ASG-managed), or Fargate (no nodes to manage at all).
-- **Data volumes**: needs a `StorageClass` manifest using a Container Storage Interface (CSI) compliant driver; supports EBS, EFS (works with Fargate), FSx for Lustre, and FSx for NetApp ONTAP.
+- Managed control plane for **Kubernetes**, the open-source system for deploying/scaling/managing containerized apps — an alternative to ECS with a Kubernetes-native API. Kubernetes is cloud-agnostic, so EKS suits a company already running it elsewhere. Deploy one cluster per region for multi-region; use CloudWatch Container Insights for logs/metrics.
+- **Node types**: Managed Node Groups (EKS manages EC2 nodes in an ASG, On-Demand or Spot), Self-Managed Nodes (you create/register nodes yourself), or Fargate (no nodes to manage).
+- **Data volumes**: needs a `StorageClass` manifest with a CSI-compliant driver; supports EBS, EFS (works with Fargate), FSx for Lustre, and FSx for NetApp ONTAP.
 
 ### Elastic Beanstalk
-- A developer-centric PaaS view of deploying on AWS: solves the recurring problem of managing infra, deploying code, configuring DBs/load balancers, and scaling for what is usually the same underlying architecture (ALB + ASG). It's a managed service — AWS handles capacity provisioning, load balancing, scaling, health monitoring, instance configuration; you're only responsible for the application code. You still have full control over the configuration underneath. Beanstalk itself is free — you pay only for the underlying resources (EC2, RDS, etc.).
-- **Components**: **Application** — a collection of Beanstalk components (environments, versions, configs). **Application Version** — one iteration of your code. **Environment** — the collection of AWS resources running one application version at a time (Web Server Tier or Worker Tier); you can run multiple environments (dev/test/prod) from the same application. Workflow: create application → upload version → launch environment → manage/deploy new versions.
-- **Supported platforms**: Go, Java SE, Java with Tomcat, .NET Core on Linux, .NET on Windows Server, Node.js, PHP, Python, Ruby, Packer Builder, and Docker (single container, multi-container, preconfigured).
-- **Web Server Tier vs Worker Tier**: Web Server Tier is a standard ALB + ASG of EC2 web server instances. Worker Tier is an ASG of EC2 instances that pull and process messages from an SQS queue (which can itself be fed by another Web Server Tier environment) — scales based on queue depth.
-- **Deployment modes**: Single Instance (one EC2 with an Elastic IP, no RDS Multi-AZ) — good for dev. High Availability with Load Balancer (ALB + ASG across AZs, RDS Multi-AZ) — good for production.
+- A developer-centric PaaS: handles capacity provisioning, load balancing, scaling, health monitoring, and instance config so you only manage application code — full control over the config remains available. Beanstalk itself is free; you pay only for the underlying resources.
+- **Components**: **Application** (a collection of environments/versions/configs), **Application Version** (one code iteration), **Environment** (the AWS resources running one version — Web Server or Worker Tier). Workflow: create application → upload version → launch environment → deploy new versions.
+- **Supported platforms**: Go, Java SE/Tomcat, .NET (Core/Windows), Node.js, PHP, Python, Ruby, Packer Builder, Docker.
+- **Web Server Tier** = ALB + ASG of EC2 web instances. **Worker Tier** = ASG that pulls/processes messages from an SQS queue, scaling on queue depth.
+- **Deployment modes**: Single Instance (one EC2 + Elastic IP, no Multi-AZ RDS) for dev. High Availability (ALB + ASG across AZs, RDS Multi-AZ) for production.
 
 
 ---
@@ -453,14 +484,11 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Security mirrors RDS: KMS at-rest encryption (set at launch), TLS in-flight, IAM Authentication, Security Groups, no SSH, CloudWatch audit logs.
 
 ### ElastiCache
-- Managed Redis or Memcached — in-memory databases with very high performance/low latency; helps make applications stateless. AWS handles OS maintenance/patching, setup, monitoring, failure recovery, backups — but using ElastiCache still requires application code changes (unlike RDS, which is close to a drop-in DB swap).
-- **Redis vs Memcached**: Redis supports Multi-AZ with auto-failover, read replicas for HA/read scaling, Append Only File (AOF) data durability, backup & restore, and Sets/Sorted Sets. Memcached supports multi-node sharding (partitioning) for scale, is multi-threaded, but has **no replication/HA and no persistence** (non-durable) — only supports backup & restore as a serverless feature.
-- **Security**: IAM policies on ElastiCache only govern AWS API-level access (creating/deleting clusters), not data-plane access. **Redis AUTH** sets a password/token at cluster creation for an extra layer of security on top of security groups, plus supports SSL in-flight encryption. Memcached supports SASL-based authentication (advanced).
-- **Patterns**: 
-  - Lazy Loading (cache all read data; can go stale), 
-  - Write-Through (add/update cache whenever the DB is written to — avoids stale data but wastes cache space on unread data, and a new cache node starts with missing data), 
-  - Session Store (store temporary session data using TTL). Cache invalidation is the classic hard problem — plan a strategy up front.
-- Use case: reducing read load on RDS/DynamoDB (cache-aside/DB cache pattern), user session storage (log in to one app instance, session is retrievable from any other instance via ElastiCache), gaming leaderboards (Redis Sorted Sets guarantee uniqueness + real-time ranked ordering).
+- Managed Redis or Memcached — in-memory DBs for very high performance/low latency, helping apps stay stateless. AWS handles OS maintenance, setup, monitoring, failure recovery, and backups, but (unlike RDS) still requires application code changes.
+- **Redis vs Memcached**: Redis supports Multi-AZ auto-failover, read replicas, AOF durability, backup & restore, and Sets/Sorted Sets. Memcached supports multi-node sharding and is multi-threaded, but has no replication/HA/persistence — only backup & restore (serverless).
+- **Security**: IAM only governs API-level access (creating/deleting clusters), not data access. **Redis AUTH** adds a password on top of security groups plus SSL in-flight encryption. Memcached uses SASL auth.
+- **Patterns**: Lazy Loading (cache reads, can go stale), Write-Through (update cache on every DB write — avoids staleness but wastes cache space), Session Store (TTL-based temp data). Cache invalidation is the classic hard problem.
+- Use cases: reducing RDS/DynamoDB read load, shared session storage, gaming leaderboards (Redis Sorted Sets for ranking).
 
 ### DynamoDB 
 
@@ -490,12 +518,12 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Use case: high-scale web/mobile apps, gaming leaderboards, session state — when schema is simple/flexible and scale is a priority.
 
 ### Big Data Concepts (Primer)
-*You won't get quizzed on these definitions directly, but Redshift/Athena/EMR/Glue questions all assume you already know the vocabulary — worth 5 minutes if this isn't your background.*
-- **OLTP vs OLAP**: **OLTP** (Online Transaction Processing) is what RDS/Aurora/DynamoDB do — many small, fast reads/writes for running the app itself (a customer placing an order). **OLAP** (Online Analytical Processing) is what Redshift/Athena/EMR do — fewer, heavier queries that scan/aggregate huge volumes of historical data to answer business questions ("total revenue by region, by month, for the last 3 years"). You generally don't run OLAP queries directly against your OLTP database — you'd slow down/lock the live app — so data gets copied out into a separate analytics system instead. That copying is the "ETL" below.
-- **Data Lake**: cheap, massive storage (S3, in AWS) that holds data **as-is** — structured, semi-structured (JSON, logs), or unstructured (images, video) — with no schema imposed at write time ("schema-on-read": you decide how to interpret it when you query, not when you store it). Cheaper and more flexible than a warehouse, but slower/less optimized for repeated BI queries. **AWS Lake Formation** helps build one on S3; **Athena/EMR/Redshift Spectrum** are the tools that query it.
-- **Data Warehouse**: a separate database, purpose-built for OLAP, holding data that's already **cleaned and structured** into a known schema (rows/columns/tables, usually a "star schema" of fact + dimension tables) before it's loaded in. Optimized for fast SQL aggregations, not for flexibility. **Redshift** is AWS's data warehouse.
-- **Data Lakehouse**: a newer pattern that layers warehouse-like structure/performance (schema, indexing, ACID transactions) directly on top of data-lake storage, so you don't need to maintain two separate copies of the data. In AWS this is roughly what you get combining S3 + Glue Data Catalog + **Redshift Spectrum** (query S3 data directly from Redshift without loading it first) — same idea shows up in tools like Databricks/Delta Lake or Apache Iceberg outside AWS.
-- **Batch vs Streaming**: **Batch** processing runs on accumulated data at intervals (e.g. a nightly Glue job, or EMR crunching a day's logs) — simpler, cheaper, higher latency. **Streaming** processes data continuously as it arrives (Kinesis Data Streams, Managed Service for Apache Flink, MSK) for near-real-time results — more complex, needed when the business question can't wait (fraud detection, live dashboards). **Kinesis Data Firehose** sits in between: near-real-time (~60s buffering) delivery into S3/Redshift, without you managing streaming infrastructure.
+*You won't be quizzed on these definitions directly, but Redshift/Athena/EMR/Glue questions assume you know the vocabulary.*
+- **OLTP vs OLAP**: OLTP (RDS/Aurora/DynamoDB) = many small, fast reads/writes running the live app. OLAP (Redshift/Athena/EMR) = fewer, heavier queries aggregating large historical data. You don't run OLAP against your OLTP DB directly — it would slow/lock the app — so data is copied out via ETL instead.
+- **Data Lake**: cheap, massive storage (S3) holding data as-is — structured, semi-structured, or unstructured — with no schema at write time ("schema-on-read"). Cheaper/more flexible than a warehouse but slower for repeated BI queries. **Lake Formation** helps build one on S3; **Athena/EMR/Redshift Spectrum** query it.
+- **Data Warehouse**: a separate DB purpose-built for OLAP, holding cleaned/structured data (usually a star schema) loaded in ahead of time. Optimized for fast SQL aggregation, not flexibility. **Redshift** is AWS's warehouse.
+- **Data Lakehouse**: layers warehouse-like structure/performance (schema, indexing, ACID) on top of data-lake storage, avoiding two copies of data. In AWS: S3 + Glue Data Catalog + **Redshift Spectrum**.
+- **Batch vs Streaming**: Batch runs on accumulated data at intervals (nightly Glue job, EMR) — simpler, higher latency. Streaming processes data continuously as it arrives (Kinesis Data Streams, Managed Flink, MSK) for near-real-time results. **Kinesis Data Firehose** sits in between: near-real-time (~60s buffer) delivery into S3/Redshift, no infra to manage.
 
 
 ### Amazon Athena
@@ -507,17 +535,17 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **Federated Query**: run SQL across relational, non-relational, object, and custom/on-prem data sources (ElastiCache, DocumentDB, DynamoDB, RDS, Aurora, SQL Server, MySQL, HBase-on-EMR) via Lambda-based Data Source Connectors, storing results back in S3 — lets Athena act as a single SQL layer over heterogeneous sources.
 
 ### Redshift
-- PostgreSQL-based but **not** used for OLTP — it's **OLAP** (online analytical processing / data warehousing), claiming ~10x better performance than other warehouses via **columnar** storage (vs row-based) and a parallel query engine, scaling to petabytes. SQL interface; BI tools like QuickSight or Tableau integrate directly; faster than Athena for joins/aggregations thanks to indexes, at the cost of needing a provisioned/serverless cluster running.
-- **Cluster architecture**: a **Leader Node** handles query planning and results aggregation; **Compute Nodes** execute the query and send results to the leader. Two modes: **Provisioned** (choose instance types up front, can reserve instances for savings) or **Serverless** (no cluster management). Some cluster configurations support a **Multi-AZ** mode for HA.
-- **Snapshots & DR**: point-in-time backups of a cluster, stored internally in S3, **incremental** (only changed blocks saved); restoring a snapshot creates a **new cluster**. Automated snapshots run every 8 hours, every 5GB of change, or on a schedule, with 1–35 day retention; manual snapshots are retained until explicitly deleted. Snapshots (automated or manual) can be configured to auto-copy to another region for DR.
-- **Loading data**: large bulk inserts perform far better than row-by-row writes. Options: Kinesis Data Firehose (streams through an S3 copy under the hood), the `COPY` command from S3 (via the public internet by default, or privately through the VPC with Enhanced VPC Routing), or an EC2 instance's JDBC driver (batch writes strongly recommended over single-row inserts).
-- **Redshift Spectrum**: query data that's already sitting in S3 **without loading it** into the cluster — still requires a running Redshift cluster to originate the query, which then fans out to potentially thousands of separate Spectrum (not cluster compute) nodes to scan S3 directly.
-- Use case: business intelligence, large-scale analytical queries — not for transactional (OLTP) workloads.
+- PostgreSQL-based but **OLAP**, not OLTP — a data warehouse claiming ~10x better performance than other warehouses via columnar storage and a parallel query engine, scaling to petabytes. SQL interface, integrates with BI tools (QuickSight, Tableau); faster than Athena for joins/aggregations due to indexes, but needs a running cluster.
+- **Cluster architecture**: a **Leader Node** plans queries and aggregates results; **Compute Nodes** execute and return results to the leader. **Provisioned** mode (choose instance types, can reserve for savings) or **Serverless** (no cluster management). Some configs support **Multi-AZ** for HA.
+- **Snapshots & DR**: incremental, point-in-time backups stored in S3; restoring creates a **new cluster**. Automated snapshots run every 8 hours or every 5GB changed, retained 1–35 days; manual snapshots retained until deleted. Both can auto-copy to another region for DR.
+- **Loading data**: bulk inserts beat row-by-row writes. Options: Kinesis Data Firehose, the `COPY` command from S3 (public internet or private via Enhanced VPC Routing), or an EC2 JDBC driver (batch writes recommended).
+- **Redshift Spectrum**: queries data in S3 without loading it — still needs a running cluster to originate the query, which fans out to separate Spectrum nodes to scan S3.
+- Use case: BI and large-scale analytics, not transactional workloads.
 
 ### Choosing the Right Database (decision framework)
-- Ask: read-heavy, write-heavy, or balanced? Throughput needs, and do they fluctuate? How much data, for how long, will it grow, average object size, access pattern? Durability needs, source of truth? Latency requirements, concurrent users? Data model — joins needed? Structured/semi-structured? Strong schema vs flexibility? Reporting/search needs? License costs — worth switching to a cloud-native DB like Aurora?
-- **By category**: RDBMS/OLTP with joins → RDS or Aurora. NoSQL, no joins → DynamoDB (~JSON), ElastiCache (key/value), Neptune (graph), DocumentDB (MongoDB-compatible), Keyspaces (Cassandra-compatible). Object store → S3 (big objects) / Glacier (backup/archive). Data warehouse / SQL analytics (BI) → Redshift (OLAP), Athena, EMR. Free-text/unstructured search → OpenSearch. Graph relationships → Neptune. Ledger (immutable, cryptographically verifiable history) → Amazon QLDB. Time series → Amazon Timestream.
-- Neptune, DocumentDB, Keyspaces, and Timestream are detailed in the companion Additional Topics guide.
+- Ask: read/write/balanced workload? Throughput and how it fluctuates? Data size, growth, object size, access pattern? Durability and source of truth? Latency and concurrency needs? Joins needed? Structured vs flexible schema? Reporting/search needs? Worth the licensing switch to a cloud-native DB like Aurora?
+- **By category**: RDBMS/OLTP with joins → RDS or Aurora. NoSQL, no joins → DynamoDB (JSON-like), ElastiCache (key/value), Neptune (graph), DocumentDB (MongoDB-compatible), Keyspaces (Cassandra-compatible). Object store → S3 (large objects) / Glacier (archive). Analytics/BI → Redshift, Athena, EMR. Free-text search → OpenSearch. Ledger (immutable history) → QLDB. Time series → Timestream.
+- Neptune, DocumentDB, Keyspaces, and Timestream are covered in the companion Additional Topics guide.
 
 ---
 
@@ -726,12 +754,12 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 ### AWS Global Accelerator
 - **!! Popular in exams !!**
-- Improves performance for global users by ***routing traffic onto the AWS internal network as early as possible*** instead of the public internet's many unpredictable hops
-- Works by assigning **2 static Anycast IPs** (same IP announced from multiple edge locations & the client is routed to the nearest one) that forward traffic over the private AWS backbone to your application (Elastic IP, EC2 instance, ALB, or NLB — public or private).
-- **Consistent performance**: intelligent routing to the lowest-latency healthy endpoint with fast regional failover, no client-side caching issues since the IP never changes.
-- **Health checks**: continuously checks application health, and reroutes on failure in well under a minute — strong fit for disaster recovery.
-- **Security**: only the 2 external Anycast IPs need to be allowlisted by clients/firewalls; DDoS-protected via AWS Shield.
-- **vs CloudFront**: both ride the AWS global edge network and integrate with Shield. CloudFront caches content (static and dynamic) at the edge — an HTTP/S CDN. Global Accelerator proxies packets (no caching) for a wide range of TCP/UDP applications to one or more regions — better fit for non-HTTP use cases (gaming/UDP, IoT/MQTT, VoIP) and for HTTP use cases specifically needing static IPs or fast deterministic regional failover.
+- Improves global performance by routing traffic onto the AWS internal network as early as possible, instead of the public internet's unpredictable hops.
+- Assigns **2 static Anycast IPs** (announced from multiple edge locations; clients route to the nearest one) that forward traffic over the AWS backbone to your app (Elastic IP, EC2, ALB, or NLB — public or private).
+- **Consistent performance**: routes to the lowest-latency healthy endpoint with fast regional failover; no client-side caching issues since the IP never changes.
+- **Health checks**: continuously checks app health and reroutes on failure in well under a minute — a strong DR fit.
+- **Security**: only the 2 Anycast IPs need allowlisting; DDoS-protected via AWS Shield.
+- **vs CloudFront**: both ride the AWS edge network and integrate with Shield. CloudFront caches HTTP(S) content at the edge. Global Accelerator proxies packets (no caching) for TCP/UDP apps — better for non-HTTP cases (gaming, IoT, VoIP) and for HTTP cases needing static IPs or fast regional failover.
 
 ### API Gateway
 
@@ -750,7 +778,7 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 ## 5. Application Integration & Messaging
 
 ### Application communication patterns
-- **Synchronous** (app-to-app direct calls) can break under sudden traffic spikes (e.g. usually encoding 10 videos, suddenly 1000). **Asynchronous/event-based** (app-to-queue-to-app) decouples producer and consumer so each scales independently — via SQS (queue model), SNS (pub/sub model), or Kinesis (real-time streaming model).
+- **Synchronous** (direct app-to-app calls) can break under sudden traffic spikes. **Asynchronous/event-based** (app-to-queue-to-app) decouples producer and consumer so each scales independently — via SQS (queue), SNS (pub/sub), or Kinesis (streaming).
 
 ### SQS (Simple Queue Service)
 
@@ -795,15 +823,12 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **Message Filtering**: a JSON filter policy on a subscription restricts which published messages that subscriber receives (matched against message attributes, e.g. `State: Placed` vs `Cancelled` vs `Declined`); a subscription without a filter policy receives every message.
 
 ### Amazon Kinesis Data Streams
-- Collects and stores streaming data in real time from producers (applications, IoT devices, Kinesis Agent capturing logs/metrics) for consumers (custom applications, Lambda, Kinesis Data Firehose, Managed Service for Apache Flink) to process.
-- Retention up to 365 days; consumers can reprocess/replay data within the retention window; data can't be deleted before it expires; records up to 1MiB; ordering guaranteed only among records sharing the same **Partition Key**; 
-- Security: at-rest KMS encryption, in-flight HTTPS. 
-- Kinesis Producer Library (KPL) and Kinesis Client Library (KCL) are the recommended SDKs for building optimized producers/consumers.
-- **Capacity modes**: 
-  1. **Provisioned** — you choose the number of shards, each shard = 1MB/s in (or 1,000 records/s) and 2MB/s out, scale shard count manually, billed per shard-hour. 
-  2. **On-demand** — no capacity management, default 4MB/s in / 4,000 records/s, auto-scales based on the observed throughput peak over the last 30 days, billed per stream-hour + data in/out per GB.
-- Get records through shard iterator.
-- Data are being flushed based on buffer-size or buffer interval.
+- Collects and stores streaming data in real time from producers (apps, IoT devices, Kinesis Agent) for consumers (custom apps, Lambda, Data Firehose, Managed Flink) to process.
+- Retention up to 365 days; consumers can replay within that window; data can't be deleted early. Records up to 1MiB; ordering guaranteed only within the same **Partition Key**.
+- Security: at-rest KMS encryption, in-flight HTTPS.
+- KPL and KCL are the recommended SDKs for producers/consumers.
+- **Capacity modes**: **Provisioned** — choose shard count, each shard = 1MB/s in / 2MB/s out, scale manually, billed per shard-hour. **On-demand** — no capacity planning, default 4MB/s in / 4,000 records/s, auto-scales on the observed 30-day peak, billed per stream-hour + data volume.
+- Records are read via a shard iterator; data flushes based on buffer size or interval.
 
 - **SQS vs SNS vs Kinesis** quick contrast:
 
@@ -818,12 +843,8 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 
 ### Amazon Data Firehose (formerly Kinesis Data Firehose)
-- Fully managed, serverless, auto-scaling near-real-time (not real-time — buffers by size or time before flushing) delivery service that loads streaming data into destinations: AWS (S3, Redshift, OpenSearch Service), 3rd-party (Splunk, MongoDB, Datadog, New Relic) or a custom HTTP endpoint. 
-  - Records up to 1MB; 
-  - supports CSV/JSON/Parquet/Avro/raw text/binary; 
-  - can convert to Parquet/ORC and compress with gzip/snappy; 
-  - can invoke a Lambda function for custom transformations (e.g. CSV→JSON) mid-pipeline; 
-  - failed/all records can also be backed up to an S3 bucket.
+- Fully managed, serverless, auto-scaling near-real-time (buffers by size/time before flushing) delivery into destinations: AWS (S3, Redshift, OpenSearch), 3rd-party (Splunk, MongoDB, Datadog, New Relic), or a custom HTTP endpoint.
+  - Records up to 1MB; supports CSV/JSON/Parquet/Avro/raw text/binary; can convert to Parquet/ORC and compress (gzip/snappy); can invoke Lambda for mid-pipeline transforms (e.g. CSV→JSON); failed/all records can back up to S3.
 - **vs Kinesis Data Streams**:
 
   | | Kinesis Data Streams | Data Firehose |
@@ -847,11 +868,10 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - **Auditing pattern**: CloudTrail logs any API call (e.g. a `DeleteTable`) → EventBridge rule matches it → alerts via SNS — a general "intercept any API call" pattern, also usable for IAM `AssumeRole` events or `AuthorizeSecurityGroupIngress` (someone opened an inbound SG rule).
 
 ### Step Functions
-- Builds a serverless **visual workflow** (state machine) to orchestrate Lambda functions and other steps — supports sequences, parallel branches, conditions, timeouts, and error handling/retries. 
-  - Can integrate with EC2, ECS, on-premises servers, API Gateway, SQS queues, and more; 
-  - supports a human-approval step.
-- AWS version of Airflow, Temporal and more. Workflow orchestration architecture.
-- Use cases: order fulfillment, data processing pipelines, web application workflows, any multi-step business logic.
+- Builds a serverless **visual workflow** (state machine) to orchestrate Lambda and other steps — sequences, parallel branches, conditions, timeouts, retries, and human-approval steps.
+- Can integrate with EC2, ECS, on-prem servers, API Gateway, SQS, and more.
+- AWS's answer to Airflow/Temporal — workflow orchestration.
+- Use cases: order fulfillment, data pipelines, web app workflows, multi-step business logic.
 
 > **Also in this domain (lower exam frequency)**: Amazon MQ, SQS/SNS→Lambda retry mechanics detail, SES, Pinpoint — see the companion Additional Topics guide. Serverless Architecture Patterns are covered under Solutions Architecture Patterns (§9).
 
@@ -877,33 +897,33 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - Exam tests: least privilege, when to use a role vs a user, policy troubleshooting (explicit deny wins).
 
 ### AWS Organizations & Control Tower
-- **Organizations**: a global service to manage multiple AWS accounts; the account that creates the organization becomes the **management account**, every other account is a **member account** (each member can belong to only one organization); **Consolidated Billing** gives a single payment method plus pricing benefits from aggregated usage (volume discounts on EC2/S3/etc.) and shared Reserved Instance/Savings Plans discounts across accounts; an API is available to automate account creation.
-- **Organizational Units (OUs)**: accounts (and nested OUs) are arranged under a Root OU beneath the management account — common patterns: by **Business Unit** (Sales OU, Retail OU, Finance OU...), by **Environmental Lifecycle** (Prod OU, Dev OU, Test OU), or **Project-Based** (Project 1/2/3 OUs). Advantages of multi-account (vs one account with multiple VPCs): consistent tagging standards for billing, CloudTrail enabled on every account with logs centralized to one S3 account, CloudWatch Logs sent to a central logging account, cross-account admin roles.
-- **Service Control Policies (SCPs)**: IAM-style JSON policies attached to an OU or account to restrict what its **Users and Roles** *can* do (guardrails, not grants) — like IAM, there's **no implicit allow by default**; an explicit Allow must exist from the root through every OU in the direct path to the target account. SCPs **never apply to the management account** (which retains full admin power). **Hierarchy**: a Deny anywhere in the chain (root → OU → account) blocks that account; an "Allowlist strategy" starts from an explicit Allow-all and adds targeted Denies; a "Blocklist strategy" attaches specific Allow statements (e.g. only `ec2:*` + `cloudwatch:*`) instead of `FullAWSAccess`.
-- **Tag Policies**: standardize tag keys/allowed values across an organization's resources — ensure consistent tags, audit tagged resources, support Cost Allocation Tags and Attribute-Based Access Control; prevents non-compliant tagging operations on specified services/resources (has no effect on resources that simply lack tags); can generate a compliance report and route non-compliant tags to EventBridge.
-- **Control Tower**: the easy way to set up and govern a secure, compliant multi-account environment based on best practices, built on top of Organizations (uses it to create accounts). Benefits: automates environment setup in a few clicks, automates ongoing policy management via **Guardrails**, detects and remediates policy violations, and gives an interactive compliance dashboard. **Guardrails** are either **Preventive** (implemented as SCPs, e.g. restrict regions across all accounts) or **Detective** (implemented as AWS Config rules, e.g. flag untagged resources) — a detective guardrail can trigger SNS (notify an admin) and/or Lambda (auto-remediate, e.g. add missing tags).
-- Use case: Large enterprises separating prod/dev/sandbox accounts with centralized governance.
+- **Organizations**: a global service managing multiple AWS accounts. The account that creates it becomes the **management account**; every other account is a **member account** (one org each). **Consolidated Billing** gives one payment method, volume discounts, and shared RI/Savings Plan benefits across accounts. An API automates account creation.
+- **Organizational Units (OUs)**: accounts and nested OUs sit under a Root OU beneath the management account — commonly organized by Business Unit, Environment (Prod/Dev/Test), or Project. Multi-account (vs. one account with many VPCs) benefits: consistent tagging, org-wide CloudTrail centralized to one account, centralized CloudWatch Logs, cross-account admin roles.
+- **Service Control Policies (SCPs)**: JSON policies attached to an OU/account restricting what its Users/Roles can do (guardrails, not grants) — no implicit allow; an explicit Allow must exist through every OU in the path. SCPs never apply to the management account. A Deny anywhere in the chain blocks it; an "Allowlist strategy" starts from Allow-all and adds Denies, a "Blocklist strategy" grants only specific Allows instead of `FullAWSAccess`.
+- **Tag Policies**: standardize tag keys/values org-wide, support Cost Allocation Tags and ABAC, and can flag non-compliant tags (not untagged resources) to EventBridge.
+- **Control Tower**: automated, best-practice setup for a secure multi-account environment, built on Organizations. **Guardrails** are **Preventive** (SCPs, e.g. restrict regions) or **Detective** (Config rules, e.g. flag untagged resources), which can trigger SNS or Lambda for remediation.
+- Use case: large enterprises separating prod/dev/sandbox accounts with centralized governance.
 
 ### AWS IAM Identity Center (successor to AWS Single Sign-On)
-- Provides one login (SSO) for: every AWS account within an AWS Organization, business cloud applications (Salesforce, Box, Slack, Microsoft 365, Dropbox), any SAML 2.0-enabled custom app, and EC2 Windows instances. User identities are stored either in the built-in Identity Center identity store, or synced from a 3rd-party identity provider (Active Directory, OneLogin, Okta) — connecting to an AWS Managed Microsoft AD works out of the box; connecting to a self-managed on-prem AD requires either a two-way trust relationship via AWS Managed Microsoft AD, or an AD Connector.
-- **Multi-Account Permissions**: a **Permission Set** is a named collection of one or more IAM policies assigned to users/groups to define their AWS access; the same permission set (e.g. `ReadOnlyAccess`) can be assigned to a group across several accounts (e.g. every Dev and Prod account) so the underlying IAM roles are provisioned consistently everywhere.
-- **Application Assignments**: SSO access to SAML 2.0 business applications by providing the required URLs, certificates, and metadata.
-- **Attribute-Based Access Control (ABAC)**: fine-grained permissions derived from user attributes stored in the Identity Center identity store (e.g. cost center, title, locale) instead of being hard-coded per user — define permissions once, then change a user's AWS access simply by changing their attributes (e.g. tagging a set of users as "DB Admins" grants them a permission set letting them assume a DB-admin IAM role in the target accounts).
+- One login (SSO) for every AWS account in an Organization, business apps (Salesforce, Box, Slack, Microsoft 365, Dropbox), any SAML 2.0 app, and EC2 Windows instances. Identities live in the built-in store or sync from a 3rd-party IdP (AD, OneLogin, Okta) — AWS Managed Microsoft AD works out of the box; self-managed on-prem AD needs a two-way trust or an AD Connector.
+- **Multi-Account Permissions**: a **Permission Set** is a named bundle of IAM policies assigned to users/groups — the same set (e.g. `ReadOnlyAccess`) can apply across several accounts, provisioning consistent IAM roles everywhere.
+- **Application Assignments**: SSO access to SAML 2.0 apps via URLs/certs/metadata.
+- **ABAC**: fine-grained permissions from user attributes (cost center, title, locale) instead of per-user rules — change access by changing attributes.
 
 ### Amazon Cognito
-- Gives your web/mobile app users an identity so they can log in and (optionally) access AWS resources directly — "hundreds of users," "mobile users," "authenticate with SAML/social login" are the exam trigger phrases (vs IAM, meant for internal/AWS-console users).
-- **Cognito User Pools (CUP)**: a serverless user directory for sign-up/sign-in — username(or email)/password login, password reset, email & phone verification, MFA, and federated logins (Facebook, Google, SAML, OpenID Connect, or another Cognito User Pool). Integrates directly with API Gateway (evaluate the Cognito token on each REST call) and an Application Load Balancer (ALB authenticates via Cognito before forwarding to the target group).
-- **Cognito Identity Pools (Federated Identities)**: exchange a login (from Cognito User Pools, or a 3rd-party/social/SAML provider) for **temporary AWS credentials**, letting users interact with AWS services (S3, DynamoDB, etc.) directly or through API Gateway. IAM policies attached to those credentials are defined in Cognito and can be customized per `user_id` for fine-grained access (e.g. row-level security in DynamoDB via `dynamodb:LeadingKeys` matched against `${cognito-identity.amazonaws.com:sub}`); default IAM roles exist for authenticated vs guest users.
-- Use case: a mobile app storing files directly in a user's own S3 prefix, or restricting each user's DynamoDB reads/writes to only their own rows — all without routing every request through a backend.
+- Gives web/mobile app users an identity to log in and (optionally) access AWS resources directly — exam triggers: "hundreds of users," "mobile users," "SAML/social login" (vs IAM, for internal/console users).
+- **Cognito User Pools (CUP)**: a serverless user directory for sign-up/sign-in — username/email+password, password reset, MFA, and federated logins (Facebook, Google, SAML, OIDC, another User Pool). Integrates with API Gateway (token validation) and ALB (auth before forwarding).
+- **Cognito Identity Pools (Federated Identities)**: exchanges a login for **temporary AWS credentials**, letting users hit S3/DynamoDB directly or via API Gateway. IAM policies can be customized per `user_id` (e.g. row-level DynamoDB security via `dynamodb:LeadingKeys`); default roles exist for authenticated vs guest users.
+- Use case: a mobile app storing files in a user's own S3 prefix, or restricting DynamoDB rows per user, without a backend in the loop.
 
 ---
 
 ## 7. Security
 
 ### Why Encryption? (the three flavors, seen throughout AWS)
-- **Encryption in flight (TLS/SSL)**: data is encrypted client-side before sending and decrypted server-side after receiving; TLS certificates enable this over HTTPS; prevents man-in-the-middle attacks.
-- **Server-side encryption at rest**: data is encrypted after being received by the server and decrypted before being sent back out; stored encrypted using a data key; the encryption/decryption keys must be managed somewhere the server can reach them (this is exactly what KMS provides).
-- **Client-side encryption**: the client encrypts data before it's ever sent, and the server never has the ability to decrypt it — only a receiving client with the key can; can leverage envelope encryption; works against any storage backend (S3, FTP, etc.), not just AWS-native encryption.
+- **Encryption in flight (TLS/SSL)**: encrypted client-side before sending, decrypted server-side after receiving, over HTTPS — prevents man-in-the-middle attacks.
+- **Server-side encryption at rest**: data is encrypted after the server receives it and decrypted before it's sent back, using a data key whose keys the server can reach — exactly what KMS provides.
+- **Client-side encryption**: the client encrypts before sending; the server never has decrypt access — only a client with the key can. Can use envelope encryption; works against any storage backend, not just AWS-native encryption.
 
 ### AWS KMS (Key Management Service)
 
@@ -945,24 +965,17 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - Use case: Compliance requirements needing audit trails on key usage → SSE-KMS.
 
 ### AWS Secrets Manager (as a secrets-rotation service)
-- Newer service purpose-built for secrets: 
-  1. capability to force rotation of secrets every X days, 
-  2. automates generation of new secret values on rotation (via a Lambda function behind the scenes), 
-  3. integrates directly with RDS (MySQL, PostgreSQL, Aurora), 
-  4. encrypts all secrets using KMS. 
-- Mostly meant for RDS credential integration, though it can store any secret.
-- **Multi-Region Secrets**: replicate a secret to one or more secondary regions; Secrets Manager keeps read replicas in sync with the primary; a replica can be promoted to a standalone secret if needed. 
-- Use cases: multi-region apps, disaster recovery, multi-region databases.
+- Purpose-built for secrets: forces rotation every X days, auto-generates new values on rotation (via a background Lambda), integrates directly with RDS (MySQL, PostgreSQL, Aurora), and encrypts everything with KMS.
+- Mainly used for RDS credentials, though it can store any secret.
+- **Multi-Region Secrets**: replicates a secret to secondary regions, kept in sync with the primary; a replica can be promoted to standalone.
+- Use cases: multi-region apps, DR, multi-region databases.
 
 ### AWS Certificate Manager (ACM)
-- Easily provision, manage, and deploy TLS certificates to provide in-flight encryption (HTTPS) for websites/APIs — supports both public and private certificates; public certificates are free and auto-renew. 
-- Integrates with (i.e. can have certs loaded directly onto) Elastic Load Balancers (CLB/ALB/NLB), CloudFront distributions, and API Gateway APIs.
-- **Requesting a public certificate**: list the domain names to cover — a Fully Qualified Domain Name (e.g. `corp.example.com`) or a wildcard (`*.example.com`) — choose a validation method (DNS validation via a Route 53 CNAME record, preferred for automation; or email validation to WHOIS contacts), wait a few hours for verification; ACM-issued public certs auto-renew (ACM starts sending daily expiration events, visible in EventBridge, 45 days before expiry by default, configurable).
-- **Importing a certificate** (generated outside ACM): **no automatic renewal** — you must re-import before expiry; ACM still sends daily expiration events; AWS Config has a managed rule (`acm-certificate-expiration-check`) to flag certs nearing expiry.
-- **Region requirements**: 
-  - `ALB`: the cert must be in the same region as the ALB. 
-  - `CloudFront` (an Edge-Optimized API Gateway endpoint routes through CloudFront under the hood): the cert must be in **us-east-1** regardless of where the API/app actually runs; 
-  - `Regional API Gateway` endpoint: the cert must be imported into API Gateway itself, in the same region as the API stage — either way, finish by pointing a Route 53 CNAME or (better) Alias record at the distribution/API.
+- Provisions, manages, and deploys TLS certs for in-flight encryption (HTTPS) — supports public and private certs; public certs are free and auto-renew.
+- Integrates with ELB (CLB/ALB/NLB), CloudFront, and API Gateway.
+- **Requesting a public certificate**: list domain names (FQDN or wildcard), choose validation (DNS via Route 53 CNAME, preferred; or email to WHOIS contacts), wait a few hours. ACM-issued certs auto-renew, sending expiration events via EventBridge 45 days out by default.
+- **Importing a certificate**: no auto-renewal — you must re-import before expiry; AWS Config's `acm-certificate-expiration-check` rule flags certs nearing expiry.
+- **Region requirements**: ALB needs the cert in its own region. CloudFront (and Edge-Optimized API Gateway, which routes through CloudFront) needs the cert in **us-east-1**. Regional API Gateway needs the cert imported into API Gateway in the API's own region. Finish with a Route 53 CNAME or (better) Alias record.
 
 ### AWS WAF (Web Application Firewall)
 
@@ -982,15 +995,15 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
   - To mitigate: pair **AWS Global Accelerator** (for a fixed IP in front of the app) with WAF attached to an ALB instead, to get both a static IP and Layer-7 filtering.
 
 ### AWS Shield
-- Protects against DDoS (Distributed Denial of Service — many requests at once). 
-- **Shield Standard**: free, automatically active for every AWS customer, protects against common Layer 3/4 attacks (SYN/UDP floods, reflection attacks). 
-- **Shield Advanced**: paid ($3,000/month per organization), protects EC2, ELB, CloudFront, Global Accelerator, and Route 53 against more sophisticated attacks, gives 24/7 access to the AWS DDoS Response Team (DRT), protects against usage-fee spikes caused by a DDoS event, and automatically creates/evaluates/deploys AWS WAF rules to mitigate Layer 7 attacks.
+- Protects against DDoS (many requests at once).
+- **Shield Standard**: free, active by default for every customer, covers common Layer 3/4 attacks (SYN/UDP floods, reflection).
+- **Shield Advanced**: paid ($3,000/month per org), covers EC2/ELB/CloudFront/Global Accelerator/Route 53 against sophisticated attacks, gives 24/7 access to the DDoS Response Team, protects against usage-fee spikes from an attack, and auto-deploys WAF rules for Layer 7 mitigation.
 
 ### Amazon GuardDuty
-- Intelligent threat detection for an AWS account using ML, anomaly detection, and 3rd-party threat intel feeds — one click to enable (30-day trial), no software or agents to install for the core feature. 
-- Input sources: CloudTrail Management Events (e.g. unusual `CreateSubnet`/`CreateTrail` calls) and CloudTrail S3 Data Events (unusual `GetObject`/`ListObjects`/`DeleteObject`), VPC Flow Logs (unusual internal traffic/IP), DNS Logs (compromised EC2 instances exfiltrating data via encoded DNS queries), plus optional features (EKS Audit Logs, RDS & Aurora login activity, EBS, Lambda network activity, additional S3 Data Events). 
-- Has a dedicated finding type for cryptocurrency-mining compromise. 
-- Findings can trigger EventBridge rules targeting Lambda or SNS for automated response.
+- Intelligent threat detection using ML, anomaly detection, and 3rd-party threat intel — one-click enable (30-day trial), no agents needed for the core feature.
+- Input sources: CloudTrail Management/S3 Data Events, VPC Flow Logs, DNS Logs, plus optional EKS Audit Logs, RDS/Aurora login activity, EBS, Lambda network activity, extra S3 Data Events.
+- Has a dedicated finding type for crypto-mining compromise.
+- Findings can trigger EventBridge rules to Lambda or SNS for automated response.
 
 ### Additional Topics
 
@@ -1017,55 +1030,45 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 - Use case: triggering Auto Scaling, alerting on thresholds, centralized logging.
 
 ### AWS CloudTrail
-- Provides governance, compliance, and audit for an AWS account — **enabled by default**, giving a history of every event/API call made via Console, SDK, CLI, or other AWS services. Logs can be sent to CloudWatch Logs and/or an S3 bucket. A trail applies to **all regions** (default) or a single region; CloudTrail itself is often treated as a global-view service. If a resource is unexpectedly deleted, check CloudTrail first.
-- **Event types**: **Management Events** — operations on account resources (e.g. IAM `AttachRolePolicy`, EC2 `CreateSubnet`, CloudTrail `CreateTrail`); logged by default; splittable into Read Events (no resource modification) vs Write Events (may modify). **Data Events** — high-volume, **not logged by default**: S3 object-level activity (`GetObject`/`PutObject`/`DeleteObject`, separable into Read/Write) and Lambda `Invoke` activity. **CloudTrail Insights Events** — CloudTrail continuously analyzes normal Write-event patterns to build a baseline, then flags unusual activity (inaccurate resource provisioning, hitting service limits, IAM action bursts, gaps in periodic maintenance); anomalies surface in the CloudTrail console, an event lands in S3, and an EventBridge event fires for automation.
-- **Retention**: events are stored for 90 days in CloudTrail itself; for longer retention, log to S3 and query with Athena.
-- Difference from CloudWatch: CloudTrail = API/governance audit trail (who did what, when); CloudWatch = performance/operational metrics and logs.
+- Governance/compliance/audit for an account — enabled by default, logging every API call (Console, SDK, CLI, or other AWS services) to CloudWatch Logs and/or S3. A trail covers all regions by default, or one. If a resource is unexpectedly deleted, check CloudTrail first.
+- **Event types**: **Management Events** (resource operations, e.g. IAM `AttachRolePolicy`) — logged by default, split into Read/Write. **Data Events** — high-volume, not logged by default: S3 object-level activity and Lambda `Invoke` calls. **Insights Events** — baselines normal Write-event patterns and flags anomalies (bad provisioning, limit hits, IAM bursts, maintenance gaps); surfaces in console, S3, and EventBridge.
+- **Retention**: 90 days in CloudTrail itself; for longer, log to S3 and query with Athena.
+- CloudTrail = who did what/when (API audit); CloudWatch = performance metrics/logs.
 
 ### AWS Config
-- Helps audit and record the **compliance** of AWS resources and how their configuration changed over time — answers questions like "is there unrestricted SSH access to my security groups?", "do my buckets have public access?", "how has my ALB configuration changed over time?" Per-region service, but can be aggregated across regions/accounts; can send SNS alerts on any change, and can store configuration data in S3 for Athena analysis.
-- **Config Rules**: use 75+ AWS-managed rules, or write custom rules backed by a Lambda function (e.g. "is every EBS volume gp2?", "is every EC2 instance t2.micro?"). Rules evaluate on every config change and/or on a fixed schedule. **Config Rules do not block/deny actions** — they only flag non-compliance after the fact. Pricing: no free tier, $0.003 per configuration item recorded/region, $0.001 per rule evaluation/region.
-- **Remediation**: auto-remediate non-compliant resources via SSM Automation Documents (AWS-managed or custom, which can themselves invoke a Lambda function), with configurable remediation retries.
-- **Notifications**: route non-compliance to EventBridge (→ Lambda/SNS/SQS) for automation, or send all configuration-change/compliance-state events straight to SNS (filter client-side or via SNS filtering) for an admin.
-- **Worked example (an ELB)**: CloudWatch tracks incoming connections and error-code % over time on a dashboard; Config tracks security group rule changes, general configuration drift, and compliance (e.g. "does it always have an SSL cert attached?"); CloudTrail tracks who made API calls that changed the load balancer.
+- Audits **compliance** of AWS resources and tracks config changes over time — e.g. "is any SG open to SSH?", "do my buckets allow public access?" Per-region, but aggregatable across regions/accounts; can alert via SNS and store config data in S3 for Athena.
+- **Config Rules**: 75+ AWS-managed rules, or custom rules backed by Lambda. They evaluate on config change and/or schedule, and only **flag** non-compliance — they don't block actions. Pricing: no free tier, $0.003/config item/region + $0.001/rule evaluation/region.
+- **Remediation**: auto-remediates via SSM Automation Documents (which can invoke Lambda), with configurable retries.
+- **Notifications**: route non-compliance to EventBridge (→ Lambda/SNS/SQS), or send all events to SNS directly.
+- **Worked example (an ELB)**: CloudWatch tracks connections/errors; Config tracks SG changes and compliance drift; CloudTrail tracks who changed what.
 
 ### CloudFormation
-- **Infrastructure as Code (IaC)**: declarative templates (JSON/YAML) — say "I want a security group, two EC2 instances using it, an S3 bucket, and a load balancer in front" and CloudFormation creates every resource in the right order with the exact configuration specified, instead of manually clicking through the console.
-- **Benefits**: nothing is created manually (full control + reviewable-through-code changes); each stack's resources are tagged so cost is easy to see per stack, and costs can be estimated from the template itself; supports a "destroy & recreate nightly" savings pattern for dev environments (e.g. auto-delete at 5pm, recreate at 8am); enables fast, safe destroy-and-recreate of infrastructure; declarative — no need to figure out resource ordering/orchestration yourself; leverage existing templates/documentation instead of reinventing them; supports almost all AWS resources, plus custom resources (backed by a Lambda function) for anything not natively supported.
-- Stacks, Change Sets (preview changes before applying), StackSets (deploy across multiple accounts/regions).
-- **Infrastructure Composer**: a visual canvas showing every resource in a template and the relationships between them (e.g. a WordPress stack's LaunchConfig, ALB, ALBListener, MySQLDatabase, and their security-group links) — helps visualize and edit complex templates.
-- **CloudFormation Service Role**: an IAM role that lets CloudFormation create/update/delete stack resources on your behalf, even for users who don't personally have permissions for those underlying resources — supports least privilege (grant a user only `cloudformation:*` + `iam:PassRole`, while the service role itself holds the broader resource permissions needed to build the stack).
-- Use case: repeatable, version-controlled infrastructure deployment.
+- **Infrastructure as Code**: declarative JSON/YAML templates — describe the resources you want and CloudFormation creates them in the right order, instead of clicking through the console.
+- **Benefits**: nothing created manually (reviewable, tagged-per-stack cost visibility, cost estimable from the template); supports scheduled destroy/recreate for dev savings; declarative, so no manual resource ordering; reuses existing templates; supports nearly all AWS resources plus Lambda-backed custom resources.
+- Stacks, Change Sets (preview before applying), StackSets (deploy across accounts/regions).
+- **Infrastructure Composer**: a visual canvas of a template's resources and their relationships.
+- **CloudFormation Service Role**: an IAM role letting CloudFormation build/update/delete stack resources even for users without direct permissions — supports least privilege.
+- Use case: repeatable, version-controlled infrastructure.
 
 ### AWS Systems Manager (SSM)
-- *Hybrid (cloud + on-prem) management/ops toolset* for EC2, on-prem & multi-cloud
-- most features need the **SSM Agent** installed and running (pre-installed on Amazon Linux 2 and some Ubuntu AMIs; must be manually installed elsewhere) and appropriate IAM permissions.
-- **Session Manager**: start a secure shell on an EC2 or on-prem server **without SSH access, a bastion host, or SSH keys**, and without opening port 22 — better security posture; supports Linux, macOS, and Windows; session log data can be sent to S3 or CloudWatch Logs.
-- **Run Command**: execute a script ("document") or a single command across multiple instances at once (targeted via resource groups), no SSH needed; output can show in the console or ship to S3/CloudWatch Logs; can notify SNS on command status (In Progress/Success/Failed); integrated with IAM and CloudTrail; can be invoked via EventBridge.
-- **Patch Manager**: automates OS/native-application/security patching across EC2 and on-prem servers (Linux, macOS, Windows) 
-  - cannot patch third-party app; usually only package manager related
-  - patch on-demand or on a schedule via **Maintenance Windows**; 
-  - To manage EC2 instances, need to either: (i) enable `Default Host Configuration Management` - for whole account & low effort or (ii) add `AmazonSSMManagedInstanceCore` to IAM role policy - for more control.
-  - scans instances and generates a patch-compliance report of missing patches.
-- **Maintenance Windows**: defines a schedule (+ duration, registered instances, registered tasks) for performing actions like patching, driver updates, or software installs — e.g. trigger Run Command every 24 hours to update a fleet.
-- **Automation**: simplifies common maintenance/deployment tasks (restart instances, create an AMI, take an EBS snapshot) via **Automation Runbooks** (pre-built or custom SSM documents); triggered manually (Console/CLI/SDK), via EventBridge, on a Maintenance Window schedule, or by AWS Config for rule remediations.
+- A hybrid (cloud + on-prem) management/ops toolset for EC2, on-prem, and multi-cloud.
+- Most features need the **SSM Agent** (pre-installed on Amazon Linux 2, some Ubuntu AMIs) and the right IAM permissions.
+- **Session Manager**: secure shell into EC2/on-prem servers without SSH, a bastion, keys, or port 22 open — supports Linux, macOS, Windows; session logs can go to S3/CloudWatch Logs.
+- **Run Command**: runs a script/document or single command across multiple instances at once, no SSH needed — output to console or S3/CloudWatch Logs, SNS status notifications, IAM/CloudTrail integrated, invokable via EventBridge.
+- **Patch Manager**: automates OS/native-app patching across EC2 and on-prem (Linux, macOS, Windows) — can't patch third-party apps, mostly package-manager-based. Patches on-demand or via **Maintenance Windows**. Requires either `Default Host Configuration Management` (account-wide, low effort) or the `AmazonSSMManagedInstanceCore` IAM policy (more control). Generates a patch-compliance report.
+- **Maintenance Windows**: a schedule (+ duration, instances, tasks) for patching, driver updates, or installs.
+- **Automation**: simplifies maintenance tasks (restart, create AMI, EBS snapshot) via **Automation Runbooks**, triggered manually, via EventBridge, on a schedule, or by AWS Config remediation.
 
 #### SSM Parameter Store (less important)
-- secure, serverless, scalable, durable storage for configuration and secrets, with optional seamless encryption via KMS 
-  - app sends/receives plaintext, Parameter Store handles KMS encryption/decryption after checking IAM permissions; 
-  - version tracking of configs/secrets; 
-  - security entirely through IAM; 
-  - change notifications via EventBridge; 
-  - integrates with CloudFormation.
-- **Hierarchy**: parameters are organized path-style, e.g. `/my-department/my-app/dev/db-url`, `/my-department/my-app/prod/db-password`; retrievable in bulk via `GetParameters` or `GetParametersByPath` (e.g. a dev Lambda pulls everything under `/my-department/my-app/dev/`). AWS also publishes *reference paths* like `/aws/reference/secretsmanager/<secret_id>` (pull a Secrets Manager secret through Parameter Store) and *public paths* like `/aws/service/ami-amazon-linux-latest/...` (latest AMI IDs).
-- **Standard vs Advanced tiers**: *Standard* — up to 10,000 parameters/account/region, 4KB max value, no parameter policies, free. *Advanced* — up to 100,000 parameters, 8KB max value, supports parameter policies, $0.05/advanced parameter/month.
-- *Less important*: **Parameter Policies** (advanced tier only, multiple can be attached at once) — `Expiration` (auto-delete the parameter after a timestamp — forces rotation of things like passwords), `ExpirationNotification` (EventBridge event N days before expiry), `NoChangeNotification` (EventBridge event if the parameter hasn't changed in N days — flags secrets that were never rotated).
+- Secure, serverless config/secrets storage, with optional KMS encryption (app sends/receives plaintext; Parameter Store handles encryption after checking IAM). Supports version tracking, EventBridge change notifications, and CloudFormation integration.
+- **Hierarchy**: path-style parameters (e.g. `/my-department/my-app/dev/db-url`), retrievable in bulk via `GetParameters`/`GetParametersByPath`. AWS also publishes reference paths (pull a Secrets Manager secret through Parameter Store) and public paths (latest AMI IDs).
+- **Standard vs Advanced tiers**: Standard — 10,000 parameters max, 4KB value, no policies, free. Advanced — 100,000 parameters, 8KB value, supports parameter policies, $0.05/parameter/month.
+- **Parameter Policies** (Advanced only): `Expiration` (auto-delete, forces rotation), `ExpirationNotification` (EventBridge event before expiry), `NoChangeNotification` (flags un-rotated secrets).
 
 ### AWS Backup
-- Fully managed, centralized backup across many AWS services (EC2/EBS, S3, RDS all engines/Aurora/DynamoDB, DocumentDB, Neptune, EFS, FSx for Lustre & Windows File Server, Storage Gateway Volume Gateway) — no custom scripts or manual processes needed; supports cross-region and cross-account backups and Point-In-Time Recovery for supported services.
-- **Backup Plans**: policies defining backup frequency (every 12h, daily, weekly, monthly, or a cron expression), backup window, transition to cold storage (never/days/weeks/months/years), and retention period (always/days/weeks/months/years) — then *assign AWS resources to the plan*; backups land automatically in an S3-backed vault.
-  - Only resources in the Backup Plan will be backed up
-- **AWS Backup Vault Lock**: enforces a WORM (Write Once Read Many) state on everything in a backup vault — protects against inadvertent or malicious deletion and against retention periods being shortened; when enabled, **even the root user cannot delete backups**.
+- Fully managed, centralized backup across many services (EC2/EBS, S3, RDS/Aurora, DynamoDB, DocumentDB, Neptune, EFS, FSx, Storage Gateway Volume Gateway) — no custom scripts needed. Supports cross-region/account backups and Point-In-Time Recovery.
+- **Backup Plans**: define frequency, backup window, cold-storage transition, and retention, then assign resources — backups land in an S3-backed vault. Only assigned resources get backed up.
+- **AWS Backup Vault Lock**: enforces WORM on a vault, blocking even the root user from deleting backups or shortening retention.
 
 > **Also relevant (lower exam frequency)**: Amazon Inspector, AWS Firewall Manager, Amazon Macie — see the companion Additional Topics guide (Security section).
 
