@@ -49,7 +49,6 @@
    - [Amazon Data Firehose (formerly Kinesis Data Firehose)](#amazon-data-firehose-formerly-kinesis-data-firehose)
    - [Amazon EventBridge (formerly CloudWatch Events) - #21 popular](#amazon-eventbridge-formerly-cloudwatch-events)
    - [Step Functions](#step-functions)
-   - [Serverless Architecture Patterns (recurring exam scenarios)](#serverless-architecture-patterns-recurring-exam-scenarios)
 6. [Identity, Access & Governance](#6-identity-access--governance)
    - [IAM (Identity and Access Management) - #11 pop](#iam-identity-and-access-management)
    - [AWS Organizations & Control Tower](#aws-organizations--control-tower)
@@ -70,16 +69,13 @@
    - [CloudFormation](#cloudformation)
    - [AWS Systems Manager (SSM)](#aws-systems-manager-ssm)
    - [AWS Backup](#aws-backup)
-9. [Disaster Recovery Strategies & Migrations (common scenario-based topic)](#9-disaster-recovery-strategies--migrations-common-scenario-based-topic)
-   - [Disaster Recovery Overview](#disaster-recovery-overview)
-   - [Disaster Recovery Strategies](#disaster-recovery-strategies)
-   - [Database & Application Migration](#database--application-migration)
+9. [Solutions Architecture Patterns (recurring exam scenarios)](#9-solutions-architecture-patterns-recurring-exam-scenarios)
+   - [Serverless Architecture Patterns (recurring exam scenarios)](#serverless-architecture-patterns-recurring-exam-scenarios)
 10. [Cost Optimization Concepts](#10-cost-optimization-concepts)
-11. [Solutions Architecture Patterns (recurring exam scenarios)](#11-solutions-architecture-patterns-recurring-exam-scenarios)
-12. [AWS Well-Architected Framework (conceptual, tested throughout)](#12-aws-well-architected-framework-conceptual-tested-throughout)
+11. [AWS Well-Architected Framework (conceptual, tested throughout)](#11-aws-well-architected-framework-conceptual-tested-throughout)
     - [Trusted Advisor](#trusted-advisor)
-13. [Quick Decision Cheat-Sheet](#13-quick-decision-cheat-sheet)
-14. [Suggested Study Approach](#14-suggested-study-approach)
+12. [Quick Decision Cheat-Sheet](#12-quick-decision-cheat-sheet)
+13. [Suggested Study Approach](#13-suggested-study-approach)
 
 ---
 
@@ -857,17 +853,7 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - AWS version of Airflow, Temporal and more. Workflow orchestration architecture.
 - Use cases: order fulfillment, data processing pipelines, web application workflows, any multi-step business logic.
 
-### Serverless Architecture Patterns (recurring exam scenarios)
-- **Serverless REST API**: Client → API Gateway (REST + HTTPS) → Lambda (business logic) → DynamoDB (CRUD) — the standard "no infrastructure to manage" pattern.
-- **Direct-to-AWS mobile access**: use Cognito Identity Pools to hand mobile clients temporary AWS credentials scoped by IAM policy, so they can talk to S3 (e.g. store/retrieve files in their own prefix) or DynamoDB directly — bypassing the API Gateway/Lambda hop entirely for simple storage operations while still using API Gateway+Lambda for business logic.
-- **High read throughput on static-ish data**: add a DAX caching layer between Lambda and DynamoDB for microsecond reads, and/or enable API Gateway response caching to avoid re-invoking Lambda for repeated identical requests.
-- **Serverless static + dynamic website (e.g. a blog)**: serve static assets globally via CloudFront in front of a private S3 bucket, secured with Origin Access Control (OAC) + a bucket policy that only authorizes the CloudFront distribution; add a serverless REST API (API Gateway + Lambda + DynamoDB, no Cognito needed if the API is public) for the dynamic parts; use **DynamoDB Global Tables** (or Aurora Global Database) so data is served with low latency in every region.
-- **Reacting to data changes (e.g. welcome email on signup)**: enable DynamoDB Streams on the table → trigger a Lambda function (with an IAM role permitting SES) → send the email via **Amazon SES**, entirely serverless.
-- **Processing uploads (e.g. thumbnail generation)**: client uploads via CloudFront (with Transfer Acceleration) to an S3 bucket → S3 event triggers a Lambda function → Lambda writes a thumbnail to another S3 bucket → optionally fan out a notification via SQS/SNS.
-- **Microservices**: split each capability into its own service, potentially with its own architecture/stack (e.g. service1 = ALB+ECS+DynamoDB, service2 = API Gateway+Lambda+ElastiCache, service3 = ELB+ASG+RDS), fronted by Route 53 DNS per subdomain. Synchronous inter-service calls use API Gateway/Load Balancers; asynchronous calls use SQS/Kinesis/SNS/S3 Lambda triggers. Challenges: per-service creation overhead, server density/utilization tuning, running multiple versions of multiple services at once, client-side integration sprawl — serverless patterns (API Gateway + Lambda auto-scale and bill per use, APIs are easy to clone/reproduce, and Swagger-generated SDKs cut client integration work) mitigate several of these.
-- **Offloading a non-serverless app's static traffic**: if an EC2/ASG-backed app mostly serves static, unchanging files (e.g. software update downloads) that spike unpredictably, put CloudFront in front of it — no architecture changes needed, CloudFront caches the static files at the edge and is itself serverless/auto-scaling, so the ASG scales less and you save on EC2, availability, and network bandwidth cost. A general pattern for making an existing non-serverless app cheaper and more scalable without a rewrite.
-
-> **Also in this domain (lower exam frequency)**: Amazon MQ, SQS/SNS→Lambda retry mechanics detail, SES, Pinpoint — see the companion Additional Topics guide.
+> **Also in this domain (lower exam frequency)**: Amazon MQ, SQS/SNS→Lambda retry mechanics detail, SES, Pinpoint — see the companion Additional Topics guide. Serverless Architecture Patterns are covered under Solutions Architecture Patterns (§9).
 
 ---
 
@@ -1085,59 +1071,144 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 
 ---
 
-## 9. Disaster Recovery Strategies & Migrations (common scenario-based topic)
+## 9. Solutions Architecture Patterns (recurring exam scenarios)
 
-### Disaster Recovery Overview
-- A **disaster** is any event with a negative impact on business continuity or finances. Disaster Recovery (DR) is about preparing for and recovering from one. Three broad kinds: 
-  1. on-premises → on-premises (traditional DR, very expensive), 
-  2. on-premises → AWS Cloud (hybrid recovery), and 
-  3. AWS Region A → AWS Region B.
-- **RPO (Recovery Point Objective)**: the maximum acceptable amount of data loss, measured as time since the last good backup/replication point before the disaster.
-- **RTO (Recovery Time Objective)**: the maximum acceptable downtime between the disaster and full recovery.
+**Useful to go over**
 
-### Disaster Recovery Strategies
-Ordered by increasing cost and decreasing RTO/RPO (all can span AWS Multi-Region):
-1. **Backup & Restore**: cheapest, highest RTO/RPO — regularly push EBS/RDS/Redshift snapshots and on-prem data (via Storage Gateway or Snowball) into S3/S3 IA/Glacier with lifecycle policies (optionally Cross-Region Replication); infrastructure (EC2 from AMI, RDS from snapshot) is provisioned only once a disaster actually happens.
-2. **Pilot Light**: a small, critical-core version of the app runs always-on in the cloud (e.g. a replicating RDS instance while EC2 sits stopped) — Route 53 fails over and the rest scales up only on disaster; faster than Backup & Restore since the critical core is already running.
-  - Example: DB replica as a pilot light.
-3. **Warm Standby**: a full system is always running in the cloud, but scaled to a **minimum** footprint (small ASG, small secondary RDS) — on failover, Route 53 redirects and the ASG scales up to production load.
-4. **Multi-Site / Hot Site Active/Active**: full production capacity running in multiple regions/sites simultaneously, both marked active in Route 53 — very low RTO (minutes or seconds) but very expensive. The "All AWS Multi-Region" variant of this (e.g. Aurora Global Database primary/secondary with an ASG in each region) is the natural fit once both sides are already in AWS.
-- **DR tips**: 
-  1. Backup — EBS snapshots, RDS automated backups/snapshots, regular pushes to S3/S3-IA/Glacier with lifecycle + Cross-Region Replication, and Snowball/Storage Gateway from on-prem. 
-  2. High Availability — Route 53 to migrate DNS between regions, RDS Multi-AZ, ElastiCache Multi-AZ, EFS, S3, and a Site-to-Site VPN as a cheap failover for a primary Direct Connect. 
-  3. Replication — RDS Read Replicas (cross-region), Aurora Global Database, on-prem-to-RDS database replication, Storage Gateway. 
-  4. Automation — CloudFormation/Elastic Beanstalk to recreate a whole environment on demand, CloudWatch alarms to recover/reboot EC2 instances automatically, Lambda for custom automation. 
-  5. Chaos engineering — deliberately breaking things (Netflix's "Simian Army" randomly terminates EC2 instances) to validate DR actually works.
+- **Stateless web app progression**: 
+  1. single public EC2 with an Elastic IP (simple, has downtime) → 
+  2. vertical scaling (bigger instance, still has downtime while resizing) → 
+  3. horizontal scaling behind Route 53 with multiple public instances (breaks if an instance is swapped and its DNS record is stale/cached) → 
+  4. private EC2 instances behind an ELB with health checks and tight security groups (LB is the only public entry point) → 
+  5. wrap the private instances in an ASG for self-healing and elasticity → 
+  6. span the ASG across ≥2 AZs for disaster tolerance. 
+  - Reserve capacity (RIs/Savings Plans) at the ASG's **minimum** size for guaranteed cost savings, since that capacity always runs.
+- **Making a stateful web app scale horizontally (3-tier architecture)**: 
+  - introduce ELB *sticky sessions* (session affinity) to keep a user's follow-up requests on the same instance — simplest option but can unbalance load. 
+  - Alternative: push session state into *user cookies* — keeps the app "stateless" but makes requests heavier and creates a security risk (cookies must be validated, and are capped at 4KB). 
+  - Better: 
+    - store session state server-side in **ElastiCache** (or DynamoDB as an alternative) so any instance can retrieve any user's session; 
+    - store durable user data (address, profile, etc.) in **RDS**; 
+    - scale DB reads with **RDS Read Replicas**, optionally adding ElastiCache as a lazy-loading cache in front of RDS to relieve read load further. 
+    - Make every tier Multi-AZ (ELB, ASG, ElastiCache, RDS) to survive an AZ failure. 
+    - Layer security groups so each tier only accepts traffic from the tier in front of it (LB ← 0.0.0.0/0, EC2 ← LB's SG, ElastiCache/RDS ← EC2's SG) 
+    - this is the standard **3-tier architecture**: 
+      1. public subnet (ELB), 
+      2. private subnet (app instances in an ASG), 
+      3. data subnet (ElastiCache + RDS).
+- *Storing user-uploaded files (e.g. a WordPress site)*: a single-instance app can store images on its local **EBS** volume, but that breaks once you scale to multiple instances (each instance only sees its own volume).
 
-- **AWS Elastic Disaster Recovery (DRS)** (formerly CloudEndure Disaster Recovery): continuously replicates physical, virtual, or cloud-based servers (OS, apps, DB, disks — via an AWS Replication Agent) into low-cost staging EC2 instances + EBS volumes in AWS, in near real time (seconds); on failover, launches full-size target EC2 instances/volumes within minutes; supports critical DBs (Oracle, MySQL, SQL Server) and enterprise apps (SAP), and protects against ransomware.
+  The fix for a distributed/multi-instance app is: 
+  
+  - a shared **EFS** file system mounted by every instance via an ENI in each AZ — reinforces the general EBS (single instance) vs EFS (many instances, shared) distinction.
+- **Instantiating applications quickly**: 
+  - for EC2: 
+    - use a pre-baked **Golden AMI** (all software/OS deps pre-installed) for fast, static launches, 
+    - **User Data bootstrap scripts** for dynamic per-instance configuration, or 
+    - a *hybrid* of both (this is what Elastic Beanstalk does under the hood). 
+  - For RDS and EBS: 
+    - restoring from a snapshot gives you a ready-to-use DB (schema + data) or disk (formatted + data) instead of provisioning from scratch.
+- **Blocking a client IP address — pick the tool that matches your layer**: 
+  - How a bare *public EC2 instance* can block traffic:
+    - behind only a Security Group can't block a specific IP -> SGs are allow-only) 
+    - a **NACL** on its subnet is the *only native way (deny rule)*. 
+  - Behind an *ALB/NLB*, the load balancer terminates the connection: 
+    - so a subnet NACL in front of it can't see/block the original client IP at the instance level 
+    - attach **AWS WAF** to the ALB instead (WAF doesn't support NLB, since NLB is Layer 4 and WAF is Layer 7). 
+  - If CloudFront is in front of everything, its public IPs are what actually reach the NACL/ALB, so blocking at the NACL is not helpful 
+- *Highly available single EC2 instance without a load balancer* (e.g. a legacy app that can't run behind an ELB): 
+  - put the instance in an ASG with min=max=desired=1 spanning ≥2 AZs, 
+    1. add an Elastic IP (EIP) that gets re-attached to whichever instance is currently running, either via: 
+      1. EC2 User Data + an EC2 instance role (calls the API to attach the EIP on boot) or 
+      2. via a CloudWatch Alarm/Event that triggers a Lambda function to start a standby instance and reattach the EIP on failure. 
+    2. Optionally pair with an EBS snapshot taken on the ASG's Terminate lifecycle hook and restored onto the new instance's volume via the Launch lifecycle hook, to preserve local disk state across failover.
+- **High Perf Computing** considerations:
+  - Data transfer services: Direct Connect (VPC), Snowmobile & Data Sync
+  - Compute: CPU & GPU optimized EC2, Spot instances
+  - Networking for compute: 
+    - EC2 cluster for faster networking between instances
+    - Elastic Network Adapter (ENA) - 100 Gbps; also known as enhanced networking
+    - Elastic Fabric Adapter (EFA) - Linux only; tightly coupled workload; uses Message Passing Interface (MPI), which bypass Linux OS to reduce latency
+  - Storage:
+    - Instance-attached storage: EBS (256k IOPS) & Instance Storage (millions IOPS)
+    - Network storage: S3, EFS (scale by storage size or provisioned), FSX Lustre (millions IOPS)
+  - Automation & Orchestration:
+    - AWS Batch: run job on multiple EC2 instances
+    - AWS Parallel Cluster: deploy HPC
+- **Layered caching for a typical web stack**:
 
-### Database & Application Migration
-- **AWS DMS (Database Migration Service)**: quickly, securely, and resiliently (self-healing) migrates databases to AWS while the **source stays available** during migration. 
-  - Supports **homogeneous** migrations (same engine, e.g. Oracle→Oracle, no schema conversion needed) and **heterogeneous** migrations (different engine, e.g. SQL Server→Aurora, needs the Schema Conversion Tool). 
-  - Uses **Continuous Data Replication (CDC)** to keep the target in sync until cutover; runs on an EC2 replication instance you provision; supports **Multi-AZ** deployment (a synchronous standby replication instance in another AZ) for data redundancy, eliminating I/O freezes, and minimizing latency spikes. 
-  - Sources: on-prem/EC2-hosted Oracle/SQL Server/MySQL/MariaDB/PostgreSQL/MongoDB/SAP/DB2, Azure SQL Database, any RDS engine incl. Aurora, S3, DocumentDB. Targets: on-prem/EC2-hosted engines, RDS, Redshift, DynamoDB, S3, OpenSearch, Kinesis Data Streams, Apache Kafka, DocumentDB & Neptune, Redis & Babelfish.
-- **AWS Schema Conversion Tool (SCT)**: converts a database's schema from one engine to another (e.g. Oracle/SQL Server → MySQL/PostgreSQL/Aurora for OLTP, or Teradata/Oracle → Redshift for OLAP); use compute-intensive instances to speed up conversions; **not needed** when migrating within the same engine (e.g. on-prem PostgreSQL → RDS PostgreSQL, since RDS is just the platform, not a new engine).
-- **RDS/Aurora same-engine migrations** (e.g. MySQL→Aurora MySQL, PostgreSQL→Aurora PostgreSQL):  
-  - from RDS, either restore a DB snapshot as an Aurora DB, or create an Aurora Read Replica from the RDS instance and promote it once replication lag hits zero (slower, costs more, but near-zero downtime). 
-  - From an external/self-hosted DB: create the target Aurora DB then import a file-based backup from S3 (e.g. via Percona XtraBackup for MySQL, or the `aws_s3` extension for PostgreSQL), or use `mysqldump` (works, but slower than the S3 method); 
-  - if both *source and target are already up and running*, DMS (Database Migration Service) is the better option regardless.
-- **AWS Application Discovery Service**: gathers *on-prem* server *utilization data and dependency mappings* to plan a migration:
- 1. **Agentless** (via the Agentless Discovery Connector: VM inventory, config, CPU/memory/disk performance history) or 
- 2. **Agent-based** (via the Application Discovery Agent: system config/performance, running processes, network connection details); results are viewable in **AWS Migration Hub**.
-- **AWS Application Migration Service (MGN)**: the evolution of CloudEndure Migration (replacing the older AWS Server Migration Service) — a lift-and-shift (rehost) service that continuously replicates physical/virtual/cloud servers (any OS, DB, platform) into low-cost staging EC2+EBS in AWS, then does a fast cutover to full-size production instances with minimal downtime; architecturally identical to DRS (Elastic Disaster Recovery), just aimed at **one-time migration** instead of ongoing DR.
-- **VM Import/Export**: download an *Amazon Linux 2 AMI* as a VM image (VMware, KVM, VirtualBox/Oracle VM, Hyper-V) to *'import'* applications into EC2, or *export* an EC2 instance back to an on-prem VM — supports a DR repository strategy for on-prem VMs.
-- **VMware Cloud on AWS**: 
-  - for customers whose on-prem data center is already managed via *VMware Cloud (vSphere/vSAN/NSX)* who want to extend that capacity into AWS while keeping the same VMware tooling:
-    1. migrate vSphere-based workloads to AWS, 
-    2. run production across private/public/hybrid VMware environments, or 
-    3. use it as a DR strategy; 
-  - the AWS side integrates with EC2, S3, Direct Connect, FSx, RDS, and Redshift.
-- **Transferring large amounts of data into AWS — worked example**: 
-  - 200TB data migration: 
-    - over a 100Mbps internet connection/Site-to-Site VPN (quick to set up) takes ≈185 days; 
-    - the same over a 1Gbps Direct Connect (over a month of one-time setup lead time) takes ≈18.5 days; 
-    - over Snowball it takes about a week end-to-end and can be combined with DMS for the database portion. 
-    - For ongoing replication/transfers once connected, use Site-to-Site VPN or Direct Connect paired with DMS or DataSync.
+  ```
+  client
+    │
+    ▼
+  CloudFront          (edge cache: static/cacheable responses)
+    │
+    ▼
+  API Gateway         (response caching)
+    │
+    ▼
+  App logic           (EC2 / Lambda)
+    │
+    ▼
+  ElastiCache / DAX   (data cache)
+    │
+    ▼
+  RDS / DynamoDB
+  ```
+
+  - Each layer trades some staleness/TTL risk for less network hops, less compute, lower cost, and lower latency; 
+  - choose how many layers based on how cacheable and how latency-sensitive the data actually is.
+
+### Serverless Architecture Patterns (recurring exam scenarios)
+- **Serverless REST API**: 
+  ```
+  Client 
+  |
+  v
+  API Gateway (REST + HTTPS) → 
+  |
+  v
+  Lambda (business logic) → 
+  |
+  v
+  DynamoDB (CRUD)
+  ```
+- **Direct-to-AWS mobile access**: 
+  - use *Cognito Identity Pools* to hand mobile clients temporary AWS credentials scoped by IAM policy, so they can talk to *S3* (e.g. store/retrieve files in their own prefix) or *DynamoDB* directly
+  - bypassing the API Gateway/Lambda hop entirely for simple storage operations while still using API Gateway+Lambda for business logic.
+- **High read throughput on static-ish data**: 
+  1. add a DAX caching layer between Lambda and DynamoDB for microsecond reads, and/or 
+  2. enable API Gateway response caching to avoid re-invoking Lambda for repeated identical requests.
+- **Serverless static + dynamic website (e.g. a blog)**: 
+  - serve static assets globally via CloudFront in front of a private *S3* bucket, secured with Origin Access Control (OAC) + a bucket policy that only authorizes the CloudFront distribution; 
+  - add a serverless REST API (*API Gateway + Lambda + DynamoDB*, no Cognito needed if the API is public) for the dynamic parts; 
+  - use *DynamoDB Global Tables* (or Aurora Global Database) so data is served with low latency in every region.
+- **Reacting to data changes (e.g. welcome email on signup)**: 
+  1. enable DynamoDB Streams on the table → 
+  2. trigger a Lambda function (with an IAM role permitting SES) → 
+  3. send the email via **Amazon SES**, entirely serverless.
+- **Processing uploads (e.g. thumbnail generation)**: 
+  1. client uploads via CloudFront (with Transfer Acceleration) to an S3 bucket → 
+  2. S3 event triggers a Lambda function → 
+  3. Lambda writes a thumbnail to another S3 bucket → 
+  4. optionally fan out a notification via SQS/SNS.
+- **Microservices**: 
+  - split each capability into its own service, potentially with its own architecture/stack & fronted by Route 53 DNS per subdomain 
+    - e.g. service1 = ALB+ECS+DynamoDB, service2 = API Gateway+Lambda+ElastiCache, service3 = ELB+ASG+RDS. 
+    - Synchronous inter-service calls use API Gateway/Load Balancers; asynchronous calls use SQS/Kinesis/SNS/S3 Lambda triggers. 
+  - Challenges: 
+    1. per-service creation overhead, 
+    2. server density/utilization tuning, 
+    3. running multiple versions of multiple services at once, 
+    4. client-side integration sprawl
+  - serverless patterns mitigate several of the above challenges, e.g.:
+    1. API Gateway + Lambda auto-scale and bill per use, 
+    2. APIs are easy to clone/reproduce, and 
+    3. Swagger-generated SDKs cut client integration work
+- **Offloading a non-serverless app's static traffic**: 
+  - if an *EC2/ASG-backed* app mostly serves *static*, unchanging files (e.g. software update downloads) that spike unpredictably, put *CloudFront* in front of it 
+    - no architecture changes needed, CloudFront caches the static files at the edge and is itself serverless/auto-scaling, so the ASG scales less and you save on EC2, availability, and network bandwidth cost. 
+    - A general pattern for making an existing non-serverless app *cheaper* and *more scalable* without a rewrite.
 
 ---
 
@@ -1155,34 +1226,7 @@ Ordered by increasing cost and decreasing RTO/RPO (all can span AWS Multi-Region
 
 ---
 
-## 11. Solutions Architecture Patterns (recurring exam scenarios)
-- **Stateless web app progression**: single public EC2 with an Elastic IP (simple, has downtime) → vertical scaling (bigger instance, still has downtime while resizing) → horizontal scaling behind Route 53 with multiple public instances (breaks if an instance is swapped and its DNS record is stale/cached) → private EC2 instances behind an ELB with health checks and tight security groups (LB is the only public entry point) → wrap the private instances in an ASG for self-healing and elasticity → span the ASG across ≥2 AZs for disaster tolerance. Reserve capacity (RIs/Savings Plans) at the ASG's **minimum** size for guaranteed cost savings, since that capacity always runs.
-- **Making a stateful web app scale horizontally (3-tier architecture)**: introduce ELB **sticky sessions** (session affinity) to keep a user's follow-up requests on the same instance — simplest option but can unbalance load. Alternative: push session state into **user cookies** — keeps the app "stateless" but makes requests heavier and creates a security risk (cookies must be validated, and are capped at 4KB). Better: store session state server-side in **ElastiCache** (or DynamoDB as an alternative) so any instance can retrieve any user's session; store durable user data (address, profile, etc.) in **RDS**; scale DB reads with **RDS Read Replicas**, optionally adding ElastiCache as a lazy-loading cache in front of RDS to relieve read load further. Make every tier Multi-AZ (ELB, ASG, ElastiCache, RDS) to survive an AZ failure. Layer security groups so each tier only accepts traffic from the tier in front of it (LB ← 0.0.0.0/0, EC2 ← LB's SG, ElastiCache/RDS ← EC2's SG) — this is the standard **3-tier architecture**: public subnet (ELB), private subnet (app instances in an ASG), data subnet (ElastiCache + RDS).
-- **Storing user-uploaded files (e.g. a WordPress site)**: a single-instance app can store images on its local **EBS** volume, but that breaks once you scale to multiple instances (each instance only sees its own volume). The fix for a distributed/multi-instance app is a shared **EFS** file system mounted by every instance via an ENI in each AZ — reinforces the general EBS (single instance) vs EFS (many instances, shared) distinction.
-- **Instantiating applications quickly**: for EC2, use a pre-baked **Golden AMI** (all software/OS deps pre-installed) for fast, static launches, **User Data bootstrap scripts** for dynamic per-instance configuration, or a **hybrid** of both (this is what Elastic Beanstalk does under the hood). For RDS and EBS, restoring from a snapshot gives you a ready-to-use DB (schema + data) or disk (formatted + data) instead of provisioning from scratch.
-- **Blocking a client IP address — pick the tool that matches your layer**: 
-  - a bare public EC2 instance behind only a Security Group can't block a specific IP (SGs are allow-only) — a NACL on its subnet is the only native way (deny rule). 
-  - Behind an ALB/NLB, the load balancer terminates the connection, so a subnet NACL in front of it still can't see/block the original client IP at the instance level — attach **AWS WAF** to the ALB instead (WAF doesn't support NLB, since NLB is Layer 4 and WAF is Layer 7). 
-  - If CloudFront is in front of everything, its public IPs are what actually reach the NACL/ALB, so blocking at the NACL is not helpful 
-- **Highly available single EC2 instance without a load balancer** (e.g. a legacy app that can't run behind an ELB): put the instance in an ASG with min=max=desired=1 spanning ≥2 AZs, with an Elastic IP (EIP) that gets re-attached to whichever instance is currently running — either via EC2 User Data + an EC2 instance role (calls the API to attach the EIP on boot) or via a CloudWatch Alarm/Event that triggers a Lambda function to start a standby instance and reattach the EIP on failure. Optionally pair with an EBS snapshot taken on the ASG's Terminate lifecycle hook and restored onto the new instance's volume via the Launch lifecycle hook, to preserve local disk state across failover.
-- **High Perf Computing** considerations:
-  - Data transfer services: Direct Connect (VPC), Snowmobile & Data Sync
-  - Compute: CPU & GPU optimized EC2, Spot instances
-  - Networking for compute: 
-    - EC2 cluster for faster networking
-    - Elastic Network Adapter (ENA) - 100 Gbps; also known as enhanced networking
-    - Elastic Fabric Adapter (EFA) - Linux only; tightly coupled workload; uses Message Passing Interface (MPI), which bypass Linux OS to reduce latency
-  - Storage:
-    - Instance-attached storage: EBS (256k IOPS) & Instance Storage (millions IOPS)
-    - Network storage: S3, EFS (scale by storage size or provisioned), FSX Lustre (millions IOPS)
-  - Automation & Orchestration:
-    - AWS Batch: run job on multiple EC2 instances
-    - AWS Parallel Cluster: deploy HPC
-- **Layered caching for a typical web stack**: client → CloudFront (edge cache, static/cacheable responses) → API Gateway (response caching) → app logic (EC2/Lambda) → ElastiCache/DAX (data cache) in front of RDS/DynamoDB — each layer trades some staleness/TTL risk for less network hops, less compute, lower cost, and lower latency; choose how many layers based on how cacheable and how latency-sensitive the data actually is.
-
----
-
-## 12. AWS Well-Architected Framework (conceptual, tested throughout)
+## 11. AWS Well-Architected Framework (conceptual, tested throughout)
 
 ### 6 Pillars
 1. Operational Excellence
@@ -1211,7 +1255,7 @@ Ordered by increasing cost and decreasing RTO/RPO (all can span AWS Multi-Region
 
 ---
 
-## 13. Quick Decision Cheat-Sheet
+## 12. Quick Decision Cheat-Sheet
 
 | Need | Use |
 |---|---|
@@ -1244,7 +1288,7 @@ Ordered by increasing cost and decreasing RTO/RPO (all can span AWS Multi-Region
 
 ---
 
-## 14. Suggested Study Approach
+## 13. Suggested Study Approach
 
 1. Go through each domain above and make sure you can articulate the **use case trigger words** in exam questions (e.g., "multiple AZs," "unpredictable traffic," "least operational overhead," "lowest cost," "millisecond latency") — the SAA-C03 exam is largely about matching scenario language to the right service.
 2. Do hands-on labs for: VPC design (public/private subnets, NAT, IGW), S3 lifecycle policies, RDS Multi-AZ vs Read Replica setup, and an Auto Scaling Group behind an ALB.

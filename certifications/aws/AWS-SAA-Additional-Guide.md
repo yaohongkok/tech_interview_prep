@@ -35,6 +35,10 @@
    - [Amazon Simple Email Service (SES)](#amazon-simple-email-service-ses)
    - [Amazon Pinpoint](#amazon-pinpoint)
 7. [Specialized / Hybrid Services (light exam coverage)](#7-specialized--hybrid-services-light-exam-coverage)
+8. [Disaster Recovery Strategies & Migrations (common scenario-based topic)](#8-disaster-recovery-strategies--migrations-common-scenario-based-topic)
+   - [Disaster Recovery Overview](#disaster-recovery-overview)
+   - [Disaster Recovery Strategies](#disaster-recovery-strategies)
+   - [Database & Application Migration](#database--application-migration)
 
 ---
 
@@ -243,7 +247,7 @@
 ### Big Data Ingestion Pipeline (recurring exam pattern)
 - A fully serverless real-time ingestion pipeline: IoT devices → **IoT Core** → **Kinesis Data Streams** (real-time collection) → **Kinesis Data Firehose** (near-real-time delivery, ~every 1 minute, optionally invoking a **Lambda** transform) → an **Ingestion S3 bucket**. From there, an S3 event can notify **SQS** (optionally, instead of triggering Lambda directly), which a **Lambda** consumes, triggering **Athena** to query/transform the data with SQL and write results to a **Reporting S3 bucket** — which **QuickSight** and/or **Redshift Serverless** then read for dashboards and warehousing.
 
-> Note: **AWS DMS (Database Migration Service)** is covered in the core guide's Disaster Recovery Strategies & Migrations section.
+> Note: **AWS DMS (Database Migration Service)** is covered later in this guide's Disaster Recovery Strategies & Migrations section (§8).
 
 ### Amazon DocumentDB
 - The **MongoDB-compatible** counterpart to Aurora (Aurora mirrors PostgreSQL/MySQL, DocumentDB mirrors MongoDB — a NoSQL database for storing, querying, and indexing JSON data). Same deployment concepts as Aurora: fully managed, highly available across 3 AZs, storage auto-scales in 10GB increments, and auto-scales to workloads of millions of requests/second.
@@ -326,3 +330,59 @@
 - **AWS Amplify**: a toolset (frontend libraries + CLI + Console) to develop and deploy scalable full-stack web/mobile apps quickly — auth, storage, REST/GraphQL APIs, CI/CD, pub/sub, analytics, and AI/ML predictions on the backend (built on Cognito, S3, API Gateway, AppSync, Lambda, DynamoDB, SageMaker); connects to GitHub/CodeCommit/Bitbucket/GitLab or direct upload; hosted/deployed via Amplify Console + CloudFront.
 - **Instance Scheduler on AWS**: a CloudFormation-deployed solution (not a managed service) that automatically starts/stops EC2, ASG, and RDS resources on a schedule (e.g. stop non-prod instances outside business hours) to cut costs by up to 70%; schedules live in a DynamoDB table; uses resource tags + Lambda to act; supports cross-account and cross-region resources.
 - **High Performance Computing (HPC)**: the cloud lets you spin up large numbers of resources instantly, scale to speed up results, and pay only for what's used — for genomics, computational chemistry, financial risk modeling, weather prediction, ML/deep learning, and autonomous driving. Supporting building blocks: **Enhanced Networking** (SR-IOV) via the Elastic Network Adapter (ENA, up to 100 Gbps) or the legacy Intel 82599 VF (up to 10 Gbps) for higher bandwidth/PPS/lower latency; **Elastic Fabric Adapter (EFA)** — an improved ENA for HPC, Linux-only, built for tightly coupled inter-node communication via the Message Passing Interface (MPI) standard, bypassing the OS kernel for low-latency reliable transport; Cluster Placement Groups for low-latency 10Gbps+ networking; storage via EBS io2 Block Express (up to 256,000 IOPS), Instance Store (millions of IOPS), or FSx for Lustre (HPC-optimized distributed file system backed by S3); **AWS Batch** and **AWS ParallelCluster** (open-source, text-file-configured HPC cluster management, automates VPC/subnet/cluster/instance-type provisioning, can enable EFA) for automation/orchestration.
+
+---
+
+## 8. Disaster Recovery Strategies & Migrations (common scenario-based topic)
+
+### Disaster Recovery Overview
+- A **disaster** is any event with a negative impact on business continuity or finances. Disaster Recovery (DR) is about preparing for and recovering from one. Three broad kinds: 
+  1. on-premises → on-premises (traditional DR, very expensive), 
+  2. on-premises → AWS Cloud (hybrid recovery), and 
+  3. AWS Region A → AWS Region B.
+- **RPO (Recovery Point Objective)**: the maximum acceptable amount of data loss, measured as time since the last good backup/replication point before the disaster.
+- **RTO (Recovery Time Objective)**: the maximum acceptable downtime between the disaster and full recovery.
+
+### Disaster Recovery Strategies
+Ordered by increasing cost and decreasing RTO/RPO (all can span AWS Multi-Region):
+1. **Backup & Restore**: cheapest, highest RTO/RPO — regularly push EBS/RDS/Redshift snapshots and on-prem data (via Storage Gateway or Snowball) into S3/S3 IA/Glacier with lifecycle policies (optionally Cross-Region Replication); infrastructure (EC2 from AMI, RDS from snapshot) is provisioned only once a disaster actually happens.
+2. **Pilot Light**: a small, critical-core version of the app runs always-on in the cloud (e.g. a replicating RDS instance while EC2 sits stopped) — Route 53 fails over and the rest scales up only on disaster; faster than Backup & Restore since the critical core is already running.
+  - Example: DB replica as a pilot light.
+3. **Warm Standby**: a full system is always running in the cloud, but scaled to a **minimum** footprint (small ASG, small secondary RDS) — on failover, Route 53 redirects and the ASG scales up to production load.
+4. **Multi-Site / Hot Site Active/Active**: full production capacity running in multiple regions/sites simultaneously, both marked active in Route 53 — very low RTO (minutes or seconds) but very expensive. The "All AWS Multi-Region" variant of this (e.g. Aurora Global Database primary/secondary with an ASG in each region) is the natural fit once both sides are already in AWS.
+- **DR tips**: 
+  1. Backup — EBS snapshots, RDS automated backups/snapshots, regular pushes to S3/S3-IA/Glacier with lifecycle + Cross-Region Replication, and Snowball/Storage Gateway from on-prem. 
+  2. High Availability — Route 53 to migrate DNS between regions, RDS Multi-AZ, ElastiCache Multi-AZ, EFS, S3, and a Site-to-Site VPN as a cheap failover for a primary Direct Connect. 
+  3. Replication — RDS Read Replicas (cross-region), Aurora Global Database, on-prem-to-RDS database replication, Storage Gateway. 
+  4. Automation — CloudFormation/Elastic Beanstalk to recreate a whole environment on demand, CloudWatch alarms to recover/reboot EC2 instances automatically, Lambda for custom automation. 
+  5. Chaos engineering — deliberately breaking things (Netflix's "Simian Army" randomly terminates EC2 instances) to validate DR actually works.
+
+- **AWS Elastic Disaster Recovery (DRS)** (formerly CloudEndure Disaster Recovery): continuously replicates physical, virtual, or cloud-based servers (OS, apps, DB, disks — via an AWS Replication Agent) into low-cost staging EC2 instances + EBS volumes in AWS, in near real time (seconds); on failover, launches full-size target EC2 instances/volumes within minutes; supports critical DBs (Oracle, MySQL, SQL Server) and enterprise apps (SAP), and protects against ransomware.
+
+### Database & Application Migration
+- **AWS DMS (Database Migration Service)**: quickly, securely, and resiliently (self-healing) migrates databases to AWS while the **source stays available** during migration. 
+  - Supports **homogeneous** migrations (same engine, e.g. Oracle→Oracle, no schema conversion needed) and **heterogeneous** migrations (different engine, e.g. SQL Server→Aurora, needs the Schema Conversion Tool). 
+  - Uses **Continuous Data Replication (CDC)** to keep the target in sync until cutover; runs on an EC2 replication instance you provision; supports **Multi-AZ** deployment (a synchronous standby replication instance in another AZ) for data redundancy, eliminating I/O freezes, and minimizing latency spikes. 
+  - Sources: on-prem/EC2-hosted Oracle/SQL Server/MySQL/MariaDB/PostgreSQL/MongoDB/SAP/DB2, Azure SQL Database, any RDS engine incl. Aurora, S3, DocumentDB. Targets: on-prem/EC2-hosted engines, RDS, Redshift, DynamoDB, S3, OpenSearch, Kinesis Data Streams, Apache Kafka, DocumentDB & Neptune, Redis & Babelfish.
+- **AWS Schema Conversion Tool (SCT)**: converts a database's schema from one engine to another (e.g. Oracle/SQL Server → MySQL/PostgreSQL/Aurora for OLTP, or Teradata/Oracle → Redshift for OLAP); use compute-intensive instances to speed up conversions; **not needed** when migrating within the same engine (e.g. on-prem PostgreSQL → RDS PostgreSQL, since RDS is just the platform, not a new engine).
+- **RDS/Aurora same-engine migrations** (e.g. MySQL→Aurora MySQL, PostgreSQL→Aurora PostgreSQL):  
+  - from RDS, either restore a DB snapshot as an Aurora DB, or create an Aurora Read Replica from the RDS instance and promote it once replication lag hits zero (slower, costs more, but near-zero downtime). 
+  - From an external/self-hosted DB: create the target Aurora DB then import a file-based backup from S3 (e.g. via Percona XtraBackup for MySQL, or the `aws_s3` extension for PostgreSQL), or use `mysqldump` (works, but slower than the S3 method); 
+  - if both *source and target are already up and running*, DMS (Database Migration Service) is the better option regardless.
+- **AWS Application Discovery Service**: gathers *on-prem* server *utilization data and dependency mappings* to plan a migration:
+ 1. **Agentless** (via the Agentless Discovery Connector: VM inventory, config, CPU/memory/disk performance history) or 
+ 2. **Agent-based** (via the Application Discovery Agent: system config/performance, running processes, network connection details); results are viewable in **AWS Migration Hub**.
+- **AWS Application Migration Service (MGN)**: the evolution of CloudEndure Migration (replacing the older AWS Server Migration Service) — a lift-and-shift (rehost) service that continuously replicates physical/virtual/cloud servers (any OS, DB, platform) into low-cost staging EC2+EBS in AWS, then does a fast cutover to full-size production instances with minimal downtime; architecturally identical to DRS (Elastic Disaster Recovery), just aimed at **one-time migration** instead of ongoing DR.
+- **VM Import/Export**: download an *Amazon Linux 2 AMI* as a VM image (VMware, KVM, VirtualBox/Oracle VM, Hyper-V) to *'import'* applications into EC2, or *export* an EC2 instance back to an on-prem VM — supports a DR repository strategy for on-prem VMs.
+- **VMware Cloud on AWS**: 
+  - for customers whose on-prem data center is already managed via *VMware Cloud (vSphere/vSAN/NSX)* who want to extend that capacity into AWS while keeping the same VMware tooling:
+    1. migrate vSphere-based workloads to AWS, 
+    2. run production across private/public/hybrid VMware environments, or 
+    3. use it as a DR strategy; 
+  - the AWS side integrates with EC2, S3, Direct Connect, FSx, RDS, and Redshift.
+- **Transferring large amounts of data into AWS — worked example**: 
+  - 200TB data migration: 
+    - over a 100Mbps internet connection/Site-to-Site VPN (quick to set up) takes ≈185 days; 
+    - the same over a 1Gbps Direct Connect (over a month of one-time setup lead time) takes ≈18.5 days; 
+    - over Snowball it takes about a week end-to-end and can be combined with DMS for the database portion. 
+    - For ongoing replication/transfers once connected, use Site-to-Site VPN or Direct Connect paired with DMS or DataSync.
