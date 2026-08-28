@@ -219,8 +219,25 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 **[#18 pop]**
 
 - Persistent block storage attached to a single EC2 instance (in the same AZ).
-- Types: **gp3/gp2** (general purpose SSD), **io1/io2** (high-performance/provisioned IOPS, for databases), **st1** (throughput-optimized HDD, big data), **sc1** (cold HDD, infrequent access).
-- Snapshots stored in S3 (incremental), can copy across regions for DR.
+- **gp2/gp3** (general-purpose SSD, 1 GiB–16 TiB): cost-effective, boot volumes/dev-test/virtual desktops. 
+  - *gp3* decouples IOPS (baseline 3,000, up to *16,000*) and throughput (baseline 125 MiB/s, up to 1,000 MiB/s) from disk size;
+    - Pricing (2026): $0.08/GB + $0.005/IOPS 
+  - gp2 links IOPS to size (3 IOPS/GiB, bursts to 3,000, caps at *16,000 IOPS*).
+    - Pricing (2026): $0.10GB
+  - For small disk size, `gp3` is almost most certainly **cheaper** than `gp2` (even at 100 IOPS). `gp3` is likely better too.
+- **io1/io2 Block Express** (provisioned IOPS SSD, 4 GiB–16/64 TiB): sustained IOPS/sub-ms latency, *critical DB workloads* needing >16,000 IOPS; 
+  - io2 Block Express reaches up to *256,000 IOPS* and 
+  - supports **EBS Multi-Attach** — same volume attached read/write to up to *16 instances* in the *same AZ* (needs a cluster-aware file system, not XFS/EXT4).
+- **st1** (throughput-optimized HDD, 125 GiB–16 TiB, not bootable): *big data, data warehouses, log processing*; max 500 MiB/s, 500 IOPS.
+- **sc1** (cold HDD, 125 GiB–16 TiB, not bootable): *infrequently accessed data*, *lowest cost*; max 250 MiB/s, 250 IOPS.
+- **EBS snapshots**: point-in-time backup of a volume (detaching first is recommended, not required); can copy across AZ or Region. 
+  - *Fast Snapshot Restore (FSR)* force-initializes a snapshot to remove first-use latency ($$$).
+  - *EBS Snapshot Archive* moves a snapshot to a ~75% cheaper tier (24–72h to restore).
+  - *Recycle Bin* retains deleted snapshots for a configurable period (1 day–1 year) to recover from accidental deletion. 
+- **EBS encryption**: *encrypts data at rest, in-flight between instance and volume*, and *all snapshots/volumes derived* from it — transparent, minimal latency impact, keys from KMS (AES-256). 
+  - To encrypt an existing unencrypted volume: (i) snapshot it, (ii) copy the snapshot with encryption enabled, (iii) create a new volume from new snapshot, and (iv) re-attach.
+- **Delete on Termination**: controls whether an EBS volume is deleted when its EC2 instance terminates. *Root* volumes *default* to enabled (*deleted*); other *attached* volumes default to disabled (*preserved*) — toggle via console/CLI.
+- Snapshots stored in S3 (incremental), can *copy across regions* for DR.
 
 ### EFS (Elastic File System)
 
@@ -282,31 +299,26 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **EC2 Instance Connect**: browser-based SSH using a temporary AWS-uploaded key (no local key file needed) — works out-of-the-box only with Amazon Linux 2, and port 22 must still be open.
 - **Purchasing options**:
   - **On-Demand**: pay per second/hour, no commitment — unpredictable, short-term, uninterrupted workloads.
-  - **Reserved Instances**: 1 or 3-year commitment, up to ~72% discount, scoped to instance attributes (type/region/tenancy/OS) — steady-state predictable workloads (e.g. databases). **Convertible RIs** allow changing instance family/OS/scope/tenancy for a smaller (~66%) discount. Can be bought/sold on the RI Marketplace.
-  - **Savings Plans**: commit to $/hour of usage for 1 or 3 years (up to ~72% discount); locked to an instance family + region but flexible across instance size, OS, and tenancy.
-  - **Spot Instances**: up to 90% discount, can be reclaimed with a 2-minute warning if your max price < current spot price — the most cost-efficient option, good for batch jobs/data analysis/anything fault-tolerant, **not** for critical jobs or databases. **Spot Fleets** request a set of Spot (+ optional On-Demand) instances across multiple launch pools using a strategy: `lowestPrice`, `diversified`, `capacityOptimized`, or `priceCapacityOptimized` (recommended default).
-  - **Dedicated Hosts**: an entire physical server dedicated to you, billed per host — for BYOL/socket-or-core-based licensing or strict compliance. Most expensive option.
-  - **Dedicated Instances**: run on hardware dedicated to your account (may share hardware with your own other instances), billed per instance — no control over instance placement.
-  - **Capacity Reservations**: reserve On-Demand capacity in a specific AZ for any duration, no time commitment (create/cancel anytime), billed at On-Demand rate with **no discount** — combine with a Regional RI or Savings Plan to get the discount back. Good for short-term uninterrupted workloads that must run in a specific AZ.
-- **Placement Groups**: Cluster (low-latency 10 Gbps cluster in a single AZ — big data/HPC, but an AZ failure takes down all instances), Spread (each instance on separate hardware, max 7 per AZ per group, can span AZs — maximize isolation for critical instances), Partition (up to 7 partitions per AZ, instances don't share racks across partitions, scales to 100s of instances — Hadoop/Cassandra/Kafka/HBase).
-- **Elastic IPs**: a public IPv4 address you own until you release it, remappable to another instance to mask a failure; limited to 5 per account (soft limit). Generally **best avoided** — often reflects a poor architectural decision; prefer a random public IP + DNS name, or a load balancer.
-- **ENI (Elastic Network Interface)**: a virtual network card in a VPC — can carry a primary + secondary private IPv4s, one Elastic IP per private IPv4, one public IPv4, one or more security groups, and a MAC address. Bound to a specific AZ; can be created independently and moved between instances in that AZ for failover.
-- **EC2 Hibernate**: preserves the in-memory (RAM) state to a file on the root EBS volume (which must be encrypted) so the next start skips OS boot and app warm-up. Supported on specific instance families, RAM must be < 150 GB, not supported on bare metal, and an instance can't stay hibernated more than 60 days.
-- **EC2 Instance Store vs EBS**: instance store = ephemeral hardware-attached disk, better IOPS (starting from 200k IOPS to 3M IOPS), data lost on stop (not just terminate) — buffer/cache/scratch data, backups/replication are your responsibility; EBS = persistent network-attached block storage ("network USB stick"), bound to an AZ, billed for all provisioned capacity, can be detached and re-attached to another instance quickly.
+  - **Reserved Instances**: *1 or 3-year* commitment, up to *~72%* discount, *scoped to instance attributes (type/region/tenancy/OS)* — steady-state predictable workloads (e.g. databases). **Convertible RIs** *allow changing instance family/OS/scope/tenancy* for a smaller (*~66%*) discount. Can be bought/sold on the RI Marketplace.
+  - **Savings Plans**: commit to *$/hour of usage* for *1 or 3 years* (up to *~72%* discount); locked to an instance family + region but flexible across instance size, OS, and tenancy.
+  - **Spot Instances**: *up to 90%* discount, can be reclaimed with a *2-minute warning* if your *max price < current spot price* — the most cost-efficient option, good for batch jobs/data analysis/anything fault-tolerant, **not** for critical jobs or databases. 
+    - **Spot Fleets** request a set of Spot (+ optional On-Demand) instances across multiple launch pools using a strategy: `lowestPrice`, `diversified`, `capacityOptimized`, or `priceCapacityOptimized` (recommended default).
+  - **Dedicated Hosts**: Most expensive option. An entire physical server dedicated to you, billed per host. For *BYOL*, *socket-or-core-based licensing* or *strict compliance*. 
+  - **Dedicated Instances**: run on *hardware dedicated* to your account (may share hardware with your own other instances), billed per instance — no control over instance placement.
+  - **Capacity Reservations**: reserve On-Demand capacity in a specific AZ. In case of insufficient on-demand capacity. No time commitment (create/cancel anytime), billed at On-Demand rate with **no discount**. 
+    - Good for *short-term uninterrupted workloads* that must *run in a specific AZ*. 
+- **Placement Groups**: 
+  1. Cluster: low-latency 10 Gbps cluster in a single AZ. *Big data/HPC*, but an AZ failure takes down all instances, 
+  2. Spread: each EC2 on separate HW, max 7 per AZ per group, can span AZs (min: 3 AZs, max: 6 AZs). Max *isolation* for *critical* instances, 
+  3. Partition: up to 7 partitions per AZ. EC2's don't share racks across partitions. Scales to 100s of instances. Use cases: *Hadoop (EMR)/Cassandra (Keyspace)/Kafka (MSK)/HBase*.
+- **Elastic IPs**: a public IPv4 address you own until you release it, remappable to another instance to mask a failure; **limited to 5** per account (soft limit). Generally *best avoided* — often reflects a poor architectural decision; prefer a random *public IP + DNS name*, or a *load balancer*.
+- **ENI (Elastic Network Interface)**: a *virtual network card in a VPC* — can carry a primary + secondary private IPv4s, one Elastic IP per private IPv4, one public IPv4, one or more security groups, and a MAC address. Bound to a specific AZ. Can be created independently and moved between instances in that AZ for *failover*.
+- *EC2 Hibernate*: *preserves* the *in-memory state* to a file on the root EBS volume (which must be encrypted) so the next start *skips OS boot and app warm-up*. Supported on specific instance families, RAM must be < 150 GB, not supported on bare metal, and an instance can't stay hibernated more than 60 days.
+- **EC2 Instance Store vs EBS**: instance store = ephemeral hardware-attached disk, better IOPS (starting from *200k IOPS to 3M IOPS*), data lost on stop/terminate, backups/replication are your responsibility; EBS = persistent network-attached block storage ("network USB stick"), bound to an AZ, billed for all provisioned capacity, can be detached and re-attached to another instance quickly.
 - **EBS volume types** (only gp2/gp3 and io1/io2 Block Express can be boot volumes):
-  - **gp2/gp3** (general-purpose SSD, 1 GiB–16 TiB): cost-effective, boot volumes/dev-test/virtual desktops. 
-    - gp3 decouples IOPS (baseline 3,000, up to 16,000) and throughput (baseline 125 MiB/s, up to 1,000 MiB/s) from disk size;
-      - Pricing (2026): $0.08/GB + $0.005/IOPS 
-    - gp2 links IOPS to size (3 IOPS/GiB, bursts to 3,000, caps at 16,000 IOPS).
-      - Pricing (2026): $0.10GB
-    - For small disk size, `gp3` is almost most certainly **cheaper** than `gp2` (even at 100 IOPS).
-  - **io1/io2 Block Express** (provisioned IOPS SSD, 4 GiB–16/64 TiB): sustained IOPS/sub-ms latency, critical DB workloads needing >16,000 IOPS; io2 Block Express reaches up to 256,000 IOPS and supports **EBS Multi-Attach** — same volume attached read/write to up to 16 instances in the same AZ (needs a cluster-aware file system, not XFS/EXT4).
-  - **st1** (throughput-optimized HDD, 125 GiB–16 TiB, not bootable): big data, data warehouses, log processing; max 500 MiB/s, 500 IOPS.
-  - **sc1** (cold HDD, 125 GiB–16 TiB, not bootable): infrequently accessed data, lowest cost; max 250 MiB/s, 250 IOPS.
-- **EBS snapshots**: point-in-time backup of a volume (detaching first is recommended, not required); can copy across AZ or Region. **EBS Snapshot Archive** moves a snapshot to a ~75% cheaper tier (24–72h to restore). **Recycle Bin** retains deleted snapshots for a configurable period (1 day–1 year) to recover from accidental deletion. **Fast Snapshot Restore (FSR)** force-initializes a snapshot to remove first-use latency ($$$).
-- **EBS encryption**: encrypts data at rest, in-flight between instance and volume, and all snapshots/volumes derived from it — transparent, minimal latency impact, keys from KMS (AES-256). To encrypt an existing unencrypted volume: snapshot it, copy the snapshot with encryption enabled, create a new volume from that snapshot, and re-attach.
-- **Delete on Termination**: controls whether an EBS volume is deleted when its EC2 instance terminates. Root volumes default to enabled (deleted); other attached volumes default to disabled (preserved) — toggle via console/CLI.
-- **EFS** is another powerful network drive that can attached to multiple EC2 instances across multiple AZ. See the section `Storage` for more info.
+  - See subsection [EBS (Elastic Block Store) - #18 pop](#ebs-elastic-block-store)
+- **EFS** is another powerful network drive that can attached to multiple EC2 instances across multiple AZ.
+  - See subsection [EFS (Elastic File System) - #19 pop](#efs-elastic-file-system)
 
 ### Scalability & High Availability (concepts)
 - **Vertical scaling**: increase an instance's size (e.g. t2.nano → u-12tb1.metal). Used for non-distributed systems like a single DB (RDS, ElastiCache); hits a hardware ceiling.
@@ -317,13 +329,26 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#4 pop]**
 
-- **ASG**: scales EC2 count based on CloudWatch metrics/schedules/predictive scaling; ensures a min/max/desired instance count; auto-registers new instances to a load balancer and replaces terminated/unhealthy ones. ASGs themselves are free — you only pay for the underlying EC2 instances.
-- **Launch Template** (older "Launch Configurations" are deprecated): defines AMI + instance type, EC2 User Data, EBS volumes, security groups, SSH key pair, IAM role, network/subnets, and load balancer info, plus min/max/initial capacity.
+- **ASG**: scales EC2 count based on CloudWatch *metrics/schedules/predictive scaling*; 
+- ensures a min/max/desired instance count; 
+- auto-registers new instances to a load balancer and *replaces terminated/unhealthy ones*. 
+- Price: **free**.
+- **Launch Template** (older "Launch Configurations" are deprecated) includes:
+  1. EC2 related: AMI, instance type, EC2 User Data, EBS volumes, 
+  2. Security & Access related: security groups, SSH key pair, IAM role, 
+  3. Networking: network/subnets, and load balancer info, 
+  4. ASG specific: min/max/initial capacity.
 - **Scaling policies**: 
-  - **Dynamic** — ***Target Tracking*** (simple, e.g. "keep average ASG CPU ~40%") or ***Simple/Step Scaling*** (a CloudWatch alarm crossing a threshold adds/removes a set number of instances); 
-  - **Scheduled** — anticipate known usage patterns (e.g. raise min capacity at 5pm Fridays); 
-  - **Predictive** — continuously forecasts load from historical data and schedules scaling ahead of time. Good metrics to scale on: CPUUtilization, RequestCountPerTarget, Average Network In/Out, or any custom CloudWatch metric.
-- **Scaling cooldowns**: after a scaling activity, the ASG pauses further launches/terminations for a cooldown period (default 300s) to let metrics stabilize — use a ready-to-use AMI to reduce configuration time and shrink the effective cooldown.
+  - **Dynamic**: *Target Tracking* (simple, e.g. "keep average ASG CPU ~40%") or *Simple/Step Scaling* (a CloudWatch alarm crossing a threshold adds/removes a set number of instances); 
+  - **Scheduled**: anticipate known usage patterns (e.g. raise min capacity at 5pm Fridays); 
+  - **Predictive**: continuously *forecasts load* from historical data and *schedules* scaling *ahead of time*. Good metrics to scale on: 
+    1. CPUUtilization, 
+    2. RequestCountPerTarget, 
+    3. Average Network In/Out, or 
+    4. any custom CloudWatch metric.
+- **Scaling cooldowns**: after a scaling activity, ASG pauses further launches/terminations for a cooldown period to let metrics stabilize
+  - Default cooldown: 300s
+  - use a ready-to-use AMI to reduce configuration time and shrink the effective cooldown.
 
 ### Elastic Load Balancing (ELB)
 
@@ -346,44 +371,84 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#3 pop]**
 
-- "Serverless" doesn't mean no servers — it means you never manage/provision/see them; pioneered by Lambda, now applied broadly (DynamoDB, Cognito, API Gateway, S3, SNS/SQS, Kinesis Data Firehose, Aurora Serverless, Step Functions, Fargate).
-- Virtual **functions**, not virtual servers: no OS/patching to manage, limited by time (short executions) not RAM/CPU alone, runs on-demand, scales automatically — contrast with EC2 (continuously running, scaling needs manual intervention).
-- **Languages**: Node.js, Python, Java, C# (.NET Core)/PowerShell, Ruby, plus a community Custom Runtime API (e.g. Rust, Go). **Container images** are also supported but must implement the Lambda Runtime API — for arbitrary Docker images, ECS/Fargate is the better fit.
-- **Pricing**: pay per request (first 1M free, then $0.20/million) + pay per duration in 1ms increments (400,000 GB-seconds/month free — e.g. 400,000s at 1GB RAM or 3,200,000s at 128MB, then $1.00 per 600,000 GB-seconds) — usually very cheap.
-- **Limits (per region)**: memory 128MB–10GB (1MB increments — more RAM also scales CPU and network proportionally), max execution time 900s (15 min), env vars 4KB, `/tmp` disk 512MB–10GB, default concurrency limit 1,000 (raisable via support ticket), deployment package 50MB zipped / 250MB unzipped.
-- Can only run for ***<15 minutes per session***
-- **Concurrency & throttling**: **Reserved concurrency** caps/guarantees a function's concurrent executions; exceeding the account/function concurrency limit triggers a Throttle — synchronous callers get a `429 ThrottleError`, asynchronous callers are retried automatically (exponential backoff from 1s up to 5 min, for up to 6 hours) then routed to a DLQ if still failing. Without reserved concurrency, one noisy function can starve concurrency from every other function/caller in the account.
-- **Cold starts & Provisioned Concurrency**: a cold start = a fresh instance runs your init code (loading the runtime, dependencies) before the handler, adding latency to that first request; **Provisioned Concurrency** pre-initializes a set number of execution environments in advance so cold starts never happen for that pool — can be managed by Application Auto Scaling (scheduled or target-utilization based). **Lambda SnapStart** (Java, Python, .NET) gets up to 10x faster starts at no extra cost by invoking from a cached, pre-initialized snapshot of memory/disk state taken when you publish a version.
+- "Serverless" doesn't mean no servers — it means you never manage/provision/see them; pioneered by Lambda, now applied broadly: DynamoDB, Cognito, API Gateway, S3, SNS/SQS, Kinesis Data Firehose, Aurora Serverless, Step Functions, Fargate.
+
+#### Basic Info
+- *Virtual functions*, not virtual servers: no OS/patching to manage, limited by time (*short executions*) not RAM/CPU alone, runs on-demand, *scales automatically* — contrast with EC2 (continuously running, scaling needs manual intervention).
+- Lambda's **Triggers**: S3 events, API Gateway, DynamoDB Streams, Kinesis, SQS, SNS, EventBridge/CloudWatch Events (schedules), CloudWatch Logs, Cognito, CloudFront.
+- Use case: 
+  1. event-driven microservices, 
+  2. glue logic, 
+  3. image processing on S3 upload, 
+  4. cron-like scheduled tasks (EventBridge schedule → Lambda).
+- **Languages**: *Node.js, Python, Java, C# (.NET Core)/PowerShell, Ruby*, plus a community Custom Runtime API (e.g. Rust, Go). **Container images** are also supported but must *implement the Lambda Runtime API* — for arbitrary Docker images, ECS/Fargate is the better fit.
+- **Pricing**: 2 parts:
+  1. pay per request: *first 1M free*, then **$0.20/million**
+  2. pay per duration in 1ms increments 
+    - *400,000 GB-seconds/month free*. e.g. **400,000s @ 1GB RAM** or **3,200,000s at 128MB**, 
+    - then **$1.00 per 600,000 GB-second**.
+- **Limits (per region)**: 
+  - memory 128MB - **10GB** (1MB increments — more RAM also scales CPU and network proportionally), 
+  - max execution time 900s or **15 min**, 
+  - env vars *4KB*, 
+  - `/tmp` disk 512MB - **10GB**, 
+  - default concurrency limit for *all functions per region* is **1,000** (raisable via support ticket), 
+  - deployment package *50MB zipped / 250MB unzipped*.
+- **Concurrency & throttling**: 
+  - **Reserved concurrency** caps/guarantees a function's concurrent executions; 
+  - exceeding the concurrency limit triggers a Throttle. 
+    - **Synchronous** callers (e.g. API Gateway, ALB, or `invoke` with `RequestResponse`) get a `429 ThrottleError` back immediately, 
+    - **Asynchronous** callers (e.g. S3 event notifications, SNS, EventBridge) are retried automatically (exponential backoff from 1s up to 5 min, for up to 6 hours) then routed to a DLQ if still failing. 
+  - Without reserved concurrency, one noisy function can starve concurrency from other function/caller in the account's region.
+
+#### Lambda Start Up
+- a cold start = a fresh instance runs your init code (loading the runtime, dependencies) before the handler, adding latency to that first request; 
+- **Provisioned Concurrency** pre-initializes a set number of execution environments in advance so to avoid cold starts. 
+  - Can be managed by *Application Auto Scaling* -  scheduled or target-utilization based.
+  - Extra cost of $0.015/GB-hour or  $1.08 per month per GB.
+- **Lambda SnapStart**: *Java, Python, .NET* gets up to *10x faster starts at no extra cost* by invoking from a cached, pre-initialized snapshot of memory/disk state taken when you publish a version.
+
+#### Lambda & the Edge
 - **Edge functions**: code attached to a CloudFront distribution, running close to users. 
   - E.F. use cases:
-    1. Website Security and Privacy
+    1. Website *Security and Privacy*
     2. Dynamic Web App @ Edge
     3. SEO
-    3. Inteligent routing across origins & data centers
+    3. *Inteligent routing* across origins & data centers
     3. Bot mitigation @ Edge
     3. Real-time image transformation
     3. A/B testing
     3. User auth
     3. User tracking & analytics
   - Two types:
-    1. **CloudFront Functions** — lightweight JavaScript, sub-ms startup, millions of req/s, only ***Viewer Request/Response*** triggers, <1ms exec time, 2MB max memory, 10KB package, no network/filesystem access — for cache-key normalization, header manipulation, URL rewrites, simple auth (JWT validation).
-      - Use cases:
-        1. Cache key normalization: transform headers, cookies, query string & URL to optimize cache key
-        1. Header manipulation
-        1. URL rewrites or redirect
-        1. Request auth
-    2. **Lambda@Edge** — Node.js/Python, thousands of req/s, ***all 4 triggers (Viewer + Origin Request/Response)***, 5–10s exec time, up to 10GB memory, 1–50MB package, network/filesystem access — for longer processing, calling other AWS services via SDK, dynamic content at the edge; author in us-east-1 and CloudFront replicates it globally.
-      - Use cases:
-        1. >1ms exec time
-        1. Need more CPU & RAM
-        1. 3rd party libraries
-        1. Network access dependency
-        1. File system access
-- **Networking**: by default a Lambda function runs outside your VPC (in an AWS-owned VPC) and **cannot** reach resources inside your VPC (private RDS, ElastiCache, internal ELB). To reach them, deploy the function into your VPC (specify VPC ID, subnets, security groups) — Lambda creates an ENI in your subnet to route traffic, and the target resource's security group must allow the Lambda function's security group.
-- **Lambda with RDS Proxy**: many Lambda invocations opening direct DB connections under load can exhaust the database's connection limit; RDS Proxy pools/shares connections, cuts failover time ~66%, and enforces IAM auth + Secrets Manager credentials — the Lambda function must itself run inside the VPC, since RDS Proxy is never publicly accessible.
-- **Invoking Lambda from RDS/Aurora**: RDS for PostgreSQL and Aurora MySQL can invoke a Lambda function directly from within the database to react to data events (e.g. on INSERT, send a welcome email via SES) — requires outbound connectivity from the DB instance (public route, NAT Gateway, or VPC Endpoint) plus both a Lambda resource-based policy and an IAM policy granting the DB instance invoke permission. This is different from **RDS Event Notifications**, which only report on the DB instance's own lifecycle (created/stopped/started, snapshot, parameter/security group, RDS Proxy, custom engine version changes — near-real-time within 5 min) via SNS or EventBridge, with no visibility into the data itself.
-- Triggers: S3 events, API Gateway, DynamoDB Streams, Kinesis, SQS, SNS, EventBridge/CloudWatch Events (schedules), CloudWatch Logs, Cognito, CloudFront.
-- Use case: event-driven microservices, glue logic, image processing on S3 upload, cron-like scheduled tasks (EventBridge schedule → Lambda).
+
+    | | **CloudFront Functions** | **Lambda@Edge** |
+    |---|---|---|
+    | Runtime | Lightweight JavaScript | Node.js/Python |
+    | Startup | Sub-ms | — |
+    | Throughput | Millions of req/s | Thousands of req/s |
+    | Triggers | Only **Viewer Request/Response** | **Viewer + Origin Request/Response** |
+    | Exec time | <1ms | 5–10s |
+    | Max memory | 2MB | Up to 10GB |
+    | Package size | 10KB | 1–50MB |
+    | Network/filesystem access | No | Yes |
+    | Authoring | — | Author in us-east-1; CloudFront replicates globally |
+    | Use cases | 1. *Cache key normalization* (transform headers, cookies, query string & URL)<br>2. Header manipulation<br>3. URL rewrites/redirects<br>4. Request auth | 1. >1ms exec time<br>2. Need more CPU/RAM<br>3. 3rd party libraries<br>4. Network access dependency<br>5. File system access<br>6. Calling other AWS services via SDK<br>7. Dynamic content at the edge |
+
+#### Lmabda, Networking & DB
+- **Networking**: 
+  - by default, a Lambda function runs *outside your VPC* (in an AWS-owned VPC) and cannot reach resources inside your VPC (private RDS, ElastiCache, internal ELB). 
+  - To reach them, *deploy* the function into your *VPC* (specify VPC ID, subnets, security groups). Lambda creates an *ENI in your subnet* to route traffic, and the *target resource's security group* must allow the Lambda function's security group.
+- **Lambda with RDS Proxy**: 
+  - many Lambda invocations opening direct DB connections under load can exhaust the database's connection limit; RDS Proxy:
+    - *pools/shares connections*, 
+    - cuts *failover time ~66%* (require multi-AZ), and 
+    - enforces IAM auth + Secrets Manager credentials 
+  - the *Lambda* function must itself run *inside the VPC*, since *RDS Proxy is never publicly* accessible.
+- **Invoking Lambda from RDS/Aurora**: RDS for PostgreSQL and Aurora MySQL can invoke a Lambda function directly from within the database to react to data events (e.g. on INSERT, send a welcome email via SES) 
+  - DB instance requires outbound connectivity (public route, NAT Gateway, or VPC Endpoint) plus both a Lambda resource-based policy and an IAM policy granting the DB instance invoke permission. 
+  - different from **RDS Event Notifications**, which only *report* on the DB instance's own *lifecycle* (created/stopped/started, snapshot, parameter/security group, RDS Proxy, custom engine version changes — near-real-time within 5 min) via *SNS or EventBridge*, with no visibility into the data itself.
+
 
 ### Docker fundamentals
 - Docker packages apps into **containers** that run identically on any machine/OS — no compatibility issues, less maintenance, works with any language.
@@ -446,23 +511,51 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#5 pop]**
 
+#### RDS Basics
 - Managed relational DB engines: Postgres, MySQL, MariaDB, Oracle, Microsoft SQL Server, IBM DB2, and Aurora.
 - Advantages over self-managed DB-on-EC2:      
-  - automated provisioning/OS patching, 
-  - continuous backups with point-in-time restore, 
+  - continuous backups with **point-in-time restore**, 
   - monitoring dashboards, 
-  - read replicas, 
-  - Multi-AZ, maintenance windows, 
-  - vertical/horizontal scaling, 
-  - EBS-backed storage — trade-off: **no SSH access** to the underlying instance (except RDS Custom).
-- **Storage Auto Scaling**: dynamically grows storage when RDS detects you're running low (free storage < 10% of allocated, low-storage lasts ≥ 5 min, and 6 hours since the last modification) up to a **Maximum Storage Threshold** you set. Good for unpredictable workloads, supports all RDS engines.
-- **Multi-AZ**: synchronous replication to a standby in another AZ for **high availability/failover** (not for read scaling); one DNS name auto-fails over on AZ loss, network loss, instance or storage failure, no manual intervention needed. Converting Single-AZ → Multi-AZ is a zero-downtime operation (snapshot + restore in new AZ + sync).
-- **Read Replicas**: up to 15, within-AZ/cross-AZ/cross-region, **asynchronous replication** (eventually consistent) for **read scaling** only (SELECT, not INSERT/UPDATE/DELETE); each needs its own connection string in the app; promotable to a standalone DB. Same-region replication is free; cross-region replication incurs data transfer cost.
+  - **read replicas** (CR), 
+  - **Multi-AZ**, 
+  - maintenance windows (auto patch-and-failover), 
+  - **vertical/horizontal scaling**, 
+  - EBS-backed storage — trade-off: *no SSH access* to the underlying instance (except RDS Custom).
 - **RDS Custom**: for *Oracle* and *SQL Server* only — gives admin access to the underlying OS and database (via SSH/SSM) to configure settings, install patches, or enable native features; deactivate Automation Mode first (snapshot recommended before customizing). Trade-off vs standard RDS: RDS manages everything, RDS Custom gives you full admin access.
-- **Backups**: Automated backups take a daily full backup during the backup window plus transaction logs every 5 minutes, giving point-in-time restore anywhere from the oldest backup to 5 minutes ago; retention 1–35 days (0 disables). Manual DB snapshots are user-triggered with retention for as long as you want. Restoring a backup/snapshot always **creates a new database**. A stopped RDS instance still incurs storage charges — for long stops, snapshot & delete instead.
 - **Security**: at-rest encryption via KMS must be set at launch time (an unencrypted master can't have encrypted replicas — snapshot & restore as encrypted to fix); in-flight encryption is TLS-ready by default using AWS TLS root certs; IAM Authentication lets you connect using IAM roles instead of username/password; Security Groups control network access; no SSH except on RDS Custom; Audit Logs can be sent to CloudWatch Logs.
-- **RDS Proxy**: fully managed connection pooler sitting in front of RDS/Aurora. Make many DB connections into less connections. Reduces DB CPU/RAM stress from many open connections/timeouts (common with Lambda), serverless/auto-scaling/Multi-AZ, cuts failover time by up to 66%, enforces IAM auth and stores credentials in Secrets Manager and is never publicly accessible (must be reached from within a VPC). 
-- Exam tests: Multi-AZ (HA) vs Read Replica (scaling) — a very common distinction question.
+
+#### RDS Scaling & HA
+- **Storage Auto Scaling**: dynamically grows storage when RDS detects you're running low up to a **Maximum Storage Threshold** you set.
+  - All 3 conditions for scaling: (i) free storage spaces < 10% of allocated, (ii) low-storage state lasted ≥ 5 min, and (iii) 6 hours since the last modification
+  - Good for unpredictable workloads, supports all RDS engines.
+- **Multi-AZ**: synchronous replication to a *standby* in another AZ for **high availability/failover** 
+  - *Mainly for auto-failover*. One DNS name auto-fails over on AZ loss, network loss, instance or storage failure, no manual intervention needed.
+  - *Not for read scaling.* This is the job of Read Replicas.
+  - Converting Single-AZ → Multi-AZ is a *zero-downtime* operation. Snapshot + restore in new AZ + sync.
+- **Read Replicas**: 
+  - up to 15 replicas, 
+  - can be within-AZ/cross-AZ/**cross-region**, 
+  - **asynchronous replication** (eventually consistent) for **read scaling** only (SELECT, not INSERT/UPDATE/DELETE); 
+  - each needs its own connection string in the app; 
+  - promotable to a standalone DB. 
+  - *Same*-region replication is *free* vs *cross*-region replication incurs data transfer *cost*. In cross region, VPC cannot help eliminate cost because: VPC is region-bound -> Cross region require 2 VPCs -> Cross region cost  still exist.
+- **RDS Proxy**: fully managed connection pooler sitting in front of RDS/Aurora. 
+  - Make many DB connections *into less connections*. Scale to read more data. 
+  - Reduces DB CPU/RAM stress from many open connections/timeouts (common with Lambda), 
+  - serverless/auto-scaling/Multi-AZ, 
+  - *cuts failover* time by up to *66%*, 
+  - enforces IAM auth and stores credentials in Secrets Manager
+  - is never publicly accessible (must be reached from within a VPC).
+- **Backups**: 
+  - Automated backups perform:
+    1. take a daily full backup during the backup window 
+    2. transaction logs every 5 minutes, giving point-in-time restore anywhere from the oldest backup to 5 minutes ago; 
+  - Automated backup retention 1 - 35 days (0 disables). Console defaults to 7 and CLI defaults to 1 day. 
+  - Manual DB snapshots are user-triggered with retention for as long as you want. 
+  - Restoring a backup/snapshot always **creates a new database**. 
+  - A stopped RDS instance still incurs storage charges — for long stops, snapshot & delete instead.
+ 
+- Exam tests: *Multi-AZ (HA) vs Read Replica (scaling)* — a very common distinction question.
 
 ### Aurora
 
@@ -587,8 +680,12 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#6 pop]**
 
-#### Basics for VPC
-- **Networking layers, in one line**: **Layer 3 (Network)** = IP addresses and routing — gets a packet to the right *machine*, no notion of ports; **Layer 4 (Transport)** = TCP/UDP and port numbers — gets a packet to the right *process* on that machine; **Layer 7 (Application)** = HTTP/HTTPS and above, where a request carries meaning like URL paths, headers, and hostnames. This is the shorthand the exam uses to distinguish tools by what they can see and act on: an NLB/Network Firewall/Shield Standard (L3/4) only ever sees IP:port, while an ALB/API Gateway/AWS WAF (L7) can route or filter on URL path, hostname, or request content that a Layer 4 tool never touches.
+#### Basics for Networking
+- *Networking layers*: 
+  - **Layer 3 (Network)** = IP addresses and routing — gets a packet to the right *machine*, no notion of ports; 
+  - **Layer 4 (Transport)** = TCP/UDP and port numbers — gets a packet to the right *process* on that machine; 
+  - **Layer 7 (Application)** = HTTP/HTTPS and above, where a request carries meaning like URL paths, headers, and hostnames. 
+  - This is the shorthand the exam uses to distinguish tools by what they can see and act on: an NLB/Network Firewall/Shield Standard (L3/4) only ever sees IP:port, while an ALB/API Gateway/AWS WAF (L7) can route or filter on URL path, hostname, or request content that a Layer 4 tool never touches.
 - **CIDR**: Classless Inter-Domain Routing, the method for allocating/writing IP ranges.
   - Format: `base IP/subnet mask`, e.g. `192.168.0.0/26` = 64 addresses, i.e `192.168.0.0` to `192.168.0.63`; `/32` = 1 IP, `/0` = all IPs.
   - More examples: `192.168.0.0/24` would have range of `192.168.0.0` to `192.168.0.255` (256 IPs). `192.168.0.0/16` would have range of `192.168.0.0` to `192.168.255.255` (65,536 IPs).
@@ -598,48 +695,77 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   2. `172.16.0.0/12` (AWS's default VPC range) [max: `172.31.255.255` (20 bits), 1 mil IPs] 
   3. `192.168.0.0/16` [max: `192.168.255.255`], 
   4. everything else is public/internet-routable.
+
+#### VPC Basics
 - **VPC sizing**:
-  - Up to 5 VPCs per region (soft limit); each VPC can have up to 5 CIDR blocks, each between `/28` (16 IPs) and `/16` (65,536 IPs); only private IPv4 ranges are allowed.
-  - A VPC's CIDR should never overlap another network you'll connect it to (peering, on-prem).
-  - Every new AWS account has a **default VPC** with internet connectivity, and new EC2 instances launch into it if no subnet is specified.
-- **Subnets**: tied to a single AZ, each with its own CIDR carved from the VPC range; public (route table sends 0.0.0.0/0 to an Internet Gateway) vs private (no such route).
-  - AWS reserves 5 IPs per subnet (first 4 + last 1) — e.g. for `10.0.0.0/24`: `.0` network address, `.1` VPC router, `.2` DNS, `.3` reserved for future use, `.255` broadcast (unsupported but reserved).
-  - So a `/27` (32 IPs) only nets 27 usable, not enough if you need 29; use `/26` instead.
-- **Route Tables — the concept**: every subnet is associated with exactly one route table (the VPC's default "main" route table, unless a custom one is explicitly associated); each row is `destination CIDR → target` (e.g. `0.0.0.0/0 → igw-xxxx`). Traffic within the VPC's own CIDR is always routed via an implicit, un-editable `local` route, so every other row only matters for traffic *leaving* the VPC.
-  - Route tables are directionless. It can serve inbound or outbound. But, inbound traffic is more often handled by IGW + NAT to identify local IP.
-  - When more than one row could match a packet's destination, AWS always picks the **most specific (longest-prefix) match** — never evaluation order. This is why a Gateway VPC Endpoint's route (a specific AWS-service prefix, e.g. all of S3's IP ranges) silently overrides a table's default `0.0.0.0/0 → IGW` row for that traffic, without you ever touching the default row.
-- **Internet Gateway (IGW)**: horizontally scaled, redundant, HA; lets VPC resources reach the internet.
-  - Exactly one IGW per VPC (and vice versa); created separately and attached.
-  - On its own does nothing — route tables must also route 0.0.0.0/0 (and `::/0` for IPv6) to it.
-- **Bastion Host**: a public-subnet EC2 instance used to SSH into private-subnet instances.
+  - Up to *5 VPCs per region* (soft limit); each VPC can have up to **5 CIDR blocks**, each between `/28` (16 IPs) and `/16` (65,536 IPs); only private IPv4 ranges are allowed.
+  - 1 VPC can have up to 200 subnets
+  - A VPC's CIDR should *never overlap* another network you'll connect it to (peering, on-prem).
+  - Every new AWS account has a *default VPC* with internet connectivity, and new EC2 instances launch into it if no subnet is specified.
+- **Subnets**: *tied* to a *single AZ*, each with its own CIDR carved from the VPC range; public (route table sends 0.0.0.0/0 to an Internet Gateway) vs private (no such route).
+  - 1 CIDR block can have many subnets.
+  - Count of all subnets from the CIDR blocks of 1 VPC <= 200.
+  - AWS *reserves 5 IPs per subnet*: **first 4 + last 1**; e.g. for `10.0.0.0/24`: `.0` network address, `.1` VPC router, `.2` DNS, `.3` reserved for future use, `.255` broadcast (unsupported but reserved).
+    - So a `/27` (32 IPs) only nets 27 usable, not enough if you need 29; use `/26` instead.
+- **Route Tables — the concept**: 
+  - 1 subnet maps to 1 Route Table (RT) exactly (the VPC's default "main" route table, unless a custom one is explicitly associated); 
+  - each row is `destination CIDR → target` (e.g. `0.0.0.0/0 → igw-xxxx`). 
+  - Every RT has a built-in `local` route (can't be edited or deleted) that routes traffic between resources inside the VPC's own CIDR. So the rows you actually configure only matter for traffic *leaving* the VPC.
+  - By default, a RT is attached to a subnet and its custom rows are only consulted for outbound traffic. *Inbound traffic* from the internet *doesn't need RT*: the *IGW does 1:1 NAT (public IP → instance's private IP)* before the packet needs routing, so the implicit `local` route alone delivers it.
+    - AWS also lets you attach a RT to an IGW/VGW instead (**Ingress Routing**), to force *inbound* traffic through a *network appliance (firewall, IDS)* before it reaches your subnets. But this is opt-in, not the default path.
+  - When more than one row could match a packet's destination, AWS always picks the **most specific (longest-prefix) match** . 
+    - a Gateway VPC Endpoint's route (a specific AWS-service prefix, e.g. all of S3's IP ranges) silently overrides a table's default `0.0.0.0/0 → IGW` row for that traffic, without you ever touching the default row.
+- **Internet Gateway (IGW)**: horizontally scaled, redundant, HA; lets VPC resources *reach in & out* the internet.
+  - Exactly *1 IGW -> 1 VPC* ; created separately and attached.
+  - *RT* must also *route 0.0.0.0/0* (and `::/0` for IPv6) to *IGW*.
+- **Bastion Host**: a public-subnet EC2 used to SSH into private-subnet instances.
   - Its SG must allow inbound 22 from a restricted CIDR (e.g. your corporate IP), and the private instances' SGs must allow the bastion's SG/private IP.
+  - RT needs no updates because boths EC2 are in VPC. They are reachable via private IP.
+  - Default NACL no update (as it allows all inbound & outbound). But *custom NACL* need to ALLOW inbound TCP 22 & ephemeral ports range.
+
 
 #### NAT
-- **NAT (Network Address Translation) — the concept**: NAT rewrites the source IP (and port) of outbound packets to its own public IP before sending them out, then un-rewrites the reply back to the originating private IP. Net effect: *private subnet instances* can initiate *outbound connections* (e.g. pull OS updates, call an external API) but the internet can't initiate a connection back in — one-way, by construction, no security group needed to enforce it.
-  - This is why a NAT device sits in a **public subnet** (it needs its own route to the Internet Gateway) while the **private subnet's route table** points `0.0.0.0/0` at the NAT device instead of at the IGW.
-  - Don't confuse this with a **Bastion Host** (above): a bastion lets *inbound* SSH/RDP reach private instances; NAT only ever carries *outbound* traffic. They solve opposite directions of the same "private subnet has no direct internet path" problem.
-  - AWS gives you three ways to run the NAT device itself — trade-off is managed/simple vs cheaper/flexible:
-    - **NAT Gateway**: AWS-managed appliance, the default choice on the exam and in practice.
-      - Highly available *within its AZ* only — it doesn't fail over across AZs, so best practice is one NAT Gateway per AZ (each AZ's subnets route to their own local NAT Gateway). This isn't a gap in the product: if an AZ goes down, every instance that would've used that AZ's NAT Gateway is down too, so there's nothing left needing outbound internet.
-      - Scales automatically up to 100 Gbps, uses an Elastic IP as its public-facing address, billed per-hour plus per-GB processed.
-      - No security group to manage (translation-only, nothing to configure) and it can't double as a bastion (it doesn't accept inbound connections at all).
-    - **NAT Instance**: a regular EC2 instance running NAT software — the old, manual way, effectively legacy (AMI's standard support ended Dec 2020).
-      - You manage it like any EC2 instance: pick the instance type (bandwidth = whatever that instance type can push), patch it, and script your own failover if it dies (AWS won't do this for you).
-      - Must disable **Source/Destination Check** on the instance — normally EC2 drops any packet whose source/dest IP isn't its own, but a NAT instance is deliberately forwarding *other* instances' traffic, so that check has to be turned off.
-      - Upside over NAT Gateway: it's a real EC2 instance with a security group, so it can also be locked down and reused as a bastion host.
-    - **Regional NAT Gateway (RNAT)**: a newer variant attached to the whole VPC rather than one AZ/subnet. 
-      - brings its own route tables, 
-      - does *not need a public subnet*, and 
-      - automatically extends coverage as you add AZs.
+- **NAT (Network Address Translation) — the concept**: NAT rewrites the source IP (and port) of outbound packets to its own public IP before sending them out, then un-rewrites the reply back to the originating private IP. Net effect: *private subnet instances* can initiate *outbound connections* (e.g. pull OS updates, call an external API). The internet can't initiate a connection back in — *one-way*, by construction
+  - This is why a NAT device sits in a **public subnet** (it needs its own route to the Internet Gateway) while the *private subnet's route table* points `0.0.0.0/0` at the NAT device instead of at the IGW.
+  - 1 public subnet -> 1 NAT
+  - Don't confuse this with a *Bastion Host* (above): a bastion lets *inbound* SSH/RDP reach private instances; NAT only ever carries *outbound* traffic. They solve opposite directions of the same "private subnet has no direct internet path" problem.
+- AWS gives you three ways to run the NAT device itself — trade-off is managed/simple vs cheaper/flexible:
+  - **NAT Gateway**: AWS-managed appliance, the default choice on the exam and in practice.
+    - *Highly available within its AZ* only — it doesn't fail over across AZs, so best practice is *one NAT Gateway per AZ* (each AZ's subnets route to their own local NAT Gateway). 
+      - This isn't a gap in the product: if an AZ goes down, every instance that would've used that AZ's NAT Gateway is down too, so there's nothing left needing outbound internet.
+    - Scales automatically up to *100 Gbps*, uses an *Elastic IP as its public-facing address*, billed per-hour plus per-GB processed.
+    - No security group to manage (translation-only, nothing to configure) and it can't double as a bastion (it doesn't accept inbound connections at all).
+  - **NAT Instance**: a regular EC2 instance running NAT software — the old, manual way, effectively legacy (AMI's standard support ended Dec 2020).
+    - You manage it like any EC2 instance: pick the instance type (bandwidth = whatever that instance type can push), patch it, and script your own failover if it dies (AWS won't do this for you).
+    - Must *disable Source/Destination Check* on the instance — normally EC2 drops any packet whose source/dest IP isn't its own, but a NAT instance is deliberately forwarding *other* instances' traffic, so that check has to be turned off.
+    - Upside over NAT Gateway: it's a real EC2 instance with a security group, so it can also be *locked down* and *reused* as a *bastion* host.
+  - **Regional NAT Gateway (RNAT)**: a newer variant attached to the **whole VPC** rather than one AZ/subnet. 
+    - brings its own route tables, 
+    - does *not need a public subnet*, and 
+    - automatically extends coverage as you add AZs.
 
 #### VPC security
 - **NACL Primer**:
-  - **Ports, in one paragraph**: an IP address gets a packet to the right *machine*; a port number then gets it to the right *process/application* on that machine (a browser, a web server, etc.) — a connection is fully identified by (source IP, source port, destination IP, destination port), sometimes called the 4-tuple. Well-known ports (e.g. 443 for HTTPS, 22 for SSH) are fixed numbers a server listens on so clients know where to knock. When a client *initiates* a connection, though, it doesn't use a fixed port for itself — the *OS* hands it a temporary, randomly chosen **ephemeral port** (range 1024–65535 & is not used by other programs) just for that one conversation, freed up again once the connection ends. So a request to a web server looks like `client_IP:54321 → server_IP:443`, and the reply comes back `server_IP:443 → client_IP:54321` — same ephemeral port, because that's how the reply finds its way back to the exact process that asked.
-  - **Stateful vs stateless — the concept**: any network exchange is really two one-way packet flows — a request one direction, a response the other. A **stateful** firewall inspects the request as it goes by and keeps a note keyed on that 4-tuple ("connection X just went out to Y") — when the reply packet comes back, it's matched against that note and let through automatically, no separate rule needed. A **stateless** firewall keeps no memory of anything — every single packet, in either direction, is checked against the rule list from scratch as if it were the first one it's ever seen. So with a stateless filter, an outbound request and its inbound reply are two unrelated events that both need their own explicit rule, or the reply gets dropped even though the firewall itself let the request out moments earlier.
-  - **TCP vs UDP statefulness**: the port addressing above is identical for both protocols, but what a stateful device is actually tracking differs. **TCP** is connection-oriented — a handshake (SYN/SYN-ACK/ACK) opens it and a FIN/FIN-ACK closes it, so the firewall has real protocol signals marking the note's start and end. **UDP** is connectionless — no handshake, no close signal — so a "UDP connection" in a stateful firewall's table is a pseudo-session it invents: it sees an outbound UDP packet, creates a temporary entry keyed on the 4-tuple, allows a matching reply for some idle timeout (e.g. 30s–a few minutes), then just expires the entry since nothing ever signals "we're done." This is why Security Groups (stateful) auto-allow the reply to a UDP request too — e.g. an outbound DNS query on UDP/53 — even though UDP itself has no notion of a session.
-- **Security Groups** (stateful, instance-level, allow rules only, return traffic auto-allowed) vs **NACLs** (stateless, subnet-level, allow + deny rules, numbered 1–32766 evaluated lowest-first with first-match-wins, default NACL allows everything, new custom NACLs deny everything by default, final `*` rule denies unmatched traffic).
-  - Because a *Security Group is stateful*, it only needs the request direction written down: allow inbound 443 on the server's SG, and the reply is auto-allowed back out — no ephemeral-port rule needed, and in fact you can't even see/target ephemeral ports in an SG rule.
-  - Because a *NACL is stateless*, it has no memory of the request, so the reply has to be explicitly permitted as if it were a brand-new, unrelated packet — and since it's arriving on whatever ephemeral port the client picked, the rule has to open the *whole* ephemeral range (1024–65535), not just one port. Concretely, for a client hitting a server on port 443: the **server-side NACL** needs inbound allow 443 (from the client) *and* outbound allow 1024–65535 (to the client); the **client-side NACL** needs outbound allow 443 (to the server) *and* inbound allow 1024–65535 (from the server). Miss any one of those four rules and the connection breaks in a way that's easy to misdiagnose, since the "request" half often works fine while only the "reply" half silently gets dropped.
+  - **Ephemeral port**: When a client *initiates* a connection, though, it doesn't use a fixed port for itself — the *OS* hands it a temporary, randomly chosen an *ephemeral port* (range 1024–65535 & is not used by other programs) just for that one conversation, freed up again once the connection ends. So a request to a web server looks like `client_IP:54321 → server_IP:443`, and the reply comes back `server_IP:443 → client_IP:54321` — same ephemeral port, because that's how the reply finds its way back to the exact process that asked.
+  - *Stateful vs stateless*:  
+    - A **stateful** firewall inspects the request as it goes by and keeps a note keyed on that 4-tuple *("connection X just went out to Y")* — when the reply packet comes back, it's matched against that note and let through automatically, no separate rule needed. 
+    - A **stateless** firewall keeps no memory of anything — every single packet, in either direction, is checked against the rule list from scratch as if it were the first one it's ever seen. So with a stateless filter, an *outbound request* and its *inbound reply* are two *unrelated events* that *both need* their own *explicit rule*, or the reply gets dropped even though the firewall itself let the request out moments earlier.
+  - *TCP vs UDP statefulness*: the port addressing above is identical for both protocols, but what a stateful device is actually tracking differs. 
+    - *TCP* is connection-oriented — a *handshake (SYN/SYN-ACK/ACK) opens it* and a *FIN/FIN-ACK closes* it, so the *firewall* has real protocol signals marking the note's start and end. 
+    - *UDP* is connectionless — *no handshake, no close signal*. So a "UDP connection" in a stateful firewall's table is a pseudo-session it invents: it sees an outbound UDP packet, creates a temporary entry keyed on the 4-tuple, allows a *matching reply* for some *idle timeout* (e.g. 30s to a few minutes), then just expires the entry since nothing ever signals end of session.
+- **NACLs** vs *Security Groups*
+  - *Comparison table*:
+    | Feature | **NACL** | Security Group |
+    |---|---|---|
+    | State | Stateless | Stateful |
+    | Scope | Subnet-level | Instance-level |
+    | Rule types | Allow + deny rules | Allow rules only |
+    | Return traffic | Not tracked — must be explicitly allowed | Auto-allowed |
+    | Rule numbering/evaluation | Numbered 1–32766, evaluated lowest-first, first-match-wins | all rules evaluated |
+    | Default behavior | Default NACL allows everything; new custom NACLs deny everything by default | Deny all inbound, allow all outbound |
+    | Unmatched traffic | Final `*` rule denies unmatched traffic | N/A |
+  - Because a *Security Group is stateful*, no ephemeral-port rule needed. Can't even see/target ephemeral ports in an SG rule.
+  - Because a *NACL is stateless*, it has no memory of the request, so the reply has to be explicitly permitted as if it were a brand-new, unrelated packet. Since it's arriving on whatever ephemeral port the client picked, the rule has to open the *whole* ephemeral range (1024–65535), not just one port. Concretely, for a client hitting a server on port 443: the **server-side NACL** needs inbound allow 443 (from the client) *and* outbound allow 1024–65535 (to the client); the **client-side NACL** needs outbound allow 443 (to the server) *and* inbound allow 1024–65535 (from the server). Miss any one of those four rules and the connection breaks in a way that's easy to misdiagnose, since the "request" half often works fine while only the "reply" half silently gets dropped.
 
 
 - **VPC Flow Logs**: capture IP traffic metadata (not payload) at the VPC, subnet, or ENI level; also capture traffic for AWS-managed interfaces (ELB, RDS, ElastiCache, Redshift, WorkSpaces, NAT Gateway, Transit Gateway).
@@ -649,54 +775,100 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   - Outbound connection log: OUTBOUND accept but INBOUND reject -> NACL issue
   - Query flow logs via Athena (over S3) or CloudWatch Logs Insights.
 
-- **VPC Traffic Mirroring**: copies inbound/outbound traffic from source ENIs to a target (ENI or Network Load Balancer, same or peered VPC) for content inspection, threat monitoring, or troubleshooting via your own security appliances.
+- **VPC Traffic Mirroring**: copies inbound/outbound traffic from source ENIs to a target (ENI or Network Load Balancer, same or peered VPC) 
+  - Use case: 
+    1. content inspection, 
+    2. threat monitoring, or 
+    3. troubleshooting via your own security appliances.
 
-- **AWS Network Firewall**: protects an entire VPC end-to-end (VPC-to-VPC, outbound to internet, inbound from internet, to/from Direct Connect & Site-to-Site VPN) at Layer 3–7, built internally on Gateway Load Balancer.
-  - Supports thousands of rules (IP/port, protocol, stateful domain lists, regex pattern matching), allow/drop/alert actions, intrusion-prevention-style active flow inspection, logs to S3/CloudWatch/Firehose; centrally managed cross-account via AWS Firewall Manager.
+- **AWS Network Firewall**: protects an entire VPC end-to-end (VPC-to-VPC, outbound to internet, inbound from internet, to/from Direct Connect & Site-to-Site VPN) at Layer 3–7, 
+  - built **internally** on *Gateway Load Balancer*.
+  - Supports: 
+    1. thousands of rules (IP/port, protocol, stateful domain lists, regex pattern matching), 
+    2. allow/drop/alert actions, 
+    3. intrusion-prevention-style active flow inspection, 
+    4. logs to S3/CloudWatch/Firehose; 
+  - *Centrally* managed *cross-account* via AWS **Firewall Manager**.
   - Complements narrower tools: NACLs, security groups, AWS WAF (app-layer request filtering), AWS Shield/Shield Advanced (DDoS).
 
 #### Connecting VPCs
-- **VPC Peering**: privately connects two VPCs so they behave as one network; requires *non-overlapping CIDRs*; **not transitive** (must be created pairwise for every pair that needs to talk).
-  - **Not transitive, concretely**: if VPC A peers with VPC B, and VPC B peers with VPC C, A and C *cannot* talk to each other through B — even though B can reach Iboth.  it never extends through a peered VPC to reach a third one. So B knowing both A and C doesn't give A a path to C. *Why, mechanically*: each peering connection's routes live only in the route tables of the two VPCs on that connection — B's route table has entries pointing at A and C, but A's route table only has an entry for B's CIDR (and vice versa for C), and those routes are never propagated onward into a third VPC's route table.
-  - **"Pairwise" means**: for every *pair* of VPCs that needs to talk directly, you must create a separate, dedicated peering connection between exactly those two. For 3 VPCs that all need to talk to each other, that's 3 connections (A-B, B-C, A-C); for 4 VPCs, that's 6 (every combination of 2). This is why peering doesn't scale well past a handful of VPCs — the number of connections grows quadratically — and it's the main reason **Transit Gateway** exists (a hub-and-spoke design where every VPC connects once to the hub, and the hub *does* route between them).
-  - Works cross-account and cross-region; route tables in every peered VPC's subnets must be updated.
+- **VPC Peering**: privately connects two VPCs so they behave as one network; requires *non-overlapping CIDRs*; *not transitive* (must be created pairwise for every pair that needs to talk).
+  - *Peering* works **cross-account** and **cross-region**; route tables in every peered VPC's subnets must be updated.
   - A security group in a peered VPC can be referenced directly (including cross-account, same region).
-- **VPC Endpoints (AWS PrivateLink)**: connect to AWS services over the private AWS network instead of the public internet — redundant, horizontally scaled, remove the need for an IGW/NAT/public IP.
-  - **Gateway Endpoints**: S3 and DynamoDB only. Free, must be set as a route table target, no security group — prefer Gateway endpoints by default/on the exam.
-  - **Interface Endpoints**: 
-    - usable for most other AWS services, 
-    - provisions an ENI with a private IP as the entry point, 
-    - needs a security group, 
-    - $/hour + $/GB.
-  - Prefer an Interface Endpoint specifically when access is needed from on-premises (via Direct Connect/VPN), a different VPC, or a different region.
+  - **Not transitive** - with example: if VPC A peers with VPC B, and VPC B peers with VPC C, A and C *cannot* talk to each other through B — even though B can reach both. It never extends through a peered VPC to reach a third one. 
+    - Why, mechanically: each *peering connection's routes* live only in the *route tables* of the *two VPCs* on that connection. B's RT has entries pointing at A and C, but A's route table only has an entry for B's CIDR and C's RT has only entry to B. A & C route tables have never been updated to support peering.
+    - Visual rep — two separate peering connections (pcx-AB, pcx-BC), each with its own routes; there's no pcx-AC, so no path from A to C exists at all:
+      ```
+        VPC A                    VPC B                    VPC C
+      10.0.0.0/16              10.1.0.0/16              10.2.0.0/16
+      +--------+   pcx-AB    +--------+    pcx-BC     +--------+
+      |        |=============|        |=============|        |
+      |  RT:   |             |  RT:   |             |  RT:   |
+      |  ->B   |             |  ->A   |             |  ->B   |
+      |        |             |  ->C   |             |        |
+      +--------+             +--------+             +--------+
+           ^                                              ^
+           |___________________ no route ________________|
+                       (no pcx-AC exists)
+      ```
+  - *"Pairwise" means*: for every *pair* of VPCs that needs to talk directly, you must create a separate, dedicated peering connection between exactly those two. 
+    - For 3 VPCs that all need to talk to each other, that's 3 connections (A-B, B-C, A-C); for 4 VPCs, that's 6 (every combination of 2). 
+    - peering doesn't scale well past a handful of VPCs — the number of connections grows quadratically 
+    - **Transit Gateway** exists to solve this issue (a hub-and-spoke design where every VPC connects once to the hub, and the hub *does* route between them).
+  
+- **VPC Endpoints (AWS PrivateLink)**: connect to *AWS services* over the *private AWS network* instead of the public internet — redundant, horizontally scaled, *remove* the need for an *IGW/NAT/public IP*.
+  - Two types: *Gateway Endpoints* & *Interface Endpoints*
+  | | **Gateway Endpoints** | **Interface Endpoints** |
+    |---|---|---|
+    | Services | **S3 and DynamoDB** only | most other AWS services |
+    | Cost | *Free* | \$/hour + \$/GB |
+    | Mechanism | must be set as a *route table target* | *provisions an ENI* with a private IP as the entry point |
+    | Security group | none | needed |
+    | Exam guidance | prefer by default/on the exam | — |
+  - Prefer an *Interface Endpoint* specifically when *access* is needed from:
+    1. *on-premises* via Direct Connect/VPN, 
+    2. a *different VPC*, or 
+    3. a *different region*.
   - **Peering vs. Endpoints**: Peering gives a VPC private access to *another VPC's resources* (any protocol/port); an Endpoint gives a VPC private access to an *AWS service's API* (S3, DynamoDB, etc.), not to another VPC.
 
 - **Site-to-Site VPN**: fast, cheap encrypted hybrid link 
   - **!!Popular on Exam!!**
-  - Use cases: hours to set up vs. DX's month+ lead time; often used as DX's backup/failover path; extend on-prem to AWS VPC; low/moderate bandwidth usages
-  - on-premises network (a data center, office) to a VPC over an encrypted IPsec tunnel that still traverses the public internet.
-  - a **Virtual Private Gateway (VGW)** on the AWS side (AWS's real endpoint, attached to the VPC, customizable **(Autonomous System Number) ASN** — the ID number a network uses to identify itself in BGP (Border Gateway Protocol) route exchange) + a **Customer Gateway (CGW)** (not real AWS infra, just AWS's config pointing at your actual on-prem device — software/hardware, needs a public/NAT'd IP) connected over the public internet, IPsec-encrypted.
+  - *on-premises* network (a data center, office) to a *VPC* over an *encrypted IPsec* tunnel that still traverses the *public internet*.
+  - Use cases: 
+    1. faster, i.e. hours to set up vs. DX's month+ lead time; 
+    2. often used as DX's backup/failover path; 
+    3. extend on-prem to AWS VPC; 
+    4. low/moderate bandwidth usages
+  - Require 2 things:
+    1. a **Virtual Private Gateway (VGW)** on the AWS side. This is AWS's real endpoint, attached to the VPC, customizable *(Autonomous System Number) ASN* — the ID number a network uses to identify itself in *BGP (Border Gateway Protocol)* route exchange. *Not transitive*.
+    2. a **Customer Gateway (CGW)** (not real AWS infra, just AWS's config pointing at your actual on-prem device — software/hardware, needs a public/NAT'd IP) connected over the public internet, IPsec-encrypted.
   - CGW can have 2 conditions:
     1. CGW has a public IP
     2. CGW is private. Thus, have to use company NAT to hook up with CGW.
   - Must enable **Route Propagation** in the route table for the VGW; open ICMP inbound if you need to ping EC2 from on-prem.
+  - Not like VPC peering because this crosses internet
   - **AWS VPN CloudHub**: 
-    - low-cost **hub-and-spoke** VPN model — multiple Customer Gateways share one central VGW (the hub), so sites/nodes (spokes) can reach each other *transitively* through it
-    - unlike **VPC Peering** which is point-to-point and non-transitive 
+    - low-cost **hub-and-spoke** VPN model — *multiple CGW* share *one central VGW* (the hub), so sites/nodes (spokes) can reach each other *transitively* through it
+    - unlike **Site-to-Site** which is point-to-point and non-transitive 
     - for primary/secondary connectivity between sites (still goes over the public internet).
-- **Direct Connect (DX)**: a dedicated **private** physical connection from *on-prem to a VPC* (via a Virtual Private Gateway) — not encrypted by default (combine with VPN for IPsec encryption over DX), supports both public (e.g. S3) and private (EC2) resources on the same connection, IPv4 & IPv6.
+- **Direct Connect (DX)**: a dedicated **private** physical connection from *on-prem to a VPC* (via a Virtual Private Gateway) 
+  - Connection is not encrypted by default (combine with VPN for IPsec encryption over DX), 
+  - supports both public (e.g. S3) and private (EC2) resources on the same connection, IPv4 & IPv6.
   - Connection types: 
-    1. Dedicated (1 Gbps–400 Gbps, physical port, ordered via AWS then completed by a DX Partner) or 
-    2. Hosted (50 Mbps–25 Gbps, via a DX Partner, capacity adjustable on demand).
-  - Setup lead time often 1+ month, so a Site-to-Site VPN is the common interim/backup connection.
+    1. **Dedicated DX** (1 Gbps–*400 Gbps*, physical port, ordered via AWS then completed by a DX Partner) or 
+    2. **Hosted DX** (50 Mbps–*25 Gbps*, via a DX Partner, capacity adjustable on demand).
+  - *Setup* lead time often *1+ month*, so a *Site-to-Site VPN* is the common *interim/backup* connection.
   - **Direct Connect Gateway** is required to reach VPCs in multiple regions (same account) over one DX connection.
   - Resiliency: 
     - single connections at multiple location = high resiliency; 
     - multiple connections across multiple locations = maximum resiliency.
 - **Transit Gateway**: *regional hub-and-spoke resource* for *transitive peering* across **thousands** of *VPCs, VPNs, and Direct Connect Gateways* at once — solves the VPC Peering non-transitivity problem at scale.
-  - Can be peered cross-region and shared cross-account via AWS Resource Access Manager (RAM); route tables limit which attachments can reach each other; the only AWS networking construct supporting IP Multicast.
-  - **ECMP (Equal-Cost Multi-Path routing)**: with a Transit Gateway, multiple Site-to-Site VPN tunnels to the same destination can be combined for higher aggregate bandwidth (a single VPN-to-VGW tunnel caps around 1.25 Gbps; VPN-to-Transit-Gateway with ECMP scales roughly linearly per tunnel pair).
-    - Can have multiple tunnel to Transit Gateway to increase bandwidth. **Exam Question**
+  - Can be peered *cross-region* and shared *cross-account* via AWS *Resource Access Manager* (RAM); 
+  - RTs limit which attachments can reach each other; 
+  - the only AWS networking construct supporting *IP Multicast*.
+  - **Transit Gateway vs VPN CloudHub**: Transit Gateway is a *general-purpose* regional hub for *VPCs, VPNs, and DX Gateways alike*, while VPN CloudHub is a *VPN-only*, *low-cost* hub-and-spoke built from *multiple CGWs terminating on one VGW* — no VPC/DX attachment support, no RAM sharing.
+  - **ECMP (Equal-Cost Multi-Path routing)**: with a Transit Gateway, *multiple* Site-to-Site VPN tunnels to the same destination can be *combined* for *higher aggregate bandwidth* (a single VPN-to-VGW tunnel caps around 1.25 Gbps; VPN-to-Transit-Gateway with ECMP scales roughly *linearly per tunnel* pair).
+    - Can have multiple tunnel to Transit Gateway to increase bandwidth.
 - **Connectivity services compared** — what connects a VPC to what, side by side:
   | Service | Connects VPC to | Transitive? | Encrypted? | Bandwidth | Setup time | Notes |
   |---|---|---|---|---|---|---|
@@ -705,10 +877,11 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   | Egress-only IGW | Internet, outbound only (IPv6) | N/A | No | — | Fast | IPv6 equivalent of a NAT Gateway |
   | VPC Peering | Another VPC | No — pairwise only | No (private AWS backbone) | — | Fast | Non-overlapping CIDRs required; scales quadratically |
   | VPC Endpoints (PrivateLink) | An AWS service's API | N/A | N/A (private AWS network) | — | Fast | Gateway (S3/DynamoDB, free) vs Interface (most services, ENI + $/hr + $/GB) |
-  | Site-to-Site VPN | On-premises network | No (unless via CloudHub or Transit Gateway) | Yes (IPsec) | ~1.25 Gbps per tunnel (to a VGW); higher via ECMP over a Transit Gateway | Hours | Over the public internet; VGW (AWS side) + CGW (on-prem side) |
-  | Direct Connect | On-premises network | No (unless via Direct Connect Gateway) | No by default (pair with VPN) | Dedicated: 1 Gbps–400 Gbps; Hosted: 50 Mbps–25 Gbps, adjustable on demand | 1+ month | Dedicated private physical line, via a VGW |
-  | Transit Gateway | Many VPCs, VPNs, Direct Connect Gateways | Yes | Depends on attachment | Aggregates multiple VPN tunnels via ECMP for higher combined bandwidth | Fast | Regional hub-and-spoke; solves peering's non-transitivity at scale |
+  | Site-to-Site VPN | On-premises network | No (unless via CloudHub or Transit Gateway) | Yes (IPsec) | ~1.25 Gbps per tunnel (to a VGW) | Hours | Over the public internet; VGW (AWS side) + CGW (on-prem side) |
   | AWS VPN CloudHub | Multiple on-prem sites, to each other | Yes (via shared VGW hub) | Yes (IPsec) | — | Hours | Low-cost hub-and-spoke, still over the public internet |
+  | Direct Connect | On-premises network | No (unless via Direct Connect Gateway) | No by default (pair with VPN) | Dedicated: 1 Gbps–400 Gbps; Hosted: 50 Mbps–25 Gbps, adjustable on demand | 1+ month | Dedicated private physical line, via a VGW |
+  | Transit Gateway | Many **VPCs, VPNs, DX** | Yes | Depends on attachment | Aggregates multiple VPN tunnels via ECMP for higher combined bandwidth | Fast | Regional hub-and-spoke; solves peering's non-transitivity at scale |
+
 
 
 #### Misc Topics on VPCs
@@ -719,36 +892,45 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
     - Let instances initiate outbound IPv6 connections while blocking inbound-initiated ones; 
     - Route tables must be updated (target `::/0` to it in the private subnet).
 - **Networking cost notes**: 
-  - traffic between AZs/regions or via public/Elastic IP costs money,
+  - These *traffic cost* money:
+    1. Between AZs
+    2. Between Regions
+    3. Internet
+    4. Elastic IP
+  - a NAT Gateway's hourly + per-GB charge for the same path.
   - traffic into AWS is free;
   - same-AZ traffic over private IP is free 
-  - prefer *private IPs* and *same-AZ* placement for savings (at the cost of availability).
-  - A Gateway VPC Endpoint to S3/DynamoDB is free
-  - a NAT Gateway's hourly + per-GB charge for the same path.
-- Exam tests heavily: designing multi-tier VPC architectures, choosing connectivity option based on requirements (security, speed, cost, setup time), and reading VPC Flow Logs to diagnose SG vs NACL blocks.
+  - prefer *private IPs* and *same-AZ* placement for *savings* (at the cost of availability).
+  - A *Gateway VPC Endpoint* to S3/DynamoDB is *free*
+- Exam tests heavily: 
+  1. designing multi-tier VPC architectures, 
+  2. choosing connectivity option based on requirements (security, speed, cost, setup time), and 
+  3. reading VPC Flow Logs to diagnose SG vs NACL blocks.
 
 ### CloudFront
 
 **[#7 pop]**
 
-- CDN: content is cached at hundreds of global Points of Presence (edge locations/regional edge caches), improving read performance and user experience; built-in DDoS protection (globally distributed) plus integration with AWS Shield and WAF.
+- CDN: content is *cached* at hundreds of global Points of Presence (edge locations/regional edge caches), improving read *performance* and user experience; built-in *DDoS* protection (globally distributed) plus integration with AWS *Shield* and *WAF*.
+- Use case: global content delivery, reducing load on origin servers, DDoS mitigation (works with AWS Shield).
 - **Origins**: 
   1. **S3 bucket** (distributes/caches files, can also upload through CloudFront, secured with **Origin Access Control/OAC** + a bucket policy so only CloudFront can reach the private bucket over the AWS private network); 
-  2. **VPC Origin** (delivers content from apps in private subnets — a private ALB/NLB/EC2 instance — with no need to expose them publicly); 
+  2. **VPC Origin** (delivers content from apps in private subnets — a *private ALB/NLB/EC2* instance — with no need to expose them publicly); 
   3. **Custom Origin (HTTP)** (an S3 static website — bucket enabled as a website first — or any public HTTP backend like a public ALB).
-- **Public-network origin security**: when not using VPC Origin, the origin's security group must allow CloudFront's published edge-location public IPs; for an ALB origin, the ALB itself must be public but the EC2 instances behind it can stay private (SG allows the ALB's SG only).
+- **Public-network origin security**: *non-VPC-origin's SG* must allow CloudFront's published *edge-location public IPs*; for an ALB origin, the *ALB* itself must be *public* but the EC2 instances behind it can stay private (SG allows the ALB's SG only).
 - **CloudFront vs S3 Cross-Region Replication**:
 
-  | | CloudFront | S3 Cross-Region Replication |
+  | | CloudFront | S3 CR Repl |
   |---|---|---|
   | Scope | Global edge network (hundreds of PoPs) | Per-region (specific replica regions you configure) |
   | Update freshness | TTL-based cache (can lag up to ~a day) | Near-real-time replication |
   | Replica type | Cached copy of origin content | Full, independent read-only replica |
   | Best fit | Static content that must be available everywhere | Dynamic content needing low latency in a handful of regions |
-- **Geo Restriction**: allowlist (only approved countries) or blocklist (banned countries), country determined via a 3rd-party Geo-IP database — use case: copyright/licensing law compliance.
+- **Geo Restriction**: *allowlist* (only approved countries) or *blocklist* (banned countries), country determined via a 3rd-party Geo-IP database
+  - use case: *copyright*/*licensing* law compliance.
 - **Cache Invalidations**: updating the origin doesn't refresh edge caches until the TTL expires; force a full (`*`) or partial (`/images/*`) refresh with a CloudFront Invalidation to bypass the TTL immediately.
 - Signed URLs/Cookies for private content distribution.
-- Use case: global content delivery, reducing load on origin servers, DDoS mitigation (works with AWS Shield).
+
 
 ### AWS Global Accelerator
 - **!! Popular in exams !!**
@@ -783,30 +965,52 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 **[#8 pop]**
 
 - **!!Popular Exam Question!!**
-- Oldest AWS messaging offering (10+ years), fully managed, **decouples applications** (i.e. producers/consumers): producers `SendMessage` (up to 256KB — despite an older 1024KB figure sometimes cited, current limit is 256KB) into the queue, it's **persisted** until a consumer explicitly deletes it; consumers poll (receive up to 10 messages at a time), process, then call `DeleteMessage`.
-- This is one queue, one consumer model. To have multiple consumers, use SNS to publish to multiple queues. Thus, multiple consumers.
-- **Standard Queue**: unlimited throughput and unlimited messages in the queue, default retention 4 days (max 14 days), <10ms publish/receive latency, at-least-once delivery (occasional duplicates), best-effort ordering (can arrive out of order).
-- **Message Visibility Timeout**: once a consumer polls a message, it becomes invisible to other consumers for the timeout period (default 30s, i.e. the consumer has 30s to finish processing); if not processed/deleted in time it becomes visible again and gets redelivered (processed twice) — a consumer can call `ChangeMessageVisibility` for more time. Too-high a timeout means slow reprocessing after a consumer crash; too-low a timeout causes duplicate processing.
-- **Long Polling**: a `ReceiveMessage` call optionally waits (`WaitTimeSeconds`, 1–20s, 20s recommended) for a message to arrive rather than returning empty immediately — reduces API call count/cost and latency vs short polling; configurable at the queue or API-call level.
-- **FIFO Queue**: different from standard SQS queues. 
-  - Strict message ordering 
-  - exactly-once processing (via a Deduplication ID), 
-  - but limited throughput — 300 msg/s without batching, 3,000 msg/s with batching. 
-  - Queue name needs to end with `*.fifo`.
-  - **Ordering is scoped to a Message Group ID** (mandatory parameter) — all messages sharing a group ID are ordered relative to each other.
-    - Avoid consumers to wait on sequential messages. Some messages maybe sequentials but others need not to be.
-- **Scaling consumers**:
-  - **!!Popular exam question!!**
-  - multiple EC2/Lambda consumers can poll the same queue in parallel to increase processing throughput (at-least-once delivery + best-effort ordering still apply)
-  - an ASG can scale consumer count off a CloudWatch alarm on the `ApproximateNumberOfMessages` queue-length metric. 
-  - SQS as a buffer in front of a database write path (enqueue → auto-scaled consumers dequeue and insert) smooths out load spikes that would otherwise overwhelm RDS/Aurora/DynamoDB directly.
-- **Security**: in-flight encryption via the HTTPS API, at-rest encryption via KMS, or client-side encryption if you want full control; IAM policies regulate API access; SQS (resource) Access Policies (like S3 bucket policies) enable cross-account access or let another service (SNS, S3, etc.) write to the queue.
-- **Dead-Letter Queue (DLQ)** for failed message handling (messages that repeatedly fail processing get redirected there after a max-receive threshold).
+- Oldest AWS messaging offering (10+ years), fully managed, *decouples applications* (i.e. producers/consumers)
+- Producers `SendMessage` (up to 256KB — despite an older 1024KB figure sometimes cited, current limit is 256KB) into the queue. Messages are **persisted** until a consumer explicitly deletes it; 
+- Consumers poll (receive up to 10 messages at a time), process, then call `DeleteMessage`.
+- *1 queue, 1 consumer* model. To have multiple consumers, use SNS to publish to multiple queues. Thus, multiple consumers.
+- Many producers can send messages to 1 queue meant for 1 consumer.
 - Use case: 
   1. Decoupling microservices
   2. Buffering requests to smooth out spiky traffic
   3. Fault tolerant database writing (avoid losing transactions)
   4. Long running process
+
+#### SQS mechanics
+- **Message Visibility Timeout**: once a *consumer polls* a message, it becomes *invisible* to other consumers for the timeout period. Timeout period default *30s*, i.e. the consumer has 30s to finish processing. 
+  - If not processed/deleted in time it becomes visible again and gets redelivered (processed twice) — a consumer can call `ChangeMessageVisibility` for *more time*. 
+  - Too-high a timeout means slow reprocessing after a consumer crash; too-low a timeout causes duplicate processing.
+- **Long Polling**: a `ReceiveMessage` call optionally waits (`WaitTimeSeconds`, 1–20s, 20s recommended) for a message to arrive rather than returning empty immediately. configurable at the queue or API-call level. 
+  - Helps to reduce: 
+    1. API call count 
+    2. Consumer cost
+    3. Latency;
+- **Security** knobs: 
+  1. in-flight encryption via the HTTPS API, 
+  2. at-rest encryption via KMS, or client-side encryption if you want full control; 
+  3. IAM policies regulate API access; 
+  4. *SQS Access Policies* (like S3 bucket policies) enable *cross-account* access or let *another* service (SNS, S3, etc.) write to the queue.
+
+#### Types of Queues
+- Two types: Standard & FIFO. Comparisons:
+
+  | | **Standard Queue** | **FIFO Queue** |
+  |---|---|---|
+  | Throughput | unlimited | 300 msg/s (3,000 msg/s with *batching*). 10 msg per batch. |
+  | Ordering | best-effort (can arrive out of order) | strict — but only *within* a Message Group ID (mandatory parameter); avoid consumers waiting on sequential messages, since some messages may be sequential but others need not be |
+  | Delivery | *at-least-once* (occasional duplicates) | exactly-once (via a Deduplication ID) |
+  | Retention | default 4 days (max 14 days) | default 4 days (max 14 days) |
+  | Latency | <10ms publish/receive | <10ms publish/receive |
+  | Naming | any name | must end with `*.fifo` |
+
+#### SQS Scaling & Reliability
+- **Scaling consumers**:
+  - **!!Popular exam question!!**
+  - *multiple consumers* (EC2/Lambda) can *poll* the same queue in *parallel* to increase processing throughput (at-least-once delivery + best-effort ordering still apply)
+  - an *ASG* can *scale consumer* count off a *CloudWatch alarm* on the `ApproximateNumberOfMessages` queue-length metric. 
+  - SQS as a *buffer* in front of a *database write* path smooths out load spikes to avoid *overwhelming RDS/Aurora/DynamoDB* directly.
+- **Dead-Letter Queue (DLQ)** for failed message handling. Messages that repeatedly fail processing get redirected there after a max-receive threshold.
+
 
 ### SNS (Simple Notification Service)
 
