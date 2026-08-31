@@ -470,7 +470,7 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
     | Authoring | — | Author in us-east-1; CloudFront replicates globally |
     | Use cases | 1. *Cache key normalization* (transform headers, cookies, query string & URL)<br>2. Header manipulation<br>3. URL rewrites/redirects<br>4. Request auth | 1. >1ms exec time<br>2. Need more CPU/RAM<br>3. 3rd party libraries<br>4. Network access dependency<br>5. File system access<br>6. Calling other AWS services via SDK<br>7. Dynamic content at the edge |
 
-#### Lmabda, Networking & DB
+#### Lambda, Networking & DB
 - **Networking**: 
   - by default, a Lambda function runs *outside your VPC* (in an AWS-owned VPC) and cannot reach resources inside your VPC (private RDS, ElastiCache, internal ELB). 
   - To reach them, *deploy* the function into your *VPC* (specify VPC ID, subnets, security groups). Lambda creates an *ENI in your subnet* to route traffic, and the *target resource's security group* must allow the Lambda function's security group.
@@ -715,35 +715,49 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 
 **[#24 pop]**
 
-- A highly available, scalable, fully managed **authoritative** DNS (you can update the records) that is also a domain registrar; the only AWS service with a **100% availability SLA**. Named for port 53, the traditional DNS port.
-- **DNS terminology**: Domain Registrar (Route 53, GoDaddy, ...) vs DNS Service — not the same thing, though registrars usually bundle basic DNS; you can register with one provider and manage DNS records with another (e.g. buy via GoDaddy, point its NS records at Route 53). Zone File contains DNS records; Name Server resolves queries (authoritative or non-authoritative); Top Level Domain (.com, .org) and Second Level Domain (amazon.com) make up a Fully Qualified Domain Name.
-- **Hosted Zones** ($0.50/month each): a container of records for how to route traffic for a domain + subdomains. **Public Hosted Zone** routes internet traffic (public domain names); **Private Hosted Zone** routes traffic within one or more VPCs (internal domain names like `app.company.internal`).
+- A highly available, scalable, fully managed **authoritative** DNS (you can update the records) that is also a *domain registrar*; the only AWS service with a **100% availability SLA**. Named for port 53, the traditional DNS port.
+- *DNS terminology*: Domain Registrar (Route 53, GoDaddy, ...) vs DNS Service — not the same thing, though registrars usually bundle basic DNS; you can register with one provider and manage DNS records with another (e.g. buy via GoDaddy, point its NS records at Route 53). Zone File contains DNS records; Name Server resolves queries (authoritative or non-authoritative); Top Level Domain (.com, .org) and Second Level Domain (amazon.com) make up a Fully Qualified Domain Name.
+- Use case: DNS-level traffic management and failover across regions.
+- **Hosted Zones** ($0.50/month each): a container of records for how to route traffic for a domain + subdomains. 
+  1. **Public Hosted Zone** routes internet traffic (public domain names); 
+  2. **Private Hosted Zone** routes traffic within one or more VPCs (internal domain names like `app.company.internal`).
 - **Records**: each has a domain/subdomain name, record type, value, routing policy, and TTL (time DNS resolvers cache the answer — high TTL = less Route 53 traffic/cost but more outdated data on change; low TTL = opposite; TTL is mandatory except for Alias records). Must-know types: 
   - **A**: hostname → IPv4
   - **AAAA**: hostname → IPv6
   - **CNAME**: hostname → another hostname. Target must itself have an A/AAAA record, and CNAME can't be used for the zone apex/root domain 
   - **NS** (name servers for the hosted zone).
-- **Alias records vs CNAME**: Alias maps a hostname to an AWS resource (ALB/NLB, CloudFront, API Gateway, Elastic Beanstalk, S3 website, VPC interface endpoint, Global Accelerator, or another Route 53 record in the same zone), auto-tracks the resource's underlying IP changes, works for **both root and non-root domains** (CNAME is non-root only), is free, has native health checking, and you can't set its TTL — always of type A/AAAA. You cannot create an Alias for a raw EC2 DNS name.
+- *Alias records vs CNAME*: *Alias* maps a *hostname* to an *AWS resource* (ALB/NLB, CloudFront, API Gateway, Elastic Beanstalk, S3 website, VPC interface endpoint, Global Accelerator, or another Route 53 record in the same zone), auto-tracks the resource's underlying IP changes, works for **both root and non-root domains**, is free, has *native health checking*, and you can't set its TTL — always of type A/AAAA. You cannot create an Alias for a raw EC2 DNS name. CNAME is non-root only.
 - **Routing policies**: 
-  - **Simple** — one record, optionally multiple values with the client picking one at random (only one AWS resource if Alias-enabled; no health checks). 
-  - **Weighted** — traffic split by relative weight (traffic % = weight ÷ sum of weights, needn't total 100; weight 0 stops traffic to that record; if all are 0, traffic is split evenly) — A/B testing, canary rollouts. 
-  - **Latency-based** — routes to the region with lowest measured latency between the user and AWS Regions (not necessarily the geographically nearest), supports health-check failover. 
-  - **Failover (Active-Passive)** — routes to a primary, health check mandatory, fails over to a secondary/DR resource when unhealthy. 
-  - **Geolocation** — routes by the user's location (continent/country/US state, most-specific match wins); should define a "Default" record for unmatched locations; use cases: localization, content restriction. 
-  - **Geoproximity** (requires Route 53 Traffic Flow) — routes by geographic distance between users and resources (AWS region or lat/long for non-AWS resources), with a **bias** value (1 to 99 to expand a region's reach, -1 to -99 to shrink it) to shift traffic volume. 
-  - **IP-based routing** — maps CIDR blocks of client IPs to specific endpoints/locations, for optimizing performance or steering a particular ISP's users. 
-  - **Multi-Value** — returns up to 8 healthy record values per query, can be health-checked, but is **not a substitute for a real load balancer**.
+  - **Simple** — one record, optionally *multiple values* with the client picking one at *random* (only one AWS resource if Alias-enabled; no health checks). 
+  - **Weighted** — traffic split by relative weight (traffic % = weight ÷ sum of weights, needn't total 100; weight 0 stops traffic to that record; if all are 0, traffic is split evenly)
+    - Use case: A/B testing, canary rollouts. 
+  - **Latency-based** — routes to the region with *lowest measured latency* between the user and AWS Regions (not necessarily the geographically nearest), supports health-check failover. 
+  - **Failover (Active-Passive)** — routes to a primary, *health check mandatory*, fails over to a secondary/DR resource when unhealthy. 
+  - **Geolocation** — routes by the user's *location* (continent/country/US state, most-specific match wins); should define a "Default" record for unmatched locations; 
+    - use cases: localization, content restriction. 
+  - **Geoproximity** (requires Route 53 Traffic Flow) — routes by *geographic distance* between users and resources (AWS region or lat/long for non-AWS resources), with a **bias** value (1 to 99 to expand a region's reach, -1 to -99 to shrink it) to shift traffic volume. 
+  - **IP-based routing** — maps *CIDR* blocks of *client IPs* to specific endpoints/locations.
+    - Use case: for optimizing *performance* or steering a particular *ISP's* users. 
+  - **Multi-Value** — returns up to *8 healthy record values* per query, can be health-checked, but is **not a substitute for a real load balancer**.
 - **Health Checks (HC)**: 
-  - HTTP checks only work for **public** resources (health checkers sit outside any VPC, so they can't reach private/on-prem endpoints directly). 
-  - Use Cases: monitoring, failover, Cloudwatch integration, smart routing control
-  - About 15 global checker locations poll (default interval 30s, can drop to 10s for higher cost); 
-  - default healthy/unhealthy threshold is 3 consecutive checks; passes only on 2xx/3xx responses, and can additionally require specific text in the first 5120 bytes. 
+  - HTTP checks only work for **public** resources (can't reach private/on-prem endpoints directly). 
+  - Use Cases: monitoring, *failover*, Cloudwatch integration, *smart routing* control
+  - About *15 global checker* locations poll 
+  - Default interval *30s*. Can drop to *10s* for higher cost; 
+  - default healthy/unhealthy threshold is 3 consecutive checks; 
+    - *passes* only on *2xx/3xx* responses, and can additionally require specific text in the first 5KB. 
   - Types of HC: 
     1. monitor an **endpoint** directly, 
-    2. **Calculated Health Checks** combine up to 256 child checks with OR/AND/NOT and a pass threshold — useful for maintaining a site without failing all checks at once, 
-    3. monitor a **CloudWatch Alarm** — the workaround for private resources (create a CloudWatch metric + alarm on the private resource, then health-check the alarm itself). Firewalls/routers must allow inbound traffic from Route 53's published checker IP ranges.
-- **Hybrid DNS / Resolver**: the Route 53 Resolver automatically answers queries for local EC2 domain names, Private Hosted Zone records, and public name servers. For hybrid resolution between a VPC and other networks (peered VPCs or on-prem via Direct Connect/VPN): an **Inbound Endpoint** lets your on-prem DNS resolvers query AWS-side records (EC2 names, Private Hosted Zones); an **Outbound Endpoint** forwards VPC-originated queries out to your on-prem DNS resolvers.
-- Use case: DNS-level traffic management and failover across regions.
+    2. **Calculated Health Checks** combine up to *256 child checks* with *OR/AND/NOT* and a *pass threshold* — useful for maintaining a site without failing all checks at once, 
+    3. monitor a **CloudWatch Alarm** — the workaround for **private resources** (create a CloudWatch metric + alarm on the private resource, then health-check the alarm itself
+  - *Firewalls/routers* must *allow inbound* traffic from Route 53's *published checker IP ranges*.
+- **Hybrid DNS / Resolver**: 
+  - the Route 53 *Resolver* automatically answers queries for *local EC2 domain* names, *Private Hosted Zone* records, and *public name servers*. 
+  - For *hybrid* resolution between a *VPC* and *other networks* (peered VPCs or on-prem via Direct Connect/VPN): 
+    - an **Inbound Endpoint** lets your *on-prem DNS resolvers* query *AWS-side records* (EC2 names, Private Hosted Zones). 
+    - an **Outbound Endpoint** forwards *VPC-originated* queries out to your *on-prem DNS* resolvers.
+    - both Inbound & Outbound endpoint sit inside the Central Hub VPC & they are typically private subnet.
+
 
 ### VPC (Virtual Private Cloud)
 
@@ -1374,18 +1388,25 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 
 **[#25 pop]**
 
-- Protects web applications from common Layer 7 (HTTP) exploits. Deploys onto ALB, API Gateway, CloudFront, AppSync GraphQL APIs, and Cognito User Pools.
-  - not Layer 4 (TCP/UDP), which AWS Shield/Network Firewall handle instead.
+- Protects web applications from common **Layer 7 (HTTP)** exploits. Deploys onto: (i) *ALB*, (ii) *API Gateway*, (iii) *CloudFront*, (iv) *AppSync GraphQL APIs* and (v) *Cognito User Pools*.
+  - not Layer 4 (TCP/UDP), which *AWS Shield/Network Firewall* handle instead.
 - **Web ACL (Web Access Control List) Rules**: 
   1. IP Set (up to 10,000 IPs per rule — chain multiple rules for more), 
-  2. rules matching HTTP headers/body/URI strings (protects against SQL injection and XSS), 
+  2. rules matching *HTTP headers/body/URI* strings (protects against SQL injection and XSS), 
   3. size constraints, 
-  4. Geo-Match (block specific countries), and 
-  5. Rate-Based rules (count request occurrences per client — the core building block for DDoS protection at the app layer). 
-- Web ACLs are Regional, except when attached to CloudFront, where they're global. 
-- A **Rule Group** is a reusable bundle of rules you can attach to multiple Web ACLs.
-- *WAF does not support the Network Load Balancer* (Layer 4)
-  - To mitigate: pair **AWS Global Accelerator** (for a fixed IP in front of the app) with WAF attached to an ALB instead, to get both a static IP and Layer-7 filtering.
+  4. *Geo-Match* (block specific countries), and 
+  5. *Rate*-based rules (count request occurrences per client — the core building block for DDoS protection at the app layer). 
+- Web ACLs are *Regional*. Except when attached to *CloudFront*, where *ACLs are global*. 
+- A **Rule Group** is a reusable *bundle* of rules you can attach to multiple *Web ACLs*.
+- *WAF* does NOT support the *Network Load Balancer* (Layer 4)
+  - To mitigate: pair *AWS Global Accelerator* (for a fixed IP in front of the app) with WAF attached to an *ALB instead of NLB*, to get both a static IP and Layer-7 filtering. Lose Layer 4 routing.
+  ```
+  ✓ workaround:      Client ─▶ Global Accelerator ─▶ ALB (L7, WAF attached) ─▶ Targets
+                                (static/fixed IP)      (Layer-7 filtering)
+  ```
+  - To keep NLB & WAF in the architecture:
+    1. Put ALB + WAF behind NLB
+    2. Put Cloudfront + WAF in front of NLB
 
 ### AWS Shield
 - Protects against DDoS (many requests at once).
@@ -1410,21 +1431,45 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
 
 **[#23 pop]**
 
+- Use case: triggering Auto Scaling, alerting on thresholds, centralized logging.
 - **Metrics**: 
   - a variable to monitor (e.g. `CPUUtilization`, `NetworkIn`), scoped to a namespace, with up to 30 **Dimensions** (attributes like instance ID/environment) and a timestamp; 
   - CloudWatch provides metrics for every AWS service out of the box, 
   - you can publish **Custom Metrics** (e.g. RAM usage, which isn't tracked by default). 
   - Dashboards visualize metrics.
-- **CloudWatch Metric Streams**: continually streams metrics near-real-time to a destination (Kinesis Data Firehose → S3/Redshift/OpenSearch, or a 3rd-party like Datadog/Dynatrace/New Relic/Splunk/Sumo Logic), with optional filtering to a subset of metrics.
-- **CloudWatch Logs**: organized into **Log Groups** (usually one per application) containing **Log Streams** (one per instance/log file/container); configurable expiration (never, or 1 day–10 years); encrypted by default, or with your own KMS key. Sources: SDK, the (legacy) CloudWatch Logs Agent, the CloudWatch Unified Agent, Elastic Beanstalk, ECS, Lambda, VPC Flow Logs, API Gateway, CloudTrail (filtered), Route 53 (DNS query logs). Can be sent onward to S3 (export), Kinesis Data Streams, Kinesis Data Firehose, Lambda, or OpenSearch.
-  - **CloudWatch Logs Agent vs Unified Agent**: the (old) Logs Agent only pushes to CloudWatch Logs. The **Unified Agent** additionally collects system-level metrics (CPU active/guest/idle/system/user/steal, disk free/used/total + IO, RAM free/inactive/used/total/cached, Netstat TCP/UDP connections, Processes, Swap Space — none of which are in EC2's out-of-the-box disk/CPU/network metrics), and supports centralized configuration via SSM Parameter Store; works on EC2 or on-prem servers.
-  - **CloudWatch Logs Insights**: a purpose-built query language (not real-time — a query engine) to search/analyze log data already in CloudWatch Logs — auto-discovers fields from AWS services and JSON logs, can fetch fields/filter/aggregate/sort/limit, save queries to dashboards, and query multiple Log Groups across different AWS accounts at once.
-  - **S3 Export** (via `CreateExportTask`) takes up to 12 hours for data to become exportable — not real-time or near-real-time; use **Logs Subscriptions** instead for that.
-  - **Logs Subscriptions**: real-time (via Lambda) or near-real-time (via Kinesis Data Firehose) log event delivery to Lambda, Kinesis Data Streams, Kinesis Data Firehose, or OpenSearch, filtered by a **Subscription Filter**. **Cross-Account Subscriptions** send log events to a Kinesis stream in a different account (via a destination access policy + an assumable IAM role) — the basis for multi-account/multi-region log aggregation (CloudWatch Logs → Subscription Filter → Kinesis Data Streams → Kinesis Data Firehose → S3, near-real-time).
-- **CloudWatch Alarms**: trigger notifications for a single metric based on sampling/%/max/min/etc thresholds; states are OK, INSUFFICIENT_DATA, ALARM; **Period** is the evaluation window in seconds (high-resolution custom metrics support 10s, 30s, or multiples of 60s). Targets: stop/terminate/reboot/recover an EC2 instance, trigger an Auto Scaling action, or notify an SNS topic (from which almost anything downstream is possible). **Composite Alarms** monitor the state of multiple other alarms with AND/OR logic — reduces alarm noise from correlated failures. Alarms can also be created directly from a CloudWatch Logs Metric Filter. **EC2 Instance Recovery**: a `StatusCheckFailed_System` alarm can automatically recover the instance onto new hardware, preserving private/public/Elastic IP, metadata, and placement group. Test an alarm via `aws cloudwatch set-alarm-state`.
-- **CloudWatch Network Synthetic Monitor**: agentless monitoring of network paths between AWS-hosted apps and on-prem, testing ICMP/TCP over Direct Connect or Site-to-Site VPN to detect packet loss/latency/jitter degradation, publishing results as CloudWatch Metrics.
-- **CloudWatch Insights suite**: Container Insights (metrics/logs from ECS, EKS, Kubernetes-on-EC2, Fargate — needs a containerized CloudWatch Agent for Kubernetes/EKS). Lambda Insights (system-level metrics — CPU, memory, disk, network — plus diagnostics like cold starts/worker shutdowns for serverless apps, delivered as a Lambda Layer). Contributor Insights (time-series of top-N contributors from any AWS-generated logs, e.g. VPC Flow Logs — finds bad hosts/heaviest network users/most-erroring URLs, via built-in or custom rules). Application Insights (SageMaker-powered automated dashboards surfacing problems for EC2-hosted apps on select technologies — Java, .NET, IIS, databases — plus related resources like EBS/RDS/ELB/ASG/Lambda/SQS/DynamoDB/S3/ECS/EKS/SNS/API Gateway; findings/alerts route to EventBridge and SSM OpsCenter).
-- Use case: triggering Auto Scaling, alerting on thresholds, centralized logging.
+- **CloudWatch Metric Streams**: continually streams metrics near-real-time to a *destination* (Kinesis Data Firehose → *S3/Redshift/OpenSearch*, or a 3rd-party like *Datadog/Dynatrace/New Relic/Splunk/Sumo Logic*), with *optional filtering* to a subset of metrics.
+- **CloudWatch Logs**: organized into **Log Groups** (usually one per application) containing **Log Streams** (one per instance/log file/container); 
+  - configurable *expiration* (never, or 1 day–10 years); 
+  - *encrypted* by default, or with your own KMS key. 
+  - Sources: SDK, the (legacy) CloudWatch Logs Agent, the CloudWatch Unified Agent, Elastic Beanstalk, ECS, Lambda, VPC Flow Logs, API Gateway, CloudTrail (filtered), Route 53 (DNS query logs). 
+  - Can be sent onward to *S3* (export), Kinesis Data Streams, Kinesis Data Firehose, Lambda, or *OpenSearch*.
+  - **CloudWatch Logs Agent vs Unified Agent**: 
+    - the (old) Logs Agent only pushes to CloudWatch Logs. 
+    - The **Unified Agent** additionally collects system-level metrics: CPU active/guest/idle/system/user/steal, *disk* free/used/total + IO, *RAM* free/inactive/used/total/cached, Netstat *TCP/UDP* connections, *Processes*, Swap Space 
+      - none of which are in EC2's out-of-the-box disk/CPU/network metrics
+      - supports centralized configuration via SSM Parameter Store; 
+      - works on EC2 or on-prem servers.
+  - **CloudWatch Logs Insights**: a purpose-built query language to *search/analyze* log data already in CloudWatch Logs.
+    - *auto-discovers* fields from AWS services and JSON logs, 
+    - can fetch fields/filter/aggregate/sort/limit, 
+    - *save* queries to dashboards, and 
+    - query *multiple Log Groups* across *different AWS accounts* at once.
+  - **S3 Export** (via `CreateExportTask`) takes up to 12 hours for data to become exportable — *NOT real-time or near-real-time*; use **Logs Subscriptions** instead for that.
+  - **Logs Subscriptions**: *real-time (via Lambda)* or *near-real-time (via Kinesis Data Firehose)* log event delivery to Lambda, Kinesis Data Streams, Kinesis Data Firehose, or OpenSearch, filtered by a **Subscription Filter**. 
+  - **Cross-Account Subscriptions** send log events to a Kinesis stream in a different account (via a destination access policy + an assumable IAM role) — the basis for *multi-account/multi-region* log aggregation (CloudWatch Logs → Subscription Filter → Kinesis Data Streams → Kinesis Data Firehose → S3, near-real-time).
+- **CloudWatch Alarms**: trigger notifications for a single metric based on sampling/%/max/min/etc thresholds; 
+  - states are *OK, INSUFFICIENT_DATA, ALARM*; 
+  - **Period** is the evaluation window in seconds (10s, 30s, or multiples of 60s). 
+  - Targets (action from alarms): (i) stop/terminate/reboot/recover an EC2 instance, (ii) trigger an Auto Scaling action, or (iii) notify an *SNS* topic (from which almost anything downstream is possible). 
+  - **Composite Alarms** monitor the state of *multiple other alarms with AND/OR logic*. Helps reduce alarm noise from correlated failures. Alarms can also be created directly from a *CloudWatch Logs Metric Filter*. 
+  - *EC2 Instance Recovery (use case)*: a `StatusCheckFailed_System` alarm can *automatically recover* the instance onto new hardware, preserving private/public/Elastic IP, metadata, and placement group. Test an alarm via `aws cloudwatch set-alarm-state`.
+- **CloudWatch Network Synthetic Monitor**: agentless monitoring of **network paths** between: (i) *AWS-hosted apps* and *on-prem*, (ii) testing ICMP/TCP over *Direct Connect* or *Site-to-Site VPN* to detect packet loss/latency/jitter degradation. Publishes results as CloudWatch Metrics.
+- **CloudWatch Insights suite**: 
+  1. *Container* Insights (metrics/logs from ECS, EKS, Kubernetes-on-EC2, Fargate — needs a containerized CloudWatch Agent for Kubernetes/EKS). 
+  2. *Lambda* Insights (system-level metrics — CPU, memory, disk, network — plus diagnostics like cold starts/worker shutdowns for serverless apps, delivered as a Lambda Layer). 
+  3. *Contributor* Insights (time-series of *top-N contributors* from any AWS-generated logs, e.g. VPC Flow Logs — finds bad hosts/heaviest network users/most-erroring URLs, via built-in or custom rules). 
+  4. *Application* Insights (SageMaker-powered *automated dashboards* surfacing *problems* for EC2-hosted apps on select technologies — Java, .NET, IIS, databases — plus related resources like *EBS/RDS/ELB/ASG/Lambda/SQS/DynamoDB/S3/ECS/EKS/SNS/API Gateway*. Findings/alerts route to *EventBridge* and *SSM OpsCenter*).
+
 
 ### AWS CloudTrail
 - Governance/compliance/audit for an account — enabled by default, logging every API call (Console, SDK, CLI, or other AWS services) to CloudWatch Logs and/or S3. A trail covers all regions by default, or one. If a resource is unexpectedly deleted, check CloudTrail first.
