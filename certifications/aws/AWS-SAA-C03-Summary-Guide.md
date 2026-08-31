@@ -209,69 +209,69 @@
 
 **Storage — S3, EBS, EFS, FSx**
 
-1. S3 offers eleven-nines durability across all storage classes; availability, retrieval time/cost, and minimum storage duration vary by class — durability doesn't.
-2. S3 Lifecycle rules automate transitions between storage classes and expirations; Intelligent-Tiering auto-moves objects between access tiers with no retrieval fees.
-3. S3 Cross-Region/Same-Region Replication requires versioning on both buckets and only replicates new objects going forward (not retroactively).
-4. S3 Transfer Acceleration speeds long-distance uploads via CloudFront edge locations; Multipart Upload parallelizes and resumes large object uploads.
-5. S3 encryption options: SSE-S3 (AWS-owned keys), SSE-KMS (auditable, request-quota limited), SSE-C (customer-supplied keys); presigned URLs grant temporary access without changing the bucket policy.
-6. EBS is persistent block storage attached to a single EC2 instance in the same AZ; types: gp3/gp2 (general SSD), io1/io2 (high/provisioned IOPS, databases), st1 (throughput HDD), sc1 (cold HDD).
-7. EBS snapshots are incremental and stored in S3, can be copied across regions/accounts for DR, and Fast Snapshot Restore removes first-use latency.
-8. EFS is a managed, multi-AZ NFS file system mountable concurrently by many EC2/Linux instances (vs. EBS: single-instance, single-AZ).
-9. EFS offers Standard and Infrequent Access storage classes with Lifecycle Management, plus Bursting, Provisioned, and Elastic throughput modes.
+1. S3 offers **eleven-9's durability** across all storage classes; availability, retrieval time/cost, and minimum storage duration vary by class.
+2. S3 **Lifecycle** rules *automate transitions* between storage classes and expirations; **Intelligent-Tiering** auto-moves objects between access tiers with no retrieval fees.
+3. S3 Cross-Region/Same-Region **Replication** requires *versioning* on *both buckets* and only *replicates new objects* going forward (not retroactively).
+4. S3 **Transfer Acceleration** speeds long-distance uploads via CloudFront edge locations; **Multipart Upload** parallelizes and resumes large object uploads.
+5. S3 encryption options: *SSE-S3* (AWS-owned keys), *SSE-KMS* (auditable, request-quota limited), *SSE-C* (customer-supplied keys); **presigned URLs** grant temporary access without changing the bucket policy.
+6. EBS is persistent block storage attached to a single EC2 instance in the same AZ; types: **gp3**/gp2 (general SSD), io1/**io2** (high/provisioned IOPS, databases), st1 (throughput HDD), sc1 (cold HDD).
+7. EBS snapshots are incremental and stored in S3, can be copied across regions/accounts for DR, and **Fast Snapshot Restore** removes first-use latency.
+8. EFS is a managed, multi-AZ NFS file system *mountable concurrently* by many EC2/Linux instances (vs. EBS: single-instance, single-AZ).
+9. EFS offers **Standard** and **Infrequent Access** storage classes with Lifecycle Management, plus Bursting, Provisioned, and Elastic throughput modes.
 10. FSx provides managed third-party file systems: Windows File Server (SMB, AD-integrated), Lustre (HPC), NetApp ONTAP, and OpenZFS.
-11. FSx for Lustre links directly to an S3 bucket for high-throughput, low-latency processing of S3 data (e.g., ML training, big data workloads).
+11. FSx for *Lustre* links directly to an *S3* bucket for *high-throughput, low-latency processing* of S3 data (e.g., ML training, big data workloads).
 
 **Compute — EC2, Lambda, EC2 Auto Scaling, ECS, Fargate, ALB**
 
-12. EC2 purchasing trades commitment for discount: On-Demand, Reserved/Savings Plans (up to ~72% off for 1/3-yr terms), or Spot (up to 90% off, interruptible with a 2-minute warning).
-13. Security Groups are stateful, instance-level, allow-only; NACLs are stateless, subnet-level, and support explicit deny rules evaluated in rule-number order.
-14. EC2 instance store is ephemeral (lost on stop/terminate); EBS-backed instances persist data and support stop/start; AMIs snapshot the root EBS volume for reuse.
-15. Placement groups: Cluster (lowest latency, same AZ/rack), Spread (max 7 instances per AZ, isolated hardware), Partition (large distributed workloads split into logical partitions).
-16. Lambda is serverless, billed per invocation/duration in ms, capped at a 15-minute timeout, and only needs VPC config (via an ENI) to reach private resources like RDS.
-17. Lambda concurrency: reserved concurrency caps/guarantees capacity per function; provisioned concurrency pre-warms execution environments to eliminate cold starts.
-18. Lambda scales automatically per-request with no capacity planning; destinations and DLQs capture async invocation failures for retry/inspection.
-19. Lambda@Edge / CloudFront Functions run code at CloudFront edge locations to manipulate requests/responses without a round-trip to the origin.
-20. EC2 Auto Scaling Groups keep instance count within a min/max/desired range using launch templates and scaling policies (target tracking, step, scheduled).
-21. ASG health checks (EC2 or ELB) trigger replacement of unhealthy instances; lifecycle hooks pause instances in Pending/Terminating states for custom actions.
+12. EC2 purchasing trades commitment for discount: **On-Demand**, **Reserved/Savings** Plans (up to ~72% off for 1/3-yr terms), or **Spot** (up to 90% off, interruptible with a 2-minute warning).
+13. Security Groups are *stateful*, instance-level, allow-only; **NACLs** are *stateless*, subnet-level, and support explicit deny rules evaluated in rule-number order.
+14. EC2 **instance store** is ephemeral (*lost* on stop/terminate); EBS-backed instances *persist data* and support stop/start; AMIs snapshot the root EBS volume for reuse.
+15. EC2 Placement groups: **Cluster** (lowest latency, same AZ/rack), **Spread** (max 7 instances per AZ, isolated hardware), **Partition*** (large distributed workloads split into logical partitions).
+16. Lambda is *serverless*, billed per invocation/duration in ms, capped at a **15-minute timeout**, and only needs VPC config (via an ENI) to reach private resources like RDS.
+17. Lambda concurrency: **reserved concurrency** caps/guarantees *capacity* per function; **provisioned concurrency** *pre-warms* execution environments to eliminate cold starts.
+18. Lambda *scales automatically* per-request with no capacity planning; destinations and **DLQs** capture async invocation failures for retry/inspection.
+19. **CloudFront Functions** (lightweight) / **Lambda@Edge** run *code* at CloudFront *edge* locations to manipulate requests/responses without a round-trip to the origin.
+20. EC2 **Auto Scaling Groups** keep instance count within a min/max/desired range using *launch templates* and *scaling policies* (**target tracking, step, scheduled**).
+21. ASG *health checks* (EC2 or ELB) trigger replacement of unhealthy instances; *lifecycle hooks* pause instances in Pending/Terminating states for custom actions.
 22. ASG warm pools keep pre-initialized instances ready to cut scale-out latency; termination policies control which instance is removed first on scale-in.
-23. ECS orchestrates Docker containers as Tasks (task definition = image, CPU/RAM, roles) run on a Cluster; EC2 launch type means you manage/register instances via the ECS Agent, while Fargate launch type is fully serverless.
-24. ECS integrates with ALB for path-based routing to containers via dynamic port mapping, and supports Service Auto Scaling based on CloudWatch metrics (e.g., CPU/memory).
-25. Fargate removes all EC2 server management for ECS/EKS tasks — you only define per-task CPU/RAM, billed per vCPU/memory-second used (no idle server cost).
-26. Fargate scales by increasing task count, not instance count — ideal for spiky/unpredictable workloads needing least operational overhead.
-27. ALB operates at Layer 7, routing HTTP/HTTPS by path, host, header, or query string to different target groups (EC2, ECS, Lambda, or IP targets).
-28. ALB supports native TLS termination with ACM certificates, WebSocket/HTTP2, and sticky sessions via application-controlled cookies.
+23. **ECS** orchestrates Docker containers as **Tasks** (task definition = image, **CPU/RAM**, roles) run on a Cluster; *EC2 launch type* means you manage/register instances via the ECS Agent, while *Fargate* launch type is fully serverless.
+24. ECS integrates with *ALB* for **path-based routing** to containers via dynamic port mapping, and supports **Service Auto Scaling** based on *CloudWatch metrics* (e.g., CPU/memory).
+25. **Fargate** removes all EC2 server management for ECS/EKS tasks — you only define per-task CPU/RAM, billed per **vCPU/memory-second** used (no idle server cost).
+26. Fargate scales by *increasing task count*, not instance count. Ideal for *spiky/unpredictable workloads* needing least operational overhead.
+27. **ALB** operates at *Layer 7*, routing HTTP/HTTPS by *path, host, header, or query string* to different target groups (EC2, ECS, Lambda, or IP targets).
+28. ALB supports native *TLS termination* with ACM certificates, WebSocket/HTTP2, and sticky sessions via application-controlled cookies.
 
 
 **Databases — RDS, DynamoDB, Aurora**
 
-29. *RDS Multi-AZ* gives *synchronous* standby failover for HA (not read scaling) within region; *Read Replicas* (up to 15, can *cross-region*) give *asynchronous* *read scaling*.
-30. RDS supports automated backups, manual snapshots, and point-in-time restore; storage auto scaling grows volumes automatically as usage nears the threshold.
-31. RDS Proxy pools and manages DB connections to prevent exhaustion from Lambda/serverless spikes and speeds up failover.
-32. DynamoDB is a fully managed NoSQL key-value/document store scaling to millions of requests/sec at single-digit millisecond latency; on-demand mode auto-scales, provisioned mode is cheaper for steady, predictable traffic.
-33. DAX adds a microsecond in-memory cache in front of DynamoDB; DynamoDB Streams + Lambda enable event-driven reactions to table changes; Global Tables give multi-region active-active replication.
-34. Aurora stores 6 copies of data across 3 AZs, self-heals, and fails over in under 30 seconds; Aurora Global Database replicates to secondary regions in under 1 second.
-35. Aurora Serverless v2 scales database capacity automatically for variable/intermittent workloads without managing instances.
+29. **RDS Multi-AZ** gives *synchronous* standby failover for HA (not read scaling) within region; **Read Replicas** (up to 15, can *cross-region*) give *asynchronous* *read scaling*.
+30. RDS supports **automated backups**, manual snapshots, and **point-in-time restore**; **storage auto scaling** grows volumes automatically as usage nears the threshold.
+31. **RDS Proxy pools** and manages DB connections to prevent exhaustion from Lambda/serverless spikes and speeds up failover.
+32. **DynamoDB** is a fully managed *NoSQL* key-value/document store scaling to millions of requests/sec at *single-digit ms latency*; **on-demand** mode *auto-scales*, **provisioned** mode is cheaper for *steady, predictable* traffic.
+33. **DAX** adds a microsecond *in-memory cache* in front of DynamoDB; **DynamoDB Streams + Lambda** enable *event-driven* reactions to *table changes*; **Global Tables** give *multi-region active-active* replication.
+34. **Aurora** stores *6 copies* of data across *3 AZs*, self-heals, and fails over in under *30 seconds*; **Aurora Global Database** replicates to secondary regions in *<1s*.
+35. **Aurora Serverless v2** *scales* database capacity *automatically* for variable/intermittent workloads without managing instances.
 
 **Networking — VPC, CloudFront, API Gateway**
 
-36. A VPC spans one region across multiple AZs; each subnet lives in exactly one AZ and is public/private based on whether its route table has an IGW route.
-37. Gateway VPC Endpoints (S3, DynamoDB) are free; Interface Endpoints (PrivateLink, priced ENI) cover most other AWS services for private connectivity.
-38. VPC Peering is not transitive (each pair needs its own connection); Transit Gateway provides hub-and-spoke transitive routing across many VPCs/VPNs/DX at scale.
-39. CloudFront caches content at edge locations globally, cutting latency and origin load; Origin Access Control (OAC) restricts S3 origins to CloudFront-only access.
-40. CloudFront Signed URLs/Cookies restrict access to private content; cache behaviors route different paths to different origins with different TTLs.
-41. API Gateway fronts REST, HTTP, and WebSocket APIs; Edge-Optimized routes through CloudFront, Regional serves a single region, Private is reachable only within a VPC via an interface endpoint.
+36. A **VPC** spans *1 region* across *multiple AZs*; each **subnet** lives in exactly *1 AZ* and is *public/private* based on whether its **route table** has an **IGW** route.
+37. **Gateway VPC Endpoints** (S3, DynamoDB) are free; **Interface Endpoints** (PrivateLink, priced ENI) cover most other AWS services for private connectivity.
+38. **VPC Peering** is not transitive (each pair needs its own connection); **Transit Gateway** provides hub-and-spoke transitive routing across many *VPCs/VPNs/DX* at scale.
+39. **CloudFront** caches content at *edge* locations globally, cutting latency and origin load; **Origin Access Control** (OAC) *restricts S3* origins to CloudFront-only access.
+40. CloudFront **Signed URLs/Cookies** restrict access to *private content*; cache behaviors route different paths to different origins with different TTLs.
+41. **API Gateway** fronts *REST, HTTP, and WebSocket* APIs; **Edge-Optimized** routes through CloudFront, **Regional** serves a single region, **Private** is reachable only within a VPC via an interface endpoint.
 42. API Gateway supports throttling/usage plans/API keys, response caching, and Lambda authorizers or Cognito for authentication.
 
 **Messaging & Integration — SQS, SNS**
 
-43. SQS decouples producers/consumers with at-least-once delivery and a default 4-day (max 14-day) retention; visibility timeout hides in-flight messages from other consumers.
-44. SQS FIFO queues guarantee strict ordering and exactly-once processing at lower throughput than Standard queues; DLQs capture messages that fail repeated processing.
-45. SNS fans out one published message to many subscribers at once — SQS, Lambda, email, SMS, HTTP/S endpoints — commonly paired with SQS for durable fan-out (the SNS+SQS fan-out pattern).
-46. SNS message filtering (via subscription filter policies) lets each subscriber receive only the subset of published messages relevant to it.
+43. **SQS** decouples producers/consumers with *at-least-once delivery* and a default *4-day* (max 14-day) retention; **visibility timeout** hides in-flight messages from other consumers.
+44. **SQS FIFO** queues guarantee strict *ordering* and *exactly-once* processing at lower throughput than Standard queues; **DLQs** capture messages that fail repeated processing.
+45. **SNS** *fans out* one published message to many subscribers at once — SQS, Lambda, email, SMS, HTTP/S endpoints — commonly paired with *SQS for durable fan-out* (the SNS+SQS fan-out pattern).
+46. SNS *message filtering* (via subscription filter policies) lets each *subscriber* receive only the *subset* of published messages relevant to it.
 
 **Identity & Security — IAM, KMS**
 
-47. IAM is global (not region-scoped); always prefer roles over hardcoded access keys for EC2/Lambda/ECS to call other AWS services.
-48. IAM policy evaluation: an explicit Deny always wins; otherwise an Allow must exist at every applicable layer (SCP, resource policy, identity policy, permissions boundary).
-49. KMS key types: AWS-owned (free, no visibility), AWS-managed (free, per-service), customer-managed (full control — rotation, key policies, priced); SSE-KMS gives a CloudTrail audit trail that SSE-S3 doesn't.
-50. Envelope encryption: KMS generates a data key used to encrypt data locally; only the small encrypted data key is ever sent to KMS, keeping large-object encryption fast and cheap.
+47. **IAM** is global (not region-scoped); always prefer *roles* over hardcoded access keys for EC2/Lambda/ECS to call other AWS *services*.
+48. IAM **policy evaluation**: an *explicit Deny always wins*; otherwise an Allow must exist at every applicable layer (**SCP**, *resource policy*, identity policy, permissions boundary).
+49. **KMS** key types: AWS-owned (free, no visibility), AWS-managed (free, per-service), customer-managed (full control — rotation, key policies, priced); SSE-KMS gives a CloudTrail audit trail that SSE-S3 doesn't.
+50. *Envelope encryption*: KMS generates a data key used to encrypt data locally; only the *small* encrypted data key is ever *sent to KMS*, keeping *large-object encryption fast and cheap*.
