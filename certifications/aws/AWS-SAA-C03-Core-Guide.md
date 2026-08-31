@@ -114,16 +114,27 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Storage classes are applicable to each S3 objects.
 - **Storage Classes** — durability is 99.999999999% (11 nines) for all classes; differences are availability, AZ spread, retrieval time/cost, and minimum storage commitments:
 
-| Storage Class | Availability | AZs | Retrieval Time | Min Storage Duration | Other Min/Fees | Use Case |
-|---|---|---|---|---|---|---|
-| **Standard** | 99.99% | ≥3 | Milliseconds | None | None | Frequently accessed data — big data, mobile/gaming apps, content distribution |
-| **Standard-IA** (Infrequent Access) | 99.9% | ≥3 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee | DR & backups |
-| **One Zone-IA** | 99.5% | 1 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee; data lost if the AZ is destroyed | Secondary backup copies or easily recreatable data |
-| **Glacier Instant Retrieval** | 99.9% | ≥3 | Milliseconds | 90 days | Per-GB retrieval fee | Archive data accessed ~once/quarter |
-| **Glacier Flexible Retrieval** (formerly "Glacier") | 99.99% | ≥3 | Expedited 1–5 min, Standard 3–5h, Bulk 5–12h (free) | 90 days | Per-GB retrieval fee (except Bulk) | Archives where retrieval isn't urgent |
-| **Glacier Deep Archive** | 99.99% | ≥3 | Standard 12h, Bulk 48h | 180 days | Cheapest storage class | Long-term retention/compliance archives |
-| **S3 Express One Zone** | 99.95% | 1 | Single-digit ms | None | Directory bucket; up to 10x faster/50% cheaper than Standard for high-throughput workloads | AI/ML training, financial modeling, HPC — best paired with co-located compute and SageMaker/Athena/EMR/Glue |
-| **Intelligent-Tiering** | 99.9% | ≥3 | Milliseconds (Frequent/Infrequent/Instant tiers) | None | Small monthly monitoring/auto-tiering fee, no retrieval charges | Unknown/changing access patterns — auto-moves objects between Frequent/Infrequent(30d)/Archive Instant(90d)/Archive(90d+, optional)/Deep Archive(180d+, optional) tiers |
+| Storage Class | Availability | AZs | Retrieval Time | Min Storage Duration | Other Min/ Fees |
+|---|---|---|---|---|---|
+| **Standard** | 99.99% | ≥3 | Milliseconds | None | None |
+| **Standard-IA** (Infrequent Access) | 99.9% | ≥3 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee |
+| **One Zone-IA** | 99.5% | 1 | Milliseconds | 30 days | Min 128KB billable size, per-GB retrieval fee; data lost if the AZ is destroyed |
+| **Glacier Instant Retrieval** | 99.9% | ≥3 | Milliseconds | 90 days | Per-GB retrieval fee |
+| **Glacier Flexible Retrieval** (formerly "Glacier") | 99.99% | ≥3 | Expedited 1–5 min, Standard 3–5h, Bulk 5–12h (free) | 90 days | Per-GB retrieval fee (except Bulk) |
+| **Glacier Deep Archive** | 99.99% | ≥3 | Standard 12h, Bulk 48h | 180 days | Cheapest storage class |
+| **S3 Express One Zone** | 99.95% | 1 | Single-digit ms | None | Directory bucket; up to 10x faster/50% cheaper than Standard for high-throughput workloads |
+| **Intelligent-Tiering** | 99.9% | ≥3 | Milliseconds (Frequent/Infrequent/Instant tiers) | None | Small monthly monitoring/auto-tiering fee, no retrieval charges |
+
+| Storage Class | Use Case |
+|---|---|
+| **Standard** | Frequently accessed data — big data, mobile/gaming apps, content distribution |
+| **Standard-IA** (Infrequent Access) | DR & backups |
+| **One Zone-IA** | Secondary backup copies or easily recreatable data |
+| **Glacier Instant Retrieval** | Archive data accessed ~once/quarter |
+| **Glacier Flexible Retrieval** (formerly "Glacier") | Archives where retrieval isn't urgent |
+| **Glacier Deep Archive** | Long-term retention/compliance archives |
+| **S3 Express One Zone** | AI/ML training, financial modeling, HPC — best paired with co-located compute and SageMaker/Athena/EMR/Glue |
+| **Intelligent-Tiering** | Unknown/changing access patterns — auto-moves objects between Frequent/Infrequent(30d)/Archive Instant(90d)/Archive(90d+, optional)/Deep Archive(180d+, optional) tiers |
 
 - **Moving between classes & Lifecycle Rules**: manual or automated via Lifecycle configuration (scoped to a prefix and/or object tags). 
   - **Transition actions** move objects to a cheaper class after N days (e.g. Standard → Standard-IA at 60 days → Glacier at 6 months). 
