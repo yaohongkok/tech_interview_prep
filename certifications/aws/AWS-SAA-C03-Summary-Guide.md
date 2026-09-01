@@ -11,20 +11,6 @@
 | Service | What It's Used For | Common Use Cases |
 |---|---|---|
 | **Amazon S3** [#1 pop] | Object storage with virtually unlimited scale | Data lakes, backups, static website hosting, archiving |
-| S3 Storage Classes (*Standard/IA/One Zone-IA/Glacier/Deep Archive/Intelligent-Tiering*) | Tiers of S3 trading off cost, retrieval time, and resiliency | Cost optimization by access pattern, long-term archival |
-| S3 *Lifecycle* Policies | Automated rules to transition/expire objects between storage classes | Auto-archiving old data, cleaning up incomplete multipart uploads |
-| S3 *Versioning* | Keeps multiple variants of an object in the same bucket | Protecting against accidental overwrite/delete, rollback |
-| S3 Object *Lock* | WORM (write-once-read-many) protection on object versions | Regulatory *compliance*, ransomware protection |
-| S3 Replication (CRR/SRR) | Automatic, asynchronous copying of objects across/within regions | DR, latency reduction, compliance data residency |
-| S3 Transfer Acceleration | Speeds up uploads to S3 via CloudFront edge locations | Long-distance/global uploads from clients |
-| S3 Access Points | Named network endpoints with their own policy for shared buckets | Simplifying access management for shared datasets |
-| S3 Multi-Region Access Points | Single global endpoint routing to the closest bucket replica | Global applications needing low-latency multi-region S3 access |
-| S3 Object Lambda | Runs Lambda functions to modify S3 GET responses on the fly | Redacting PII, resizing images, format conversion on retrieval |
-| S3 Batch Operations | Performs large-scale bulk actions on existing objects | Mass tagging, ACL updates, Lambda invocation across billions of objects |
-| S3 Select / Glacier Select | Retrieves a subset of object data using SQL-like queries | Reducing data transfer for analytics on large CSV/JSON/Parquet files |
-| S3 Event Notifications | Triggers on object events (create/delete/restore) | Invoking Lambda/SQS/SNS on upload, event-driven pipelines |
-| S3 Storage Lens | Organization-wide visibility into S3 usage and activity metrics | Identifying cost-saving opportunities, usage auditing |
-| S3 Access Analyzer / Block Public Access | Analyzes and prevents unintended public bucket exposure | Security audits, preventing accidental public data leaks |
 | Amazon EBS [#18 pop] | Persistent block storage for a single EC2 instance | Boot volumes, databases, high-IOPS workloads |
 | Amazon EFS [#19 pop] | Managed NFS shared across many EC2 instances/AZs | Shared content storage, CMS, home directories |
 | Snow Family (Snowball / Snowcone / Snowmobile) | Physical devices for offline bulk data transfer/edge compute | Large one-time migrations, edge sites with poor connectivity |
@@ -202,12 +188,89 @@
 
 ---
 
-## 2. Most Important Points (50 Bullets)
+## 2. Surservices or Terms for Popular Services
 
-> Ordered and weighted by actual exam frequency: see [aws-service-answer-frequency.md](practice_exam/aws-service-answer-frequency.md), generated from 1,019 practice questions. Bullet count per service is roughly proportional to how often that service appears in a correct answer, so the top 6 services (S3, EC2, Lambda, EC2 Auto Scaling, RDS, VPC) get the deepest coverage.
+1. **S3**
+  - S3 Storage Classes (*Standard/IA/One Zone-IA/Glacier/Deep Archive/Intelligent-Tiering*)
+  - S3 *Lifecycle* Policies 
+  - S3 *Versioning* 
+  - S3 Object *Lock* 
+  - S3 Replication (CRR/SRR)
+  - S3 Transfer Acceleration | Speeds up uploads to S3 via CloudFront edge locations
+  - S3 Access Points - Named network endpoints with their own policy for shared buckets 
+  - S3 Multi-Region Access Points - Single global endpoint routing to the closest bucket replica 
+  - S3 Object Lambda - modify S3 GET responses on the fly 
+  - S3 Batch Operations
+  - S3 Select / Glacier Select - Retrieves a subset of object data using SQL-like queries 
+  - S3 Event Notifications
+  - S3 Storage Lens - Organization-wide visibility into S3 usage and activity metrics 
+  - S3 Access Analyzer - Analyzes and prevents unintended public bucket exposure
+
+2. **EC2**
+  - General type (`t/m`), Compute type (`c`), Memory type (`r/x`) & Storage type (`i/d`)
+  - Purchase options: On-Demand, Reserved, Covertible Reserved (can change type), Savings (commit to $/hours), Spot, Spot Fleet, Dedicated Host (dedicated physical server, BYOL), Dedicated Instances (dedicated inst, no control over HW type)
+  - Capacity Reservation
+  - Placement: Cluster (perf), Spread (HA) & Partition
+  - Security Group (stateful firewall)
+  - Elastic IP
+  - Elastic Network Interface (ENI)
+  - Hibernate: fast startup
+  - Instance Store
+
+3. **Lambda**
+  - Reserved concurrency (limit conccurent exec)
+  - Provisioned Concurrency (avoid cold start) & Lambda SnapStart (fast startup)
+  - Cloudfront Function (lightweight JS Lambda) & Lambda @Edge (fuller Lambda exec @edge)
+
+4. **ASG**
+  - Launch Template vs Launch Config
+  - Scaling Policies: (1) Simple/Step, (2) Target Tracking, (3) Scheduled, (4) Predictive
+  - Scaling Cooldown
+
+5. **RDS**
+  - point in time recovery (PITR), cross region read replica (read scaling), Multi-AZ (standby failover)
+  - RDS custom: for Oracle & SQL Server
+  - Storage Auto Scaling
+  - RDS Proxy
+
+6. **VPC** 
+  - Basics
+    - Layer 3 {Network, IP Address}, Layer 4 {Protocol, TCP/UDP}, Layer 7 {App, HTTPS}
+    - Classless Inter-Domain Routing or CIDR {No overlap}
+    - Subnets {public or private, inbound traffic}
+    - Route Table
+    - Internet Gateway or IGW
+    - Bastion Host
+    - Network Address Translation or NAT {provide outbound internet access for private subnet, usually in public subnet}
+      - NAT Gateway {AWS managed, per AZ}
+      - NAT Instance {self-managed}
+      - Regional NAT Gateway {attach to whole VPC, not per AZ}
+  - Security
+    - NACL (Network Access Control List) {stateless firewall, inbound & outbound traffic needs to be specified, operate @ subnet}
+      - Ephemeral port {client port for receiving response}
+    - VPC Flow Log {capture IP traffic @ VPC, subnet or ENI}
+    - VPC Traffic Mirror {monitoring traffic}
+    - AWS Network Firewall
+  - Connecting VPC
+    - VPC Peering {Not transitive}
+    - VPC Endpoint or AWS Private Link {expose AWS services or own apps through VPC}
+      - Gateway Endpoint {S3 or DynamoDB only}
+      - Interface Endpoint {most services and hosted-apps, thru ENI}
+    - Site-to-Site VPN {on-prem to VPC, non-transitive, connects 1 CGW to 1 VGW, VGW need Route Propagation enabled}
+    - AWS VPN CloudHub {hub-and-spoke, transitive, many CGWs to 1 VGW}
+    - Direct Connect (DX) {Dedicated DX: Fast speed,  Hosted: Slower}
+    - Transit Gateway {hub-and-spoke, transitive, connects VPN, VPC & DX together}
+      - Equal Cost Multipath Routing {combine multiple Site-to-Site VPN for faster bandwidth}
+
+7. Cloudfront
 
 
-**Storage — S3, EBS, EFS, FSx**
+---
+
+## 3. Important Points 
+
+
+### Storage — S3, EBS, EFS, FSx
 
 1. S3 offers **eleven-9's durability** across all storage classes; availability, retrieval time/cost, and minimum storage duration vary by class.
 2. S3 **Lifecycle** rules *automate transitions* between storage classes and expirations; **Intelligent-Tiering** auto-moves objects between access tiers with no retrieval fees.
@@ -221,7 +284,7 @@
 10. FSx provides managed third-party file systems: Windows File Server (SMB, AD-integrated), Lustre (HPC), NetApp ONTAP, and OpenZFS.
 11. FSx for *Lustre* links directly to an *S3* bucket for *high-throughput, low-latency processing* of S3 data (e.g., ML training, big data workloads).
 
-**Compute — EC2, Lambda, EC2 Auto Scaling, ECS, Fargate, ALB**
+### Compute — EC2, Lambda, EC2 Auto Scaling, ECS, Fargate, ALB
 
 12. EC2 purchasing trades commitment for discount: **On-Demand**, **Reserved/Savings** Plans (up to ~72% off for 1/3-yr terms), or **Spot** (up to 90% off, interruptible with a 2-minute warning).
 13. Security Groups are *stateful*, instance-level, allow-only; **NACLs** are *stateless*, subnet-level, and support explicit deny rules evaluated in rule-number order.
@@ -242,7 +305,7 @@
 28. ALB supports native *TLS termination* with ACM certificates, WebSocket/HTTP2, and sticky sessions via application-controlled cookies.
 
 
-**Databases — RDS, DynamoDB, Aurora**
+### Databases — RDS, DynamoDB, Aurora
 
 29. **RDS Multi-AZ** gives *synchronous* standby failover for HA (not read scaling) within region; **Read Replicas** (up to 15, can *cross-region*) give *asynchronous* *read scaling*.
 30. RDS supports **automated backups**, manual snapshots, and **point-in-time restore**; **storage auto scaling** grows volumes automatically as usage nears the threshold.
@@ -252,7 +315,7 @@
 34. **Aurora** stores *6 copies* of data across *3 AZs*, self-heals, and fails over in under *30 seconds*; **Aurora Global Database** replicates to secondary regions in *<1s*.
 35. **Aurora Serverless v2** *scales* database capacity *automatically* for variable/intermittent workloads without managing instances.
 
-**Networking — VPC, CloudFront, API Gateway**
+### Networking — VPC, CloudFront, API Gateway
 
 36. A **VPC** spans *1 region* across *multiple AZs*; each **subnet** lives in exactly *1 AZ* and is *public/private* based on whether its **route table** has an **IGW** route.
 37. **Gateway VPC Endpoints** (S3, DynamoDB) are free; **Interface Endpoints** (PrivateLink, priced ENI) cover most other AWS services for private connectivity.
@@ -262,14 +325,14 @@
 41. **API Gateway** fronts *REST, HTTP, and WebSocket* APIs; **Edge-Optimized** routes through CloudFront, **Regional** serves a single region, **Private** is reachable only within a VPC via an interface endpoint.
 42. API Gateway supports throttling/usage plans/API keys, response caching, and Lambda authorizers or Cognito for authentication.
 
-**Messaging & Integration — SQS, SNS**
+### Messaging & Integration — SQS, SNS
 
 43. **SQS** decouples producers/consumers with *at-least-once delivery* and a default *4-day* (max 14-day) retention; **visibility timeout** hides in-flight messages from other consumers.
 44. **SQS FIFO** queues guarantee strict *ordering* and *exactly-once* processing at lower throughput than Standard queues; **DLQs** capture messages that fail repeated processing.
 45. **SNS** *fans out* one published message to many subscribers at once — SQS, Lambda, email, SMS, HTTP/S endpoints — commonly paired with *SQS for durable fan-out* (the SNS+SQS fan-out pattern).
 46. SNS *message filtering* (via subscription filter policies) lets each *subscriber* receive only the *subset* of published messages relevant to it.
 
-**Identity & Security — IAM, KMS**
+### Identity & Security — IAM, KMS
 
 47. **IAM** is global (not region-scoped); always prefer *roles* over hardcoded access keys for EC2/Lambda/ECS to call other AWS *services*.
 48. IAM **policy evaluation**: an *explicit Deny always wins*; otherwise an Allow must exist at every applicable layer (**SCP**, *resource policy*, identity policy, permissions boundary).

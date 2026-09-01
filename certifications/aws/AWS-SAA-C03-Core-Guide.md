@@ -333,7 +333,7 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   - **Spot Instances**: *up to 90%* discount, can be reclaimed with a *2-minute warning* if your *max price < current spot price* — the most cost-efficient option, good for batch jobs/data analysis/anything fault-tolerant, **not** for critical jobs or databases. 
     - **Spot Fleets** request a set of Spot (+ optional On-Demand) instances across multiple launch pools using a strategy: `lowestPrice`, `diversified`, `capacityOptimized`, or `priceCapacityOptimized` (recommended default).
   - **Dedicated Hosts**: Most expensive option. An entire physical server dedicated to you, billed per host. For *BYOL*, *socket-or-core-based licensing* or *strict compliance*. 
-  - **Dedicated Instances**: run on *hardware dedicated* to your account (may share hardware with your own other instances), billed per instance — no control over instance placement.
+  - **Dedicated Instances**: run on *hardware (with no control over exact type) dedicated* to your account (may share hardware with your own other instances), billed per instance — no control over instance placement.
   - **Capacity Reservations**: reserve On-Demand capacity in a specific AZ. In case of insufficient on-demand capacity. No time commitment (create/cancel anytime), billed at On-Demand rate with **no discount**. 
     - Good for *short-term uninterrupted workloads* that must *run in a specific AZ*. 
 - **Placement Groups**: 
@@ -1475,6 +1475,7 @@ You can find additional topics in "Additional" markdown doc, which covers `Cloud
   - **Composite Alarms** monitor the state of *multiple other alarms with AND/OR logic*. Helps reduce alarm noise from correlated failures. Alarms can also be created directly from a *CloudWatch Logs Metric Filter*. 
   - *EC2 Instance Recovery (use case)*: a `StatusCheckFailed_System` alarm can *automatically recover* the instance onto new hardware, preserving private/public/Elastic IP, metadata, and placement group. Test an alarm via `aws cloudwatch set-alarm-state`.
 - **CloudWatch Network Synthetic Monitor**: agentless monitoring of **network paths** between: (i) *AWS-hosted apps* and *on-prem*, (ii) testing ICMP/TCP over *Direct Connect* or *Site-to-Site VPN* to detect packet loss/latency/jitter degradation. Publishes results as CloudWatch Metrics.
+  - Use case: monitor if third party app is responding healthily
 - **CloudWatch Insights suite**: 
   1. *Container* Insights (metrics/logs from ECS, EKS, Kubernetes-on-EC2, Fargate — needs a containerized CloudWatch Agent for Kubernetes/EKS). 
   2. *Lambda* Insights (system-level metrics — CPU, memory, disk, network — plus diagnostics like cold starts/worker shutdowns for serverless apps, delivered as a Lambda Layer). 
