@@ -78,7 +78,7 @@
 | Amazon Kinesis Data Streams | Real-time data streaming and processing | Clickstream/log ingestion, real-time analytics |
 | MS Apache Flink/Amazon Kinesis Data Analytics | Processes real-time streaming data using SQL or Apache Flink | Real-time analytics, live dashboards, time series analytics |
 | Amazon Data Firehose | Near-real-time streaming delivery to storage/analytics targets | Loading streaming data into S3/Redshift/OpenSearch |
-| Amazon EventBridge [#21 pop] | Serverless event bus | Event-driven architectures, scheduled jobs |
+| Amazon EventBridge [#21 pop] | Events router to many targets | Event-driven architectures, scheduled jobs |
 | AWS Step Functions | Visual workflow orchestration (state machines) | Multi-step business processes, order fulfillment |
 | Amazon MQ | Managed RabbitMQ/ActiveMQ message broker | Migrating on-prem apps that use open messaging protocols |
 | Amazon SES | Managed email sending/receiving service | Transactional and marketing email |
@@ -188,7 +188,7 @@
 
 ---
 
-## 2. Surservices or Terms for Popular Services
+## 2. Subservices or Terms for Popular Services
 
 1. **S3**
   - S3 Storage Classes (*Standard/IA/One Zone-IA/Glacier/Deep Archive/Intelligent-Tiering*)
@@ -196,13 +196,13 @@
   - S3 *Versioning* 
   - S3 Object *Lock* 
   - S3 Replication (CRR/SRR)
-  - S3 Transfer Acceleration | Speeds up uploads to S3 via CloudFront edge locations
-  - S3 Access Points - Named network endpoints with their own policy for shared buckets 
-  - S3 Multi-Region Access Points - Single global endpoint routing to the closest bucket replica 
+  - S3 Transfer Acceleration { Speeds up uploads via CloudFront edge }
+  - S3 Access Points { endpoints for shared buckets } 
+  - S3 Multi-Region Access Points { global endpoint routing to closest bucket replica } 
   - S3 Object Lambda - modify S3 GET responses on the fly 
   - S3 Batch Operations
   - S3 Select / Glacier Select - Retrieves a subset of object data using SQL-like queries 
-  - S3 Event Notifications
+  - S3 Event Notifications {Targets: SQS, SNS, Lambda & EventBridge (for many targets)}
   - S3 Storage Lens - Organization-wide visibility into S3 usage and activity metrics 
   - S3 Access Analyzer - Analyzes and prevents unintended public bucket exposure
 
@@ -263,7 +263,145 @@
       - Equal Cost Multipath Routing {combine multiple Site-to-Site VPN for faster bandwidth}
 
 7. Cloudfront
+  - Origins {S3, private subnet VPC comp, custom HTTP}
+  - Geo-Restrictions {allow/block}
+  - Cache Invalidation
+  - Signed URL/Cookies {private content}
 
+8. SQS
+  - Message visibility timeout {default 30s}
+  - Long Polling {reduce API call count}
+  - Dead Letter Queue {failed messages}
+  - Standard Queue {best effort order, unlimited msg/s, dup msg}
+  - FIFO Queue {FIFO order, 3000 msg/s, dedup msg, name ends with `.fifo`}
+
+9. DynamoDB
+  - Standard IA tables {60% lower storage cost, read/write cost up 25%}
+  - Provisioned Capacity {provision read/write, cheaper, auto-scalable with Cloudwatch & more}
+  - On-Demand capacity {more \$\$\$, natively auto-scalable}
+  - DynamoDB Accelerator/DAX {in-memory cache in front of Dynamo}
+  - DynamoDB streams {old, targets: Lambda or DynamoDB Streams Kinesis Adapter library (i.e. your app)}
+  - Kinesis Data Streams for DynamoDB {newer, targets: Lambda, Kinesis Data Analytics, Firehose, Glue Streaming ETL}
+  - Global Tables {active-active, requires streams}
+  - TTL {auto delete}
+  - Backup: PITR vs On-demand
+  - Export to S3 {need PITR, doesn't use read cap, JSON/ION format}
+  - Import from S3 {always new table, doesn't use write cap, CSV/JSON/ION format}
+
+10. Aurora
+  - Cluster endpoints: Writer, Reader {load balanced across repl} & Customs {subset of inst, Reader not used anymore}
+  - Aurora Serverless {unpredictable workload, no cap planning}
+  - Global DB {better than cross-region repl, RTO < 1m}
+  - Aurora Machine Learning {SQL integrated with Sagemaker & Comprehend}
+  - Babelfish for Aurora Pgres {understand MS SQL Server's T-SQL}
+  - Backup: PITR, DB Cloing {copy-on-write, fast & cheap}
+
+11. IAM
+  - JSON `Statement` field: `Sid`, `Effect`, `Principal`, `Action`, `Resource` & `Condition`
+  - IAM Roles vs Users
+  - Cross Account Access
+  - Policy eval flow {Explicit Deny > Explicit Allow > Default Deny}
+  - Security Token Service (STS) {Federation & Cross account access}
+  - Identity Federation
+  - MFA
+  - IAM Credential Report {user & their credential status, account-level}
+  - IAM Access Advisor {right-size user permissions, report per user}
+
+12. KMS
+  - AWS Owned Keys {S3, SQS, DynamoDB} vs AWS Managed Keys {RDS, EBS} vs Custom Managed Keys {created vs imported}
+  - Automatic Key Rotation {Imported customer key cannot use this}
+  - Multi Region Keys {multi-region identical keys, not single global key}
+  - Key Policy {Custom policy for cross account}
+
+
+13. ECS
+  - EC2 launch type {Requires ECS agent installed, uses EC2 inst prof IAM role}
+  - Fargate launch type {define & scale tasks}
+  - ECS Task Role {access AWS resources}
+  - ECS Auto Scaling Policies: (1) Simple, (2) Step, (3) Target Tracking, (4) Scheduled
+  - Event Driven Task {uses EventBridge}
+
+14. ELB
+  - Health Check {uses 200 status code}
+  - X-Forwarded-For {client real IP}
+  - ALB {Layer 7, multi-app routing}
+  - NLB {Layer 4, ultra-low latency}
+  - GWLB {Layer 3, 3rd party appliances}
+  - Sticky sessions
+  - SSL/TLS via SNI {multi certs on 1 LB}
+  - Connection Draining/Deregistration Delay
+
+15. API Gateway
+  - Integrations: Lambda, HTTP, AWS Services
+  - Edge-optimized endpoint
+  - Regional endpoint
+  - Private endpoint {ENI on VPC}
+
+16. FSx
+  - Windows File Server {SMB, AD}
+  - Lustre {HPC, S3 integration}
+  - NetApp ONTAP {NetApp/NAS, NFS/SMB/iSCSI access}
+  - OpenZFS {ZFS, highest IOPS}
+
+18. EBS
+  - gp3 {provisionable IOPS, 16k IOPS, almost always better than gp2}
+  - io1/io2 block express {critical DB workloads, up to 250k IOPS, attach to multi-EC2}
+  - st1 {500 IOPS} vs sc1 {250 IOPS, lowest cost, infrequently access data}
+  - Fast Snapshot Restore {remove first use latency}
+  - Snapshot Archieve {fastest 24h restore, 75% lower cost}
+  - Recycle Bin {prevent accidental snapshot deletion}
+  - EBS encryption {at rest, in-flight, snapshot, volume}
+  - Inst Deletion: Root {default to 'delete'}, attached {default to 'preserved'}
+
+20. SNS
+  - Subscribers/Dest: (1) SQS, (2) Lambda, (3) Firehose, (4) Email/SMS/Mobile, (5) HTTPS
+  - Sources: (1) Cloudwatch Alarms, (2) Auto Scale, (3) S3 Events, (4) DMS, (5) RDS, (6) Dynamo, (7) Lambda
+  - Topic Publish vs Direct Publish (publish to platform endpoint)
+  - SNS Access Policies {cross account, AWS service to pub}
+  - Fan-out
+  - FIFO Topic {order & dedup}
+  - Message Filtering {subscribe limits topics}
+
+21. Amazon EventBridge
+  - Schedule vs Event Trigger
+  - Source: EC2, S3, TrustedAdvisor, CloudTrail, Schedule
+  - Dest {> SNS}: (1) Compute, (2) Messaging & Steams, (3) Orchestration, (4) Maintenance
+  - Event bus type {mainly for event subscriptions or sources, cross acc via policies}
+    - (1) Default {AWS services}, (2) Partner {SaaS} & (3) Custom {Own App}
+  - Schema Registry {infer version & generate code}
+
+
+22. Athena
+  - ORC, Parquet {Columnar, perf}
+  - Federated query {query across many type sources with Lambda-based Connectors}
+
+23. Cloudwatch
+  - Metrics Stream {stream metrics near-real-time}
+  - Log Groups vs Log Streams
+  - Alarms
+  - Network Synthetic Monitor {monitor network path between (1) AWS with on-prem or (2) DX/Site-to-Site }
+  - Container Insights {metrics + logs}
+  - Lambda Insights {metrics}
+  - Contributor Insights {top N contributors}
+  - Application Insights {automated problems discovery}
+
+24. Route53
+  - Public Hosted Zone
+  - Private Hosted Zone {route traffic between VPCs}
+  - A Record {IP4} vs AAAA Record {IP6}
+  - CNAME Record {hostname. Target hostname must have A or AAAA}
+  - Alias Record {AWS resource}
+  - Routing Policies: (1) Simple, (2) Weighted, (3) Latency, (4) Failover, (5) Geolocation, (6) Geoproximity, (7) IP, (8) Mult-value
+  - Health Check {failover}
+  - Calculated Health Check {using AND/OR}
+  - Route53 Hybrid Resolver {resolving DNS between VPC + VPN}
+    - Inbound endpoint {enable on-prem to query Route53}
+    - Outbound endpoint {enable VPC to query on-prem resolver}
+
+25. WAF
+  - Target: (1) ALB, (2) API Gateway, (3) Cloudfront, ...
+  - WebACL {IP, HTTP metadata, Geo, Rate, ...}
+  - Rule Group {bundle of rule, attachable to WebACL}
 
 ---
 
@@ -276,7 +414,6 @@
 2. S3 **Lifecycle** rules *automate transitions* between storage classes and expirations; **Intelligent-Tiering** auto-moves objects between access tiers with no retrieval fees.
 3. S3 Cross-Region/Same-Region **Replication** requires *versioning* on *both buckets* and only *replicates new objects* going forward (not retroactively).
 4. S3 **Transfer Acceleration** speeds long-distance uploads via CloudFront edge locations; **Multipart Upload** parallelizes and resumes large object uploads.
-5. S3 encryption options: *SSE-S3* (AWS-owned keys), *SSE-KMS* (auditable, request-quota limited), *SSE-C* (customer-supplied keys); **presigned URLs** grant temporary access without changing the bucket policy.
 6. EBS is persistent block storage attached to a single EC2 instance in the same AZ; types: **gp3**/gp2 (general SSD), io1/**io2** (high/provisioned IOPS, databases), st1 (throughput HDD), sc1 (cold HDD).
 7. EBS snapshots are incremental and stored in S3, can be copied across regions/accounts for DR, and **Fast Snapshot Restore** removes first-use latency.
 8. EFS is a managed, multi-AZ NFS file system *mountable concurrently* by many EC2/Linux instances (vs. EBS: single-instance, single-AZ).
@@ -286,17 +423,13 @@
 
 ### Compute — EC2, Lambda, EC2 Auto Scaling, ECS, Fargate, ALB
 
-12. EC2 purchasing trades commitment for discount: **On-Demand**, **Reserved/Savings** Plans (up to ~72% off for 1/3-yr terms), or **Spot** (up to 90% off, interruptible with a 2-minute warning).
 13. Security Groups are *stateful*, instance-level, allow-only; **NACLs** are *stateless*, subnet-level, and support explicit deny rules evaluated in rule-number order.
 14. EC2 **instance store** is ephemeral (*lost* on stop/terminate); EBS-backed instances *persist data* and support stop/start; AMIs snapshot the root EBS volume for reuse.
-15. EC2 Placement groups: **Cluster** (lowest latency, same AZ/rack), **Spread** (max 7 instances per AZ, isolated hardware), **Partition*** (large distributed workloads split into logical partitions).
 16. Lambda is *serverless*, billed per invocation/duration in ms, capped at a **15-minute timeout**, and only needs VPC config (via an ENI) to reach private resources like RDS.
 17. Lambda concurrency: **reserved concurrency** caps/guarantees *capacity* per function; **provisioned concurrency** *pre-warms* execution environments to eliminate cold starts.
 18. Lambda *scales automatically* per-request with no capacity planning; destinations and **DLQs** capture async invocation failures for retry/inspection.
-19. **CloudFront Functions** (lightweight) / **Lambda@Edge** run *code* at CloudFront *edge* locations to manipulate requests/responses without a round-trip to the origin.
 20. EC2 **Auto Scaling Groups** keep instance count within a min/max/desired range using *launch templates* and *scaling policies* (**target tracking, step, scheduled**).
 21. ASG *health checks* (EC2 or ELB) trigger replacement of unhealthy instances; *lifecycle hooks* pause instances in Pending/Terminating states for custom actions.
-22. ASG warm pools keep pre-initialized instances ready to cut scale-out latency; termination policies control which instance is removed first on scale-in.
 23. **ECS** orchestrates Docker containers as **Tasks** (task definition = image, **CPU/RAM**, roles) run on a Cluster; *EC2 launch type* means you manage/register instances via the ECS Agent, while *Fargate* launch type is fully serverless.
 24. ECS integrates with *ALB* for **path-based routing** to containers via dynamic port mapping, and supports **Service Auto Scaling** based on *CloudWatch metrics* (e.g., CPU/memory).
 25. **Fargate** removes all EC2 server management for ECS/EKS tasks — you only define per-task CPU/RAM, billed per **vCPU/memory-second** used (no idle server cost).
@@ -309,7 +442,6 @@
 
 29. **RDS Multi-AZ** gives *synchronous* standby failover for HA (not read scaling) within region; **Read Replicas** (up to 15, can *cross-region*) give *asynchronous* *read scaling*.
 30. RDS supports **automated backups**, manual snapshots, and **point-in-time restore**; **storage auto scaling** grows volumes automatically as usage nears the threshold.
-31. **RDS Proxy pools** and manages DB connections to prevent exhaustion from Lambda/serverless spikes and speeds up failover.
 32. **DynamoDB** is a fully managed *NoSQL* key-value/document store scaling to millions of requests/sec at *single-digit ms latency*; **on-demand** mode *auto-scales*, **provisioned** mode is cheaper for *steady, predictable* traffic.
 33. **DAX** adds a microsecond *in-memory cache* in front of DynamoDB; **DynamoDB Streams + Lambda** enable *event-driven* reactions to *table changes*; **Global Tables** give *multi-region active-active* replication.
 34. **Aurora** stores *6 copies* of data across *3 AZs*, self-heals, and fails over in under *30 seconds*; **Aurora Global Database** replicates to secondary regions in *<1s*.
@@ -318,17 +450,13 @@
 ### Networking — VPC, CloudFront, API Gateway
 
 36. A **VPC** spans *1 region* across *multiple AZs*; each **subnet** lives in exactly *1 AZ* and is *public/private* based on whether its **route table** has an **IGW** route.
-37. **Gateway VPC Endpoints** (S3, DynamoDB) are free; **Interface Endpoints** (PrivateLink, priced ENI) cover most other AWS services for private connectivity.
-38. **VPC Peering** is not transitive (each pair needs its own connection); **Transit Gateway** provides hub-and-spoke transitive routing across many *VPCs/VPNs/DX* at scale.
 39. **CloudFront** caches content at *edge* locations globally, cutting latency and origin load; **Origin Access Control** (OAC) *restricts S3* origins to CloudFront-only access.
-40. CloudFront **Signed URLs/Cookies** restrict access to *private content*; cache behaviors route different paths to different origins with different TTLs.
 41. **API Gateway** fronts *REST, HTTP, and WebSocket* APIs; **Edge-Optimized** routes through CloudFront, **Regional** serves a single region, **Private** is reachable only within a VPC via an interface endpoint.
 42. API Gateway supports throttling/usage plans/API keys, response caching, and Lambda authorizers or Cognito for authentication.
 
 ### Messaging & Integration — SQS, SNS
 
-43. **SQS** decouples producers/consumers with *at-least-once delivery* and a default *4-day* (max 14-day) retention; **visibility timeout** hides in-flight messages from other consumers.
-44. **SQS FIFO** queues guarantee strict *ordering* and *exactly-once* processing at lower throughput than Standard queues; **DLQs** capture messages that fail repeated processing.
+43. **SQS** decouples producers/consumers with *at-least-once delivery* and a default *4-day* (max 14-day) retention;
 45. **SNS** *fans out* one published message to many subscribers at once — SQS, Lambda, email, SMS, HTTP/S endpoints — commonly paired with *SQS for durable fan-out* (the SNS+SQS fan-out pattern).
 46. SNS *message filtering* (via subscription filter policies) lets each *subscriber* receive only the *subset* of published messages relevant to it.
 

@@ -668,16 +668,19 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
     - Can make *auto-scaling* provisioned with Cloudwatch + Application Auto Scaling services. But, not as fast as On-Demand. 
   2. **On-Demand** — reads/writes auto-scale with the workload, no capacity planning, pay-per-use (more expensive), best for unpredictable workloads/steep sudden spikes.
 - **DAX (DynamoDB Accelerator)**: fully managed, highly available, seamless in-memory cache sitting in front of DynamoDB — microsecond latency for cached data, no application logic changes needed (same DynamoDB API), 5-minute default TTL; caches individual objects and Query/Scan results. Different from ElastiCache in front of DynamoDB, which is typically used to cache computed/aggregated results rather than raw DynamoDB API calls.
-- **Streams**: an ordered stream of item-level create/update/delete events on a table. **DynamoDB Streams** (24h retention, limited consumers, processed via Lambda triggers or the DynamoDB Streams Kinesis Adapter) vs the newer **Kinesis Data Streams for DynamoDB** (up to 1 year retention, many more consumers, processed via Lambda, Kinesis Data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL). Use cases: react to changes in real time (e.g. welcome email), real-time usage analytics, populate derivative tables, cross-region replication, invoke Lambda on changes.
+- **Streams**: an ordered stream of item-level create/update/delete events on a table. 
+  - Use cases: react to changes in real time (e.g. welcome email), real-time usage analytics, populate derivative tables, cross-region replication, invoke Lambda on changes.
+  1. **DynamoDB Streams** (24h retention, limited consumers, processed via Lambda triggers or the DynamoDB Streams Kinesis Adapter) vs 
+  2. the newer **Kinesis Data Streams for DynamoDB** (up to 1 year retention, many more consumers, processed via Lambda, Kinesis Data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL). 
 - **Global Tables**: active-active, two-way replication across regions for low-latency multi-region access; applications can read AND write in any participating region; requires DynamoDB Streams enabled as a prerequisite.
-- **TTL (Time To Live)**: automatically deletes items past an expiration epoch timestamp attribute (scan-and-expire, then scan-and-delete) — reduces stored data/cost, helps meet regulatory retention limits, useful for session data.
+- **TTL (Time To Live)**: automatically deletes items past an expiration epoch timestamp attribute (scan-and-expire, then scan-and-delete).
   - Use cases: reduce storage, regulatory obligations, web sessions
 - **Backups for DR**: continuous backups via **Point-In-Time Recovery (PITR)**, optionally enabled, up to the last 35 days, restore to any point within that window; **On-demand backups** are full, long-term backups kept until explicitly deleted, with no performance/latency impact, manageable via AWS Backup (including cross-region copy). Both restore paths create a **new** table.
 - **S3 integration**: Two types of integration:
   1. **Export to S3** requires PITR enabled, works for any point in the last 35 days, doesn't consume table read capacity; exports in DynamoDB JSON or ION format.
     - Use cases: data analysis (e.g. Athena on top), audit snapshots, or ETL before re-importing
   2. **Import from S3** loads CSV, DynamoDB JSON, or ION, doesn't consume write capacity, always creates a new table, and logs import errors to CloudWatch Logs.
-- Use case: high-scale web/mobile apps, gaming leaderboards, session state — when schema is simple/flexible and scale is a priority.
+    - Use case: high-scale web/mobile apps, gaming leaderboards, session state — when schema is simple/flexible and scale is a priority.
 
 ### Big Data Concepts (Primer)
 *You won't be quizzed on these definitions directly, but Redshift/Athena/EMR/Glue questions assume you know the vocabulary.*
@@ -1023,7 +1026,7 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - **Geo Restriction**: *allowlist* (only approved countries) or *blocklist* (banned countries), country determined via a 3rd-party Geo-IP database
   - use case: *copyright*/*licensing* law compliance.
 - **Cache Invalidations**: updating the origin doesn't refresh edge caches until the TTL expires; force a full (`*`) or partial (`/images/*`) refresh with a CloudFront Invalidation to bypass the TTL immediately.
-- Signed URLs/Cookies for private content distribution.
+- *Signed URLs/Cookies* for private content distribution.
 
 
 ### AWS Global Accelerator
@@ -1130,6 +1133,8 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
   | Role | Event router/switchboard | Pub/sub fan-out | Durable buffer/queue |
   | Best for | Routing events from many AWS services/SaaS partners to multiple targets via content-based filtering (event patterns) | Simple fan-out to a fixed set of subscribers you define (SQS, Lambda, email, HTTP) | Decoupling producer/consumer with backpressure and retry (DLQ) |
   | Extras | Schema Registry; cross-account event aggregation onto one bus | — | — |
+
+- **EventBridge vs SNS — when to use which**: reach for *EventBridge* when you need *content-based filtering* on the event payload (event patterns) to route to *many different targets/consumers*, especially events sourced from *AWS services or third-party SaaS partners*. Reach for *SNS* when you just need *simple, low-latency fan-out* of a message you publish to a *known, fixed set of subscribers* (e.g., an SQS queue + a Lambda + an email topic) without needing to filter on message content.
 
 
 ### SNS (Simple Notification Service)
@@ -1274,7 +1279,13 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
   ```
 - **Roles vs Users**: Use *roles* for *EC2/Lambda/ECS* to access other *AWS services* — never hardcode access keys in code or instances.
 - **Cross-account access**: IAM roles with trust policies let one account *assume a role* in *another* (used heavily in multi-account setups).
-- **Policy evaluation logic**: **Explicit Deny > Explicit Allow > Default Deny**. **SCPs** (Organizations) set the *max permission boundary*; IAM policies operate within that.
+- **Policy evaluation logic**: Access logic eval: **Explicit Deny > Explicit Allow > Default Deny**. **SCPs** (Organizations) set the *max permission boundary*. Policy eval order:
+  1. SCP
+  2. Resource-based policies
+  3. IAM Identity-based permission boundaries
+  4. Session policies
+  5. IAM identity policies
+  6. Implicit Deny
 - **STS (Security Token Service)**: Temporary credentials via `AssumeRole`, used for *federation* and *cross-account* access.
 - *Identity Federation*: *SAML 2.0* for corporate *directories*, *Cognito* for web/mobile apps, IAM Identity Center (SSO) for *workforce access across accounts*.
 - *MFA*: password (something you know) + security device (something you own); protects the root account and IAM users — if a password is stolen/hacked, the account stays safe. 
