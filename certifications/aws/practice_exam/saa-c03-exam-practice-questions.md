@@ -2418,9 +2418,9 @@ Answer: C
 
 ## Question 134
 
-A company wants to move its application to a serverless solution. The serverless solution needs to analyze existing and new data by using SL. The company stores the data in an Amazon S3 bucket. The data requires encryption and must be replicated to a different AWS Region. Which solution will meet these requirements with the LEAST operational overhead?
+A company wants to move its application to a serverless solution. The serverless solution needs to analyze existing and new data by using SQL. The company stores the data in an Amazon S3 bucket. The data requires encryption and must be replicated to a different AWS Region. Which solution will meet these requirements with the LEAST operational overhead?
 
-- A. Create a new S3 bucket. Load the data into the new S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with AWS KMS multi-Region kays (SSE-KMS). Use Amazon Athena to query the data.
+- A. Create a new S3 bucket. Load the data into the new S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with AWS KMS multi-Region keys (SSE-KMS). Use Amazon Athena to query the data.
 - B. Create a new S3 bucket. Load the data into the new S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with AWS KMS multi-Region keys (SSE-KMS). Use Amazon RDS to query the data.
 - C. Load the data into the existing S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with Amazon S3 managed encryption keys (SSE-S3). Use Amazon Athena to query the data.
 - D. Load the data into the existing S3 bucket. Use S3 Cross-Region Replication (CRR) to replicate encrypted objects to an S3 bucket in another Region. Use server-side encryption with Amazon S3 managed encryption keys (SSE-S3). Use Amazon RDS to query the data.
@@ -2428,7 +2428,7 @@ A company wants to move its application to a serverless solution. The serverless
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: C
 
 </details>
 
@@ -2556,7 +2556,7 @@ A company runs a web-based portal that provides users with global breaking news,
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A
 
 </details>
 
@@ -3445,7 +3445,7 @@ A company has a web application that is based on Java and PHP. The company plans
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: B
 
 </details>
 
@@ -4287,9 +4287,7 @@ Answer: D
 
 ## Question 237
 
-An application running on an Amazon EC2 instance in VPC-A needs to access files in another EC2 instance in VPC-B. Both VPCs are in separate AWS accounts. The network administrator needs to design a solution to configure secure access to EC2 instance in VPC-B from VPC-
-
-- A. The connectivity should not have a single point of failure or bandwidth concerns. Which solution will meet these requirements?
+An application running on an Amazon EC2 instance in VPC-A needs to access files in another EC2 instance in VPC-B. Both VPCs are in separate AWS accounts. The network administrator needs to design a solution to configure secure access to EC2 instance in VPC-B from VPC-A. The connectivity should not have a single point of failure or bandwidth concerns. Which solution will meet these requirements?
 - A. Set up a VPC peering connection between VPC-A and VPC-B.
 - B. Set up VPC gateway endpoints for the EC2 instance running in VPC-B.
 - C. Attach a virtual private gateway to VPC-B and set up routing from VPC-A.
@@ -4577,7 +4575,7 @@ Answer: A
 
 ## Question 253
 
-A solutions architect has created two IAM policies: Policy1 and Policy2. Both policies are attached to an IAM group. A cloud engineer is added as an IAM user to the IAM group. Which action will the cloud engineer be able to perform?
+A solutions architect has created two IAM policies: Policy1 (Allow EC2 *) and Policy2 (Deny DS *). Both policies are attached to an IAM group. A cloud engineer is added as an IAM user to the IAM group. Which action will the cloud engineer be able to perform?
 
 - A. Deleting IAM users
 - B. Deleting directories
@@ -8088,7 +8086,7 @@ A company stores data in PDF format in an Amazon S3 bucket. The company must fol
 <details>
 <summary>Reveal answer</summary>
 
-Answer: C
+Answer: D
 
 </details>
 
@@ -11131,7 +11129,12 @@ Answer: B
 
 ## Question 614
 
-A company is designing a new multi-tier web application that consists of the following components: • Web and application servers that run on Amazon EC2 instances as part of Auto Scaling groups • An Amazon RDS DB instance for data storage A solutions architect needs to limit access to the application servers so that only the web servers can access them. Which solution will meet these requirements?
+A company is designing a new multi-tier web application that consists of the following components: 
+
+- Web and application servers that run on Amazon EC2 instances as part of Auto Scaling groups 
+- An Amazon RDS DB instance for data storage 
+
+A solutions architect needs to limit access to the application servers so that only the web servers can access them. Which solution will meet these requirements?
 
 - A. Deploy AWS PrivateLink in front of the application servers. Configure the network ACL to allow only the web servers to access the application servers.
 - B. Deploy a VPC endpoint in front of the application servers. Configure the security group to allow only the web servers to access the application servers.
@@ -13392,7 +13395,7 @@ A company has a new mobile app. Anywhere in the world, users can see local news 
 <details>
 <summary>Reveal answer</summary>
 
-Answer: A
+Answer: B
 
 </details>
 
@@ -13918,7 +13921,7 @@ A pharmaceutical company is developing a new drug. The volume of data that the c
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: C
 
 </details>
 
@@ -17687,7 +17690,7 @@ A weather forecasting company collects temperature readings from various sensors
 <details>
 <summary>Reveal answer</summary>
 
-Answer: D
+Answer: A
 
 </details>
 
@@ -17705,7 +17708,7 @@ A company is implementing a new application on AWS. The company will run the app
 <details>
 <summary>Reveal answer</summary>
 
-Answer: B
+Answer: A/B?
 
 </details>
 

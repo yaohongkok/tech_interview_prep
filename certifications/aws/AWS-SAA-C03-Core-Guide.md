@@ -285,9 +285,10 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 ### AWS Storage Gateway
 - Bridges on-prem environments to AWS storage (S3 isn't NFS-compatible on its own). Deployed as a VM (VMware/Hyper-V/KVM) on-prem or as an EC2 instance; encrypts data in transit.
 - Use cases: disaster recovery, backup & restore, tiered storage, low-latency on-prem cache of cloud data.
-- **S3 File Gateway**: exposes S3 over NFS/SMB, caches recently-used data locally. Supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (Glacier needs a lifecycle policy). Per-gateway IAM role for bucket access; SMB integrates with AD for auth.
-- **Volume Gateway**: block storage over iSCSI, backed by EBS snapshots via S3. **Cached volumes** keep the full dataset in S3, caching only hot data locally. **Stored volumes** keep the full dataset on-prem, with scheduled backups to S3.
-- **Tape Gateway**: a Virtual Tape Library (VTL) backed by S3/Glacier for existing tape-backup workflows — iSCSI interface, "eject" a tape to archive it.
+- Types:
+  1. **S3 File Gateway**: exposes S3 over NFS/SMB, caches recently-used data locally. Supports S3 Standard/Standard-IA/One Zone-IA/Intelligent-Tiering directly (Glacier needs a lifecycle policy). Per-gateway IAM role for bucket access; SMB integrates with AD for auth.
+  2. **Volume Gateway**: block storage over iSCSI, backed by EBS snapshots via S3. **Cached volumes** keep the full dataset in S3, caching only hot data locally. **Stored volumes** keep the full dataset on-prem, with scheduled backups to S3.
+  3. **Tape Gateway**: a Virtual Tape Library (VTL) backed by S3/Glacier for existing tape-backup workflows — iSCSI interface, "eject" a tape to archive it.
 - Hosting options: on-prem via VMware ESXi, Microsoft Hyper-V, or Linux KVM, or on the cloud via EC2.
 
 
@@ -296,7 +297,7 @@ Exam tests heavily: storage class selection based on access pattern + cost, life
 - Moves large amounts of data to/from on-prem or another cloud (NFS, SMB, HDFS, S3 API — needs a DataSync Agent) or directly between AWS storage services (S3, EFS, FSx — no agent needed).
   - **Preserves file permissions and metadata (NFS POSIX, SMB)** — the only service that does this.
   - Tasks can run on a schedule (hourly/daily/weekly); one agent uses up to 10 Gbps, with an optional bandwidth cap.
-  - Rough time estimate: Days ≈ (Data Size / Effective Internet Speed) / 10^5, where 10^5 ≈ (3600s × 24hr / 8b) converts speed from b/s to B/s.
+  - Rough time estimate: Days ≈ (Data Size / Effective Internet Speed) / 10^4, where 10^4 or 10000 ≈ (3600s × 24hr / 8b) converts speed from b/s to B/s.
   - Can sync to any S3 storage class, including Glacier.
   - **vs. Storage Gateway/Snowball/DMS**: DataSync does one-time/scheduled bulk file sync. Storage Gateway gives ongoing transparent access to AWS storage from on-prem apps. Snowball is offline/physical transfer for when network transfer is too slow. DMS is specifically for databases (CDC replication), not files.
 
@@ -1305,7 +1306,7 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 
 ### AWS Organizations & Control Tower
 - **Organizations**: a global service managing multiple AWS accounts. The account that creates it becomes the **management account**; every other account is a **member account** (one org each). **Consolidated Billing** gives one payment method, volume discounts, and shared RI/Savings Plan benefits across accounts. An API automates account creation.
-- **Organizational Units (OUs)**: accounts and nested OUs sit under a Root OU beneath the management account — commonly organized by Business Unit, Environment (Prod/Dev/Test), or Project. Multi-account (vs. one account with many VPCs) benefits: consistent tagging, org-wide CloudTrail centralized to one account, centralized CloudWatch Logs, cross-account admin roles.
+- **Organizational Units (OUs)**: accounts and nested OUs sit under a Root OU beneath the management account. Example: OU1 > OU2 > \[AC1, AC2\]. Multi-account (vs. one account with many VPCs) benefits: consistent tagging, org-wide CloudTrail centralized to one account, centralized CloudWatch Logs, cross-account admin roles.
 - **Service Control Policies (SCPs)**: JSON policies attached to an OU/account restricting what its Users/Roles can do (guardrails, not grants) — no implicit allow; an explicit Allow must exist through every OU in the path. SCPs never apply to the management account. A Deny anywhere in the chain blocks it; an "Allowlist strategy" starts from Allow-all and adds Denies, a "Blocklist strategy" grants only specific Allows instead of `FullAWSAccess`.
 - **Tag Policies**: standardize tag keys/values org-wide, support Cost Allocation Tags and ABAC, and can flag non-compliant tags (not untagged resources) to EventBridge.
 - **Control Tower**: automated, best-practice setup for a secure multi-account environment, built on Organizations. **Guardrails** are **Preventive** (SCPs, e.g. restrict regions) or **Detective** (Config rules, e.g. flag untagged resources), which can trigger SNS or Lambda for remediation.
@@ -1318,7 +1319,8 @@ In the 'Additional Notes',  see the section 'Additional Messaging Services'.
 - **ABAC**: fine-grained permissions from user attributes (cost center, title, locale) instead of per-user rules — change access by changing attributes.
 
 ### Amazon Cognito
-- Gives web/mobile app users an identity to log in and (optionally) access AWS resources directly — exam triggers: "hundreds of users," "mobile users," "SAML/social login" (vs IAM, for internal/console users).
+- Gives web/mobile app users an identity to log in and (optionally) access AWS resources directly — exam triggers: "high number of users," "mobile users," "SAML/social login" (vs IAM, for internal/console users).
+- Can handle up to 40 millions of sign-ins.
 - **Cognito User Pools (CUP)**: a serverless user directory for sign-up/sign-in — username/email+password, password reset, MFA, and federated logins (Facebook, Google, SAML, OIDC, another User Pool). Integrates with API Gateway (token validation) and ALB (auth before forwarding).
 - **Cognito Identity Pools (Federated Identities)**: exchanges a login for **temporary AWS credentials**, letting users hit S3/DynamoDB directly or via API Gateway. IAM policies can be customized per `user_id` (e.g. row-level DynamoDB security via `dynamodb:LeadingKeys`); default roles exist for authenticated vs guest users.
 - Use case: a mobile app storing files in a user's own S3 prefix, or restricting DynamoDB rows per user, without a backend in the loop.

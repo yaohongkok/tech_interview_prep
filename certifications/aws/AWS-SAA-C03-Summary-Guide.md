@@ -46,7 +46,6 @@
 | *Amazon CloudFront* [#7 pop] | Global content delivery network (CDN) | Low-latency content delivery, DDoS mitigation |
 | AWS Global Accelerator | Static Anycast IPs routing traffic over the AWS backbone (for EC2 stuff) | *Non-HTTP*, *multi-region routing*, fast regional *failover* |
 | Amazon API Gateway [#15 pop] | Managed API front door | Serverless REST/HTTP/WebSocket APIs |
-| Amazon Cognito | User authentication for web/mobile apps | App login, temporary AWS credentials for end users |
 | AWS Direct Connect | Dedicated private network link to AWS | High-bandwidth, low-latency hybrid connectivity |
 | AWS Site-to-Site VPN | Encrypted IPsec connection to a VPC over the internet | Quick/interim hybrid (on-prem VPN) connectivity, DX backup |
 | AWS Transit Gateway | Hub-and-spoke transitive routing across VPCs/VPNs/DX | Simplifying networking at scale across many VPCs |
@@ -101,6 +100,7 @@
 | *IAM* [#11 pop] | Manage users, groups, roles, and permission policies | Least-privilege access control, cross-account roles, MFA enforcement |
 | AWS Organizations | Centrally manage multiple AWS accounts with consolidated billing | Multi-account governance, Service Control Policy (SCP) guardrails |
 | AWS Control Tower | Automated setup/governance of a secure multi-account landing zone | Enterprise multi-account environments with guardrails |
+| Amazon Cognito | User authentication for web/mobile apps | App login (<40M>), temporary AWS credentials for end users |
 | AWS KMS [#12 pop] | AWS-managed encryption key creation, rotation, and usage auditing | Encrypting S3/EBS/RDS data (SSE-KMS), envelope encryption |
 | AWS CloudHSM | Dedicated, single-tenant hardware security modules you fully control | Compliance needing full key custody, Oracle TDE, Redshift encryption |
 | AWS Secrets Manager | Store and auto-rotate secrets like DB credentials | RDS credential rotation, multi-region secret replication |
@@ -261,6 +261,7 @@
     - Direct Connect (DX) {Dedicated DX: Fast speed,  Hosted: Slower}
     - Transit Gateway {hub-and-spoke, transitive, connects VPN, VPC & DX together}
       - Equal Cost Multipath Routing {combine multiple Site-to-Site VPN for faster bandwidth}
+    - VPC Lattice {microservice, service registry, routing control, low op}
 
 7. Cloudfront
   - Origins {S3, private subnet VPC comp, custom HTTP}
