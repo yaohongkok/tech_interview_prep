@@ -14085,6 +14085,7 @@ A company has a mobile game that reads most of its metadata from an Amazon RDS D
 <summary>Reveal answer</summary>
 
 Answer: C
+Reason: ElasticCache Redis supports snapshot, replication, Multi-AZ & cross region. 
 
 </details>
 
