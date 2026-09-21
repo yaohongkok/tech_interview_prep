@@ -1,0 +1,155 @@
+@startuml subscription_billing_payment_architecture
+!theme plain
+title Highly Reliable Subscription Billing & Payment System
+
+skinparam componentStyle rectangle
+skinparam wrap true
+skinparam maxMessageSize 100
+skinparam linetype ortho
+skinparam nodesep 45
+skinparam ranksep 55
+skinparam component {
+  BackgroundColor White
+  BorderColor #444444
+}
+skinparam package {
+  BackgroundColor #F7F7F7
+  BorderColor #999999
+}
+skinparam arrow {
+  Color #222222
+}
+
+actor "Customer" as Customer
+actor "Support / Ops Agent" as Ops
+
+package "Edge / API Layer" {
+  [Customer Portal / Mobile App] as Portal
+  [API Gateway\n(authn, rate limiting, idempotency keys)] as Gateway
+}
+
+package "Core Billing Domain" {
+  [Subscription Service\n(plans, trials, upgrades/downgrades)] as SubSvc
+  [Pricing & Rating Engine\n(tiers, discounts, proration, tax)] as Pricing
+  [Usage Metering Service\n(metered/usage-based billing)] as Metering
+  [Invoice Service\n(invoice generation, credit notes)] as Invoice
+  [Dunning & Retry Service\n(failed payment recovery)] as Dunning
+}
+
+package "Payment Processing" {
+  [Payment Orchestrator\n(routing, retries, idempotency)] as PayOrch
+  [Fraud & Risk Engine] as Fraud
+  [Tokenization / Vault\n(PCI-scoped card token storage)] as Vault
+  () "Payment Gateway A" as GatewayA
+  () "Payment Gateway B (fallback)" as GatewayB
+}
+
+package "Reliability & Messaging Backbone" {
+  [Outbox / CDC Relay\n(transactional outbox pattern)] as Outbox
+  queue "Event Bus / Message Broker\n(Kafka, exactly-once semantics)" as Bus
+  [Saga / Workflow Orchestrator\n(distributed transaction coordination)] as Saga
+  [Dead Letter Queue Handler] as DLQ
+}
+
+package "Ledger & Reconciliation" {
+  [Reconciliation Service\n(matches gateway settlements to ledger)] as Recon
+  [Double-Entry Ledger Service\n(source of financial truth)] as Ledger
+  [Revenue Recognition Service] as RevRec
+}
+
+package "Data Stores" {
+  database "Idempotency Key Store\n(Redis/DynamoDB)" as IdemStore
+  database "Billing DB\n(multi-AZ, primary/replica)" as BillingDB
+  database "Ledger DB\n(append-only, immutable)" as LedgerDB
+}
+
+package "Cross-Cutting Concerns" {
+  [Secrets & Key Management\n(KMS/HSM)] as KMS
+  [Notification Service\n(email/SMS/webhooks)] as Notify
+  [Audit & Compliance Logging\n(SOC2/PCI trail)] as Audit
+  [Observability Stack\n(metrics, tracing, alerting)] as Observability
+}
+
+' ===================== Main spine (solid, black) =====================
+Customer --> Portal
+Ops --> Gateway
+Portal --> Gateway
+Gateway --> SubSvc
+Gateway --> Invoice
+
+SubSvc --> Pricing
+SubSvc --> Metering
+Pricing --> Invoice
+Metering --> Invoice
+Invoice --> PayOrch : trigger charge
+
+PayOrch --> Fraud : pre-charge risk check
+PayOrch --> Vault : fetch payment token
+PayOrch --> GatewayA : charge (primary)
+PayOrch --> GatewayB : charge (failover)
+PayOrch --> Bus : publish\nPaymentSucceeded/Failed
+
+Invoice --> Outbox
+Outbox --> Bus
+
+Bus --> Ledger : payment/invoice events
+Ledger --> RevRec
+Recon --> Ledger : reconcile & flag\ndiscrepancies
+
+' ===================== Async callbacks (dashed, black) =====================
+GatewayA ..> PayOrch : async webhook result
+GatewayB ..> PayOrch : async webhook result
+GatewayA ..> Recon : settlement file
+GatewayB ..> Recon : settlement file
+
+' ===================== Failure handling (dashed, dark orange) =====================
+Bus -[#B8600B,dashed]-> Dunning : PaymentFailed
+Dunning -[#B8600B,dashed]-> PayOrch : scheduled retry
+Bus -[#B8600B,dashed]-> DLQ : unprocessable events
+
+' ===================== Saga coordination (dashed, gray) =====================
+Saga -[#888888,dashed]-> Bus
+Saga -[#888888,dashed]-> SubSvc
+Saga -[#888888,dashed]-> PayOrch
+Saga -[#888888,dashed]-> Invoice
+
+' ===================== State lookups (solid, gray) =====================
+PayOrch -[#888888]-> IdemStore : check/set\nidempotency key
+
+' ===================== Persistence (thin, gray) =====================
+SubSvc -[#999999]-> BillingDB
+Pricing -[#999999]-> BillingDB
+Invoice -[#999999]-> BillingDB
+Ledger -[#999999]-> LedgerDB
+
+' ===================== Cross-cutting (dotted, light gray) =====================
+Bus .[#AAAAAA].> Notify
+Vault .[#AAAAAA].> KMS
+PayOrch .[#AAAAAA].> Audit
+Ledger .[#AAAAAA].> Audit
+SubSvc .[#AAAAAA].> Observability
+PayOrch .[#AAAAAA].> Observability
+Ledger .[#AAAAAA].> Observability
+
+note right of PayOrch
+  Reliability patterns:
+  - Idempotency keys on every charge
+  - Multi-gateway failover
+  - Exponential backoff retries
+  - Circuit breakers per gateway
+end note
+
+note right of Ledger
+  Ledger is the immutable
+  source of truth; all
+  financial reporting reads
+  from here, not billing DB
+end note
+
+note bottom of Bus
+  At-least-once delivery +
+  idempotent consumers +
+  DLQ for poison messages
+end note
+
+@enduml
