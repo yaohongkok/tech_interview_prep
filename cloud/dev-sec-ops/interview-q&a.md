@@ -91,10 +91,71 @@ On the process side:
 
 On the delivery side, I track the DORA (DevOpsResearchAssessment) metrics to confirm security controls aren't harming velocity. These include:
 1. **deployment frequency**. High standard: < 1 month.
-2. lead time = Production Deploy Time - Code Commit Time. High standard: < 1 week.
-3. Change failure rate. High standard: < 30%. 
-4. failed deployment time to restore (MTTR). High standard: < 1 day.
+2. *lead time* = Production Deploy Time - Code Commit Time. High standard: < 1 week.
+3. *Change failure rate*. High standard: < 30%. 
+4. *failed deployment restore time*. High standard: < 1 day.
 
 I look at trends rather than raw numbers, segment by team/app and by risk tier, and avoid vanity metrics such as total findings count, which can incentivize the wrong behavior. 
 
 egular reviews with engineering leadership, plus outcomes like fewer repeat vulnerability classes and faster incident response, show whether the culture and tooling are actually working.
+
+## 8. What security pitfalls have you seen in Spring Boot microservices, and how do you guard against them?
+
+The most common issues cluster around authentication/authorization config and dependency hygiene. I make sure **Spring Security** filter chains explicitly define rules per endpoint rather than relying on defaults, since a misordered or missing matcher can leave an actuator endpoint or admin route unauthenticated. For APIs I use **OAuth2/JWT** (resource server support) and always validate signature, issuer, audience and expiry, and I disable algorithm confusion by pinning the expected signing algorithm rather than trusting the token header.
+
+In **WebFlux**, the reactive security context lives in the Reactor `Context`, not a `ThreadLocal`, so it's easy for a custom operator or a manually spawned thread to silently lose the authenticated principal; I test this explicitly and avoid `Mono`/`Flux` chains that hop schedulers without propagating context.
+
+For dependencies, Spring's own CVEs (e.g., Spring4Shell-style deserialization or data-binding issues) taught me to keep Spring Boot/Spring Framework patched aggressively and run SCA against the full dependency tree, not just direct deps, since transitive Spring Cloud/Jackson versions are frequent CVE sources.
+
+I also disable verbose error responses and actuator info in production (or secure them behind auth and a separate management port), enforce input validation with Bean Validation to reduce injection risk, and use `@ConfigurationProperties` with secrets pulled from Secrets Manager rather than `application.yml`. Finally, I include RestAssured/TestContainers-based security tests (auth-required endpoints, token expiry, role checks) in CI so regressions in access control are caught before merge, not in production.
+
+## 9. How would you secure containerized microservices running on ECS?
+
+I treat the task definition and the surrounding AWS resources as the security boundary. Each ECS **task gets its own IAM task role**, scoped to only the resources it needs (specific DynamoDB table, specific queue), rather than sharing a broad role across services — this limits blast radius if one service is compromised. The task **execution role** (used to pull images and inject secrets) is kept separate and even narrower.
+
+Images are built from minimal, pinned base images, scanned by **ECR image scanning** (or a dedicated scanner) on push, and only signed, vulnerability-free images from trusted repositories are allowed to deploy — enforced via CI gates since ECS lacks Kubernetes-style admission controllers. Secrets are injected at runtime via the `secrets` field pulling from Secrets Manager/Parameter Store, never baked into the image or task definition as plaintext env vars.
+
+Network-wise, tasks run in private subnets with **security groups** scoped to specific ports and source security groups (service-to-service, not 0.0.0.0/0), and I use VPC endpoints for AWS services to avoid traffic transiting the public internet. Where service-to-service auth matters, I add mTLS or signed requests (e.g., via a service mesh like App Mesh, or SigV4 for internal calls) rather than trusting network location alone.
+
+Operationally, I enable ECS Exec auditing, container insights/logging to CloudWatch, and read-only root filesystems where the app allows it, and I keep task definitions and their IAM policies under the same PR review process as application code.
+
+## 10. How do you secure data in DynamoDB and Aurora, and control access to it?
+
+For both, I start with **encryption at rest** (KMS-managed keys, ideally customer-managed for auditability) and enforce **TLS in transit**, then layer access control and network isolation on top.
+
+For **DynamoDB**, I avoid table-wide IAM grants and instead use **fine-grained access control** via IAM condition keys (`dynamodb:LeadingKeys`) so a service or user can only read/write items matching their own partition key — useful in multi-tenant tables. I enable point-in-time recovery for tamper/accident resilience, use VPC endpoints (gateway endpoint) so traffic never leaves the AWS network, and turn on CloudTrail data events for auditing sensitive table access.
+
+For **Aurora**, I prefer **IAM database authentication** over long-lived static DB credentials wherever latency permits, so access is tied to short-lived tokens and IAM policy rather than a password that can leak. Where IAM auth isn't practical, credentials are rotated automatically via **Secrets Manager** rotation Lambdas. The cluster sits in private subnets with security groups restricting inbound access to specific application security groups only, never public accessibility. I also enable encryption of automated backups/snapshots (snapshots inherit encryption but I double-check on cross-account copies, since that's a common misconfiguration), enforce least-privilege DB users/roles at the schema level, and turn on audit logging (Advanced Auditing or `pgaudit`) for sensitive tables to detect anomalous query patterns.
+
+## 11. What are the security risks in an event-driven architecture using SQS, SNS, EventBridge and Lambda, and how do you mitigate them?
+
+The core risks are:
+  1. overly permissive resource policies, 
+  2. unauthenticated/untrusted payloads, and 
+  3. message-level data exposure. 
+
+I set **least-privilege resource policies** on each queue/topic so only specific producer and consumer roles (by ARN condition) can publish or subscribe, rather than leaving them account-wide, and I enable **server-side encryption** (SQS/SNS with KMS) for anything carrying sensitive data.
+
+Because Lambda functions triggered by SQS/SNS/EventBridge process **untrusted or semi-trusted payloads** (from other services, webhooks, or partners), I treat event bodies like any external input: validate schema, sanitize before use in downstream calls (SQL, shell, deserialization), and never assume the source is safe just because it's "internal." Each Lambda gets its own narrowly scoped execution role — read from this one queue, write to that one table — never a shared catch-all role across functions.
+
+For resilience-as-security, I configure **dead-letter queues** with alerting so poison messages or repeated failures are visible rather than silently retried forever (which can be abused for DoS-style resource exhaustion), and I set visibility timeouts and Lambda concurrency limits to contain runaway processing. For EventBridge, I scope rules and use resource-based policies to prevent unintended cross-account event delivery, and I avoid putting secrets or PII directly in event payloads, preferring references (S3 pointers, IDs) resolved via a secured lookup instead.
+
+## 12. How do you use TestContainers, WireMock and Localstack to test security controls before code reaches production?
+
+These tools let me shift security testing left by simulating real dependencies in CI without touching actual cloud accounts or third-party services, so security tests run on every PR rather than only in a shared staging environment.
+
+**TestContainers** spins up real Postgres/Aurora-compatible or Kafka instances in Docker for the test run, so I can *verify* things like *connection encryption* settings, *least-privilege DB user permissions*, and that queries are *parameterized (no injection)* against a real engine rather than mocks that would hide SQL-dialect-specific issues.
+
+**Localstack** emulates AWS services (S3, SQS, SNS, DynamoDB, Secrets Manager) locally, which lets me write integration tests asserting that IAM-like policies are respected, that a service can't read another service's queue, that secrets are fetched via the expected client rather than hardcoded, and that encryption flags are actually set on created resources — catching misconfigured IaC/SDK calls before they hit a real account.
+
+**WireMock** stubs external HTTP dependencies (auth providers, partner APIs) so I can test failure and adversarial scenarios deliberately: expired/invalid JWTs, malformed OAuth responses, slow/hanging responses (resilience under attack-like conditions), and verify the service degrades safely (fails closed, doesn't leak stack traces) rather than failing open.
+
+Together these give me fast, deterministic, security-relevant integration tests in the PR pipeline, which fits the "shift left" principle — expensive full-environment DAST/pen-testing still happens later, but the cheap, high-value checks run on every commit.
+
+## 13. As a Lead Engineer, how would you drive DevSecOps adoption and engineering standards across global teams?
+
+In my experience, declaring standards "non-negotiable" up front is hard to make stick across global, cross-functional teams — it invites pushback and slows everything down before you've proven any value. Instead I drive adoption **team by team**: I pick a pilot team (often one that's already receptive or has a recent incident giving them a reason to care), and I start by **reducing their workload**, not increasing it — auto-remediation, pre-filled templates, paved-road modules that do the secure thing by default so the "secure path" requires less effort than the insecure one, not just marginally more discipline.
+
+Once that team is seeing security work as net-easier rather than net-extra, I gradually raise the bar with them — audit mode first, then soft gates, then hard gates — and use their results (adoption metrics, false-positive rates, time saved) as proof points to bring the next team on board. This compounds: each successful team becomes a reference story and a source of champions who can support the next rollout, so standards spread by demonstrated value rather than mandate. Only once a standard has proven itself across several teams do I consider making it a genuinely non-negotiable, org-wide gate — by then it's backed by evidence and existing muscle memory rather than being imposed cold.
+
+For technical coaching, I favor pairing and RFC-style design reviews over lecturing: reviewing a team's actual architecture and pointing out concrete improvements builds more trust than a generic policy doc. I'd track adoption with the same metrics discussed earlier (coverage, SLA adherence, DORA metrics) and share them transparently so teams see progress and stay motivated rather than treating security as a checkbox imposed from outside. Finally, I'd contribute standards and reusable modules back to the broader AWS cloud engineering community internally, so improvements compound instead of being re-invented per team.
