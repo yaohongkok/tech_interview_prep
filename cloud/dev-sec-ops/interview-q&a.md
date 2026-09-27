@@ -10,9 +10,17 @@ I treat the pipeline as production infrastructure and secure each stage.
 
 **Artifact:** generate an SBOM (software bill of material), scan images for vulnerabilities, then sign artifacts (Sigstore/cosign) and record build provenance (SLSA). Store them in a private registry with immutable tags and access controls. 
 
-**Deploy:** the cluster admission controller (Kyverno/OPA Gatekeeper) only admits signed images from trusted registries that meet policy. Use GitOps or short-lived OIDC-federated credentials for deployment rather than static keys, and require approvals for production.
+**Deploy:** the cluster admission controller (Kyverno/OPA Gatekeeper) only *admits signed images* from *trusted registries* that meet policy. Use GitOps (Git as the single truth source) or *short-lived* OIDC-federated *credentials* for deployment rather than static keys, and require approvals for production.
 
-**Runtime:** apply Pod Security standards, network policies, read-only root filesystems and non-root users, and monitor with runtime detection (Falco, cloud-native threat detection) plus centralized logging and alerting. Run DAST against staging and continuously rescan deployed images, since new CVEs appear after release. 
+**Runtime:** For app runtime:
+1. apply Pod Security standards, 
+2. network policies, 
+3. read-only root filesystems and 
+4. non-root users, and 
+5. monitor with runtime detection (Falco, cloud-native threat detection) plus 
+6. centralized logging and alerting. 
+
+Run DAST against staging and continuously rescan deployed images, since new CVEs appear after release. 
 
 The overarching principles are least privilege, verifiable provenance, and fast feedback so findings reach developers early.
 
@@ -97,13 +105,13 @@ On the delivery side, I track the DORA (DevOpsResearchAssessment) metrics to con
 
 I look at trends rather than raw numbers, segment by team/app and by risk tier, and avoid vanity metrics such as total findings count, which can incentivize the wrong behavior. 
 
-egular reviews with engineering leadership, plus outcomes like fewer repeat vulnerability classes and faster incident response, show whether the culture and tooling are actually working.
+Regular reviews with engineering leadership, plus outcomes like fewer repeat vulnerability classes and faster incident response, show whether the culture and tooling are actually working.
 
 ## 8. What security pitfalls have you seen in Spring Boot microservices, and how do you guard against them?
 
-The most common issues cluster around authentication/authorization config and dependency hygiene. I make sure **Spring Security** filter chains explicitly define rules per endpoint rather than relying on defaults, since a misordered or missing matcher can leave an actuator endpoint or admin route unauthenticated. For APIs I use **OAuth2/JWT** (resource server support) and always validate signature, issuer, audience and expiry, and I disable algorithm confusion by pinning the expected signing algorithm rather than trusting the token header.
+The most common issues cluster around authentication/authorization config and dependency hygiene. I make sure **Spring Security Filter Chains** explicitly define rules per endpoint rather than relying on defaults, since a misordered or missing matcher can leave an actuator endpoint or admin route unauthenticated. For APIs I use **OAuth2/JWT** (resource server support) and always validate signature, issuer, audience and expiry, and I disable algorithm confusion by pinning the expected signing algorithm rather than trusting the token header.
 
-In **WebFlux**, the reactive security context lives in the Reactor `Context`, not a `ThreadLocal`, so it's easy for a custom operator or a manually spawned thread to silently lose the authenticated principal; I test this explicitly and avoid `Mono`/`Flux` chains that hop schedulers without propagating context.
+(Not a security risk but common auth bug.) In **WebFlux**, the reactive security context lives in the Reactor `Context`, not a `ThreadLocal`, so it's easy for a custom operator or a manually spawned thread to silently lose the authenticated principal; I test this explicitly and avoid `Mono`/`Flux` chains that hop schedulers without propagating context.
 
 For dependencies, Spring's own CVEs (e.g., Spring4Shell-style deserialization or data-binding issues) taught me to keep Spring Boot/Spring Framework patched aggressively and run SCA against the full dependency tree, not just direct deps, since transitive Spring Cloud/Jackson versions are frequent CVE sources.
 
@@ -123,9 +131,18 @@ Operationally, I enable ECS Exec auditing, container insights/logging to CloudWa
 
 For both, I start with **encryption at rest** (KMS-managed keys, ideally customer-managed for auditability) and enforce **TLS in transit**, then layer access control and network isolation on top.
 
-For **DynamoDB**, I avoid table-wide IAM grants and instead use **fine-grained access control** via IAM condition keys (`dynamodb:LeadingKeys`) so a service or user can only read/write items matching their own partition key — useful in multi-tenant tables. I enable point-in-time recovery for tamper/accident resilience, use VPC endpoints (gateway endpoint) so traffic never leaves the AWS network, and turn on CloudTrail data events for auditing sensitive table access.
+For **DynamoDB**:
+1. I avoid table-wide IAM grants and instead use **fine-grained access control** via IAM condition keys (`dynamodb:LeadingKeys`) so a service or user can only read/write items matching their own partition key — useful in multi-tenant tables. If the architecture does not allow it, then separation of tenant can done through:
+  1. One service acting as access for other dependent services
+  2. One tenant, one account
+  3. One tenant, one DynamoDB table
+2. Enable point-in-time recovery for tamper/accident resilience, use VPC endpoints (gateway endpoint) so traffic never leaves the AWS network, and turn on CloudTrail data events for auditing sensitive table access.
 
-For **Aurora**, I prefer **IAM database authentication** over long-lived static DB credentials wherever latency permits, so access is tied to short-lived tokens and IAM policy rather than a password that can leak. Where IAM auth isn't practical, credentials are rotated automatically via **Secrets Manager** rotation Lambdas. The cluster sits in private subnets with security groups restricting inbound access to specific application security groups only, never public accessibility. I also enable encryption of automated backups/snapshots (snapshots inherit encryption but I double-check on cross-account copies, since that's a common misconfiguration), enforce least-privilege DB users/roles at the schema level, and turn on audit logging (Advanced Auditing or `pgaudit`) for sensitive tables to detect anomalous query patterns.
+For **Aurora**: 
+1. I prefer **IAM database authentication** over long-lived static DB credentials wherever latency permits, so access is tied to short-lived tokens and IAM policy rather than a password that can leak. 
+2. Where IAM auth isn't practical, credentials are rotated automatically via **Secrets Manager** rotation Lambdas. 
+3. The cluster sits in private subnets with security groups restricting inbound access to specific application security groups only, never public accessibility. 
+4. I also enable encryption of automated backups/snapshots (snapshots inherit encryption but I double-check on cross-account copies, since that's a common misconfiguration), enforce least-privilege DB users/roles at the schema level, and turn on audit logging (Advanced Auditing or `pgaudit`) for sensitive tables to detect anomalous query patterns.
 
 ## 11. What are the security risks in an event-driven architecture using SQS, SNS, EventBridge and Lambda, and how do you mitigate them?
 

@@ -1,0 +1,657 @@
+# Splunk Admin Interview Prep
+
+## 0. Positioning: user/governance side → admin side
+
+**My honest starting point:** I have used Splunk heavily and helped govern log ingestion (which sources come in, naming, sourcetypes, what is worth indexing), but I didn't have admin permissions on the platform itself.
+
+**How to frame it in the interview:**
+- "I've been the *customer* of the Splunk platform team. I know what good ingestion looks like from the consumer side: consistent sourcetypes, correct timestamps, sensible index separation, no noisy data burning license. I now want to own the platform that enforces it."
+- Map each governance activity to the admin mechanism behind it (table below). This shows I understand *how* the admins implemented what I asked for.
+- Be upfront about hands-on gaps and back it with a lab ([§14](#14-hands-on-lab-plan-do-this-before-the-interview)): "I haven't run a production indexer cluster, but I've built one in a lab with a cluster manager, 3 peers, RF=3/SF=2, and practised a rolling restart and a bundle push."
+
+| What I did as a user/governor | What the admin actually configured |
+|---|---|
+| Asked for a new log source to be onboarded | `inputs.conf` on UF, deployed via deployment server `serverclass.conf` |
+| Agreed on sourcetype/index naming standards | `indexes.conf` on indexers, `sourcetype=` in inputs, `props.conf` stanzas |
+| Reported broken timestamps / multi-line events | `props.conf`: `TIME_PREFIX`, `TIME_FORMAT`, `LINE_BREAKER`, `SHOULD_LINEMERGE` |
+| Requested dropping noisy debug logs | `props.conf` + `transforms.conf` → `nullQueue` (or ingest actions) |
+| Requested masking of PII/tokens | `SEDCMD` or transforms rewriting `_raw` |
+| Asked for access to an index | Role in `authorize.conf` with `srchIndexesAllowed`, mapped to an LDAP/SAML group |
+| Asked "how long do we keep this?" | `frozenTimePeriodInSecs`, `maxTotalDataSizeMB` per index |
+| Complained about slow dashboards | Search concurrency limits, accelerations, scheduler skipped searches |
+| License usage reviews | License manager, `license_usage.log` in `_internal` |
+
+---
+
+## 1. Splunk architecture & components
+
+```
+Sources: servers/apps, syslog, cloud/APIs
+      │
+      ▼
+Collection tier
+  • Universal Forwarder (UF)
+  • syslog-ng + UF, or SC4S → HEC
+  • Heavy Forwarder (HF) / HEC
+      │
+      │ 9997 (forwarders) / 8088 (HEC)
+      ▼
+Indexing tier
+  • Indexers (cluster peers)
+      ▲
+      │ search dispatched, results back
+      │
+Search tier
+  • Search Head(s): standalone or SHC
+
+Management
+  • Deployment Server → forwarders
+  • Cluster Manager   → indexers
+  • Deployer          → SHC members
+  • License Manager
+  • Monitoring Console
+```
+
+| Component | Role |
+|---|---|
+| **Universal Forwarder (UF)** | Lightweight agent. Collects & forwards. Does **not** parse (except structured data via `INDEXED_EXTRACTIONS`, and `EVENT_BREAKER` for load balancing). No UI, no Python. |
+| **Heavy Forwarder (HF)** | Full Splunk instance with forwarding. **Parses** data, so can filter/route/mask before indexing. Used for API inputs (add-ons), syslog aggregation, routing to multiple destinations. |
+| **Indexer** | Parses (if not already parsed), indexes, stores data in buckets, and executes the map part of searches. |
+| **Search Head (SH)** | UI, dispatches searches to indexers (map-reduce: indexers do the map, SH does the reduce), hosts knowledge objects (dashboards, saved searches, field extractions). |
+| **Cluster Manager (CM)** *(formerly "master")* | Coordinates an indexer cluster: replication, bucket fix-ups, config bundle distribution. |
+| **Search Head Cluster (SHC)** | ≥3 SHs. A **captain** (elected via RAFT) schedules jobs and coordinates replication of knowledge objects. |
+| **Deployer** | Pushes apps/config to SHC members. Not part of the SHC. |
+| **Deployment Server (DS)** | Pushes apps to forwarders (and standalone instances). |
+| **License Manager** | Central license tracking; other instances are license peers. |
+| **Monitoring Console (MC)** | Health dashboards for the whole deployment (indexing rate, queues, search load, KV store, license). |
+| **HEC (HTTP Event Collector)** | Token-authenticated HTTP(S) ingestion (default port 8088). Common for cloud/app/container logs. |
+
+**Deployment sizes**
+- *Single instance*: everything on one box (labs, small).
+- *Distributed*: separate UFs → indexers → SHs.
+- *Clustered*: indexer cluster (HA of data) + SHC (HA of search/knowledge objects), optionally **multisite** for DR.
+
+**Terminology changes to know** (Splunk renamed these): master → **manager**, slave → **peer**, `master-apps` → `manager-apps`, `slave-apps` → `peer-apps`. Splunk is now part of Cisco (acquisition completed 2024).
+
+---
+
+## 2. Directory layout & config files
+
+`$SPLUNK_HOME` (usually `/opt/splunk` or `/opt/splunkforwarder`)
+
+```
+$SPLUNK_HOME/
+├── bin/                     # splunk CLI
+├── etc/
+│   ├── system/default/      # NEVER edit — overwritten on upgrade
+│   ├── system/local/        # instance-wide overrides
+│   ├── apps/<app>/default/  # shipped by app author
+│   ├── apps/<app>/local/    # your overrides for that app
+│   ├── users/<user>/<app>/local/   # private knowledge objects
+│   ├── deployment-apps/     # (DS) apps to send to forwarders
+│   ├── manager-apps/        # (CM) bundle to push to peers
+│   ├── peer-apps/           # (peers) bundle received from CM
+│   └── shcluster/apps/      # (deployer) bundle to push to SHC
+└── var/lib/splunk/          # index data (default SPLUNK_DB)
+```
+
+**Golden rule:** never edit `default/`. Put changes in `local/`, ideally inside a dedicated app (e.g. `org_all_indexes`, `org_uf_base`), so config is versioned, portable and deployable.
+
+### Key .conf files
+
+| File | Purpose | Where it lives |
+|---|---|---|
+| `inputs.conf` | What to collect (`[monitor://]`, `[tcp://]`, `[udp://]`, `[splunktcp://9997]`, `[http://]`, scripted, WinEventLog) | UF/HF; `splunktcp` on indexers |
+| `outputs.conf` | Where to send (`[tcpout:group]`, `server=idx1:9997,idx2:9997`, `useACK`, `indexerDiscovery`) | Forwarders |
+| `props.conf` | Per sourcetype/source/host: line breaking, timestamps, extractions, which transforms to call | Parsing tier (HF/indexer) **and** search heads (search-time parts) |
+| `transforms.conf` | Regex-based actions: routing, filtering, masking, field extraction, lookups | Same as props |
+| `indexes.conf` | Index definitions, paths, retention, size limits, SmartStore volumes | Indexers (+ SH so index names autocomplete) |
+| `server.conf` | Clustering, SHC, KV store, SSL, general settings | All |
+| `authentication.conf` | Auth method: Splunk native, LDAP, SAML; role mapping | SH |
+| `authorize.conf` | Roles, capabilities, index access, search quotas | SH |
+| `serverclass.conf` | DS: which clients get which apps | DS |
+| `deploymentclient.conf` | Tells a client where its DS is | Clients |
+| `limits.conf` | Search concurrency, memory, result limits | SH/indexers |
+| `savedsearches.conf` | Reports & alerts | SH |
+| `web.conf` | Splunk Web settings (port, SSL) | SH |
+
+### Config precedence (btool is your friend)
+
+- **Global/index-time context** (inputs, outputs, indexes, index-time props): `system/local` > `apps/*/local` > `apps/*/default` > `system/default`. Between apps, precedence is by app directory name in lexicographic (ASCII) order — so naming like `000_org_base` is sometimes used deliberately.
+- **App/user (search-time) context**: current user's dir > current app (`local` > `default`) > other apps that export objects globally > `system`.
+- Within one file, more specific stanzas win: `[source::...]` > `[host::...]` > `[sourcetype]`.
+
+```bash
+splunk btool props list my_sourcetype --debug     # merged result + which file each line came from
+splunk btool check                                # syntax check all conf files
+splunk btool inputs list --debug | grep monitor
+```
+
+**Reload vs restart:** many changes need a `splunk restart`; some can reload via `/debug/refresh` or `splunk reload deploy-server`, `splunk reload index` etc. Index-time props changes need a restart (or bundle push/rolling restart on a cluster).
+
+---
+
+## 3. The data pipeline: index time vs search time
+
+This is the #1 conceptual topic. Know **which phase** a setting belongs to, because that decides **where** to deploy it.
+
+```
+Input      ← UF (or first instance)
+  │ parsingQueue
+  ▼
+Parsing    ← HF or indexer
+  │ aggQueue
+  ▼
+Merging    ← HF or indexer
+  │ typingQueue
+  ▼
+Typing     ← HF or indexer
+  │ indexQueue
+  ▼
+Indexing   ← indexer
+```
+
+| Phase | What happens | Key settings | Runs on |
+|---|---|---|---|
+| **Input** | Read data, attach `host`, `source`, `sourcetype`, `index`; character set | `inputs.conf`, `CHARSET` | UF / first Splunk instance |
+| **Parsing** | Break stream into lines/events | `LINE_BREAKER`, `TRUNCATE` | First *full* instance: HF or indexer |
+| **Merging** | Merge lines into multi-line events; extract timestamp | `SHOULD_LINEMERGE`, `BREAK_ONLY_BEFORE`, `TIME_PREFIX`, `TIME_FORMAT`, `MAX_TIMESTAMP_LOOKAHEAD`, `TZ` | HF / indexer |
+| **Typing** | Regex transforms: mask, route, filter, index-time fields | `SEDCMD`, `TRANSFORMS-*` | HF / indexer |
+| **Indexing** | Write raw data (compressed journal) + tsidx files into buckets | `indexes.conf` | Indexer |
+| **Search time** | Field extraction and enrichment when searching | `EXTRACT-`, `REPORT-`, `KV_MODE`, `FIELDALIAS-`, `EVAL-`, `LOOKUP-`, tags, eventtypes | Search head |
+
+**Key consequences**
+- If data passes through an HF, parsing happens **there**; the indexer does not re-parse it ("cooked" data). So index-time props must go on the HF, not the indexer. Classic gotcha.
+- Index-time changes only affect **new** data. Fixing a broken timestamp config won't fix already-indexed events (you'd need to re-ingest).
+- Prefer **search-time** extraction: flexible, no reindex, no index bloat. Use index-time fields only when needed for performance (e.g. `tstats` on a field).
+
+### The "Magic 6/8" props for a well-behaved sourcetype (governance favourite)
+
+```ini
+# props.conf
+[acme:app:json]
+SHOULD_LINEMERGE = false
+LINE_BREAKER = ([\r\n]+)
+TRUNCATE = 10000
+TIME_PREFIX = "timestamp":"
+TIME_FORMAT = %Y-%m-%dT%H:%M:%S.%3N%z
+MAX_TIMESTAMP_LOOKAHEAD = 30
+# optional but good practice
+EVENT_BREAKER_ENABLE = true        # on UF, for clean load balancing
+EVENT_BREAKER = ([\r\n]+)
+KV_MODE = json                     # search time, on SH
+```
+
+Why it matters: without explicit settings, Splunk *guesses* line-merging and timestamps, which is CPU-expensive and error-prone (events glued together, wrong `_time`, data "missing" because it's timestamped in the future/past).
+
+### Common index-time recipes
+
+**Drop noisy events (e.g. DEBUG):**
+```ini
+# props.conf
+[acme:app]
+TRANSFORMS-drop_debug = drop_debug
+
+# transforms.conf
+[drop_debug]
+REGEX = \sDEBUG\s
+DEST_KEY = queue
+FORMAT = nullQueue
+```
+
+**Keep only certain events** (send everything to null, then route matches back to indexQueue — order matters):
+```ini
+TRANSFORMS-filter = setnull, keep_errors
+[setnull]
+REGEX = .
+DEST_KEY = queue
+FORMAT = nullQueue
+[keep_errors]
+REGEX = ERROR|WARN
+DEST_KEY = queue
+FORMAT = indexQueue
+```
+
+**Route to a different index:**
+```ini
+[route_security]
+REGEX = auth_failure
+DEST_KEY = _MetaData:Index
+FORMAT = security
+```
+
+**Mask sensitive data:**
+```ini
+# props.conf
+[acme:payments]
+SEDCMD-mask_card = s/\d{12}(\d{4})/XXXXXXXXXXXX\1/g
+```
+
+**Modern alternative (Enterprise 9.0+):** *Ingest Actions* (UI-based filter/mask/route, can also send to S3). Worth mentioning to show awareness, but know the classic props/transforms way thoroughly.
+
+---
+
+## 4. Getting data in & forwarder management
+
+### UF basics
+```bash
+# install then:
+splunk add forward-server idx1.example.com:9997
+splunk add monitor /var/log/app/app.log -index app_prod -sourcetype acme:app
+splunk list forward-server          # active vs configured-but-inactive
+splunk list monitor
+splunk list inputstatus             # file read positions
+splunk set deploy-poll ds.example.com:8089
+```
+
+On indexers: enable receiving on 9997 (`[splunktcp://9997]` or `splunk enable listen 9997`).
+
+### outputs.conf essentials
+```ini
+[tcpout]
+defaultGroup = primary_indexers
+
+[tcpout:primary_indexers]
+server = idx1:9997, idx2:9997, idx3:9997
+useACK = true                  # indexer acknowledgement -> no data loss on failure
+autoLBFrequency = 30           # auto load balancing between indexers
+```
+With an indexer cluster, prefer **indexer discovery** (forwarders ask the CM for the peer list) so you don't hard-code indexers.
+
+### Deployment server
+```ini
+# serverclass.conf on DS
+[serverClass:linux_web]
+whitelist.0 = web-*.example.com
+machineTypesFilter = linux-x86_64
+
+[serverClass:linux_web:app:org_uf_outputs]
+restartSplunkd = true
+[serverClass:linux_web:app:acme_web_inputs]
+restartSplunkd = true
+```
+- Apps live in `$SPLUNK_HOME/etc/deployment-apps/`. After changes: `splunk reload deploy-server`.
+- Clients phone home on an interval (`phoneHomeIntervalInSecs`).
+- **Don't** use the DS to manage clustered indexers (use CM) or SHC members (use the deployer).
+- Scaling: one DS can handle many thousands of clients; tune phone-home interval for large estates.
+- (Newer versions include `whitelist/blacklist` → `allowlist/denylist` naming.)
+
+### Common input types
+- `monitor://` files/dirs (tracks position via the **fishbucket** — `_thefishbucket`; `crcSalt = <SOURCE>` to force re-reading rotated files with identical headers; `initCrcLength`).
+- `WinEventLog://Security`, `perfmon://`.
+- Syslog: best practice is **not** to send syslog directly to indexers (restarts lose UDP data). Use syslog-ng/rsyslog writing to files + UF, or **SC4S** (Splunk Connect for Syslog → HEC).
+- HEC: token-based, `[http://token_name]`, optional indexer acknowledgement, put behind a load balancer.
+- Add-ons (TAs) from Splunkbase for AWS, Azure, O365 etc., typically on an HF.
+
+### Onboarding process (a great answer for "how would you onboard a new source?")
+1. Requirements: owner, use case, volume/day, retention, sensitivity (PII?), who needs access.
+2. Get a sample; test in a dev instance with *Add Data* preview to settle line breaking + timestamps.
+3. Choose/define sourcetype (reuse a Splunkbase TA/CIM-compliant one where possible), index, and role access.
+4. Write props (magic 6/8), filters/masking if required.
+5. Deploy: `indexes.conf` via CM bundle → props/transforms to parsing tier → inputs via DS → search-time props to SH/deployer.
+6. Validate: event counts, `_time` vs `_indextime` lag, field extraction, license impact.
+7. Document and hand over (data dictionary, dashboards, alert on source going silent).
+
+This is exactly where my governance background shines — I've done steps 1, 3, 6, 7 from the other side.
+
+---
+
+## 5. Indexes, buckets & retention
+
+### Bucket lifecycle
+```
+hot      writable, homePath
+  │ rolls on size / age / restart
+  ▼
+warm     read-only, homePath
+  │ maxWarmDBCount or homePath size
+  ▼
+cold     read-only, coldPath
+  │ age (frozenTimePeriodInSecs)
+  │ or size (maxTotalDataSizeMB)
+  ▼
+frozen   deleted by default, or archived
+         via coldToFrozenDir/Script
+  │ restore archive manually
+  ▼
+thawed   thawedPath, then splunk rebuild
+```
+- A bucket = directory with **rawdata** (compressed journal) + **tsidx** (time-series index files) + metadata. Named like `db_<newest>_<oldest>_<id>` (epoch times).
+- Data freezes when the **newest** event in the bucket is older than `frozenTimePeriodInSecs` (so a bucket can hold data older than retention until the whole bucket ages out), **or** when the index exceeds `maxTotalDataSizeMB` (oldest buckets frozen first). Whichever comes first.
+- Default `frozenTimePeriodInSecs` = 188697600 (~6 years); default `maxTotalDataSizeMB` = 500000 (~500 GB). Always set them explicitly.
+
+```ini
+# indexes.conf
+[app_prod]
+homePath   = volume:hot/app_prod/db
+coldPath   = volume:cold/app_prod/colddb
+thawedPath = $SPLUNK_DB/app_prod/thaweddb       # cannot use a volume
+frozenTimePeriodInSecs = 7776000                 # 90 days
+maxTotalDataSizeMB = 200000
+repFactor = auto                                 # REQUIRED for it to be replicated in a cluster
+
+[volume:hot]
+path = /splunk/hot
+maxVolumeDataSizeMB = 1500000
+```
+
+### Index design principles
+- Separate indexes by **access control** (roles are granted per index) and by **retention** (retention is per index). Not by every source — too many indexes = admin overhead; too few = can't restrict access.
+- Naming convention (e.g. `<bu>_<env>_<category>`).
+- Internal indexes: `_internal` (splunkd.log, metrics.log, license_usage.log, scheduler.log), `_audit` (who searched/did what), `_introspection` (resource usage), `_telemetry`, `_configtracker` (config change history, 9.x).
+- `summary` / summary indexes for pre-computed results; **metrics** indexes (`datatype = metric`) for numeric time series — far cheaper to search.
+
+### Sizing rule of thumb
+- Raw data compresses to roughly **~50% on disk** (≈15% rawdata + ≈35% tsidx, highly variable).
+- Storage ≈ daily ingest × 0.5 × retention days × (RF/SF overhead in a cluster).
+
+### SmartStore
+- Warm/cold buckets live in **object storage** (S3 / Azure Blob / GCS); indexers keep hot buckets + a local **cache** managed by the cache manager.
+- Decouples compute from storage, cheaper retention, faster peer recovery (buckets don't need full re-replication; only hot buckets replicate).
+- Configured with `[volume:remote_store] storageType = remote, path = s3://...` and `remotePath` per index.
+- Trade-off: searches over old data not in cache must fetch from S3 (slower); cache sizing matters.
+
+---
+
+## 6. Clustering
+
+### Indexer cluster
+- **Replication Factor (RF)**: number of copies of raw data across peers (default 3). Tolerates RF−1 peer failures without data loss.
+- **Search Factor (SF)**: number of *searchable* copies (with tsidx) (default 2). SF ≤ RF. Non-searchable copies are smaller but need rebuild time to become searchable.
+- **Primary copy**: exactly one searchable copy per bucket is primary and answers searches.
+- **Valid / Complete cluster**: *valid* = one primary per bucket (searchable); *complete* = RF and SF met.
+- **Bucket fix-up**: when a peer dies, the CM orchestrates re-replication and making copies searchable.
+- **Multisite**: `site_replication_factor = origin:2, total:3`, `site_search_factor = origin:1, total:2`. Search affinity keeps searches local to a site.
+- The **CM is not in the data path** — if it's down, indexing and searching continue (with limits: no fix-ups, no bundle pushes). Plan standby CM (supported active/standby in recent versions).
+
+**Configuration bundle**
+```bash
+# on the CM: place apps in $SPLUNK_HOME/etc/manager-apps/
+splunk validate cluster-bundle --check-restart
+splunk apply cluster-bundle          # pushes to peers' peer-apps/, rolling restart if needed
+splunk show cluster-bundle-status
+```
+Never edit config directly on peers — it gets overwritten/drifts.
+
+**Maintenance**
+```bash
+splunk enable maintenance-mode       # pause bucket fix-ups during planned work
+splunk rolling-restart cluster-peers # (or `searchable` rolling restart to keep search available)
+splunk offline                       # on a peer: graceful shutdown, hands off primaries
+splunk offline --enforce-counts      # permanent decommission: waits until RF/SF re-met elsewhere
+splunk show cluster-status --verbose
+```
+
+### Search head cluster
+- Minimum **3** members (RAFT needs a majority to elect a captain).
+- Captain: schedules saved searches across members, coordinates knowledge object replication and artifacts.
+- **Deployer** pushes apps: `$SPLUNK_HOME/etc/shcluster/apps/` → `splunk apply shcluster-bundle -target https://sh1:8089`.
+- Runtime changes made in the UI (dashboards, saved searches) replicate between members automatically; baseline config comes from the deployer.
+- KV store is replicated across SHC members.
+- Useful: `splunk show shcluster-status`, `splunk transfer shcluster-captain`, `splunk resync shcluster-replicated-config` (for a member that drifted).
+- Load balancer in front of SHC for users (sticky sessions).
+
+---
+
+## 7. Licensing
+
+- Two main models: **ingest-based** (GB/day indexed, measured at indexing, midnight-to-midnight per License Manager clock) and **workload-based** (licensed by vCPU for Enterprise).
+- Only data **indexed** counts. Data dropped to `nullQueue` before indexing does **not** count — that's why filtering on HF/indexer saves license. Internal indexes (`_internal` etc.) and summary indexing (with `stash` sourcetype) do not count. Metrics count per event at a fixed size.
+- **License Manager** + license **peers**; licenses grouped in **stacks**, allocated via **pools**.
+- **Violations**: exceeding daily quota generates a warning; too many warnings in a rolling 30-day window (e.g. 5 for Enterprise) = violation. Indexing **never stops**. Historically search was blocked on non-internal indexes during violation; for newer versions/larger licenses (≥100 GB/day) search is not blocked — mention "depends on license size and version".
+- Monitor: *Settings → Licensing → Usage report* or:
+
+```spl
+index=_internal source=*license_usage.log type=Usage
+| eval GB=b/1024/1024/1024
+| timechart span=1d sum(GB) by idx
+```
+Governance tie-in: I've been on the "why is this source eating 30% of license?" side. As admin I'd set up this report per index/sourcetype/host plus an alert on day-over-day spikes.
+
+---
+
+## 8. Users, roles & security
+
+- Authentication: **native** Splunk users, **LDAP**, **SAML** (SSO, e.g. Okta/Entra ID), plus MFA via IdP. Map IdP groups → Splunk roles.
+- Built-in roles: `admin`, `power`, `user`, `can_delete` (only role that can run `| delete` — assign temporarily and sparingly; `delete` only hides events, doesn't free disk).
+- Roles control:
+  - **Capabilities** (e.g. `schedule_search`, `edit_user`, `admin_all_objects`, `rest_apps_management`).
+  - **Index access**: `srchIndexesAllowed` (can search), `srchIndexesDefault` (searched when no `index=` given).
+  - `srchFilter` (row-level restriction, e.g. `host=web*`).
+  - Quotas: `srchJobsQuota`, `rtSrchJobsQuota`, `srchDiskQuota`, `srchTimeWin`.
+  - **Inheritance**: roles can inherit from others.
+- Knowledge object permissions: **private / app / global**, with read/write per role.
+- Hardening: change default admin password, TLS for forwarder→indexer (and cert verification), TLS for splunkd/management port, restrict 8089, keep Splunk and apps patched (Splunk security advisories are frequent), audit via `_audit`, least-privilege roles, `pass4SymmKey` for clusters/DS, don't expose Splunk Web directly to the internet.
+
+```ini
+# authorize.conf
+[role_app_team]
+importRoles = user
+srchIndexesAllowed = app_prod;app_nonprod
+srchIndexesDefault = app_prod
+srchJobsQuota = 5
+srchDiskQuota = 500
+```
+
+---
+
+## 9. Monitoring & troubleshooting (very likely scenario questions)
+
+### Toolkit
+- **Monitoring Console** (Settings → Monitoring Console) — configure in distributed mode.
+- `_internal` logs: `splunkd.log`, `metrics.log` (throughput, queues), `scheduler.log`, `license_usage.log`.
+- `splunk btool ... --debug`, `splunk list forward-server`, `splunk list inputstatus`, `splunk diag` (support bundle), `splunk status`.
+- **Health report** (bell icon / `/services/server/health/splunkd`).
+- Job Inspector for slow searches.
+
+### Scenario: "A source stopped sending data"
+1. Scope it: one host or all hosts? one sourcetype or everything? When did it stop?
+   ```spl
+   | tstats latest(_time) as last_seen where index=* by index, sourcetype, host
+   | eval lag_min=round((now()-last_seen)/60) | where lag_min > 60
+   ```
+2. Is the forwarder phoning in? `index=_internal host=<uf> sourcetype=splunkd` (UFs send their own logs). No internal logs → forwarder down or network/outputs problem.
+3. On the UF: `splunk status`, `splunk list forward-server`, splunkd.log for `TcpOutputProc` errors (connection refused, SSL errors, blocked).
+4. Network/firewall to 9997; indexer receiving enabled? Certs expired?
+5. Is data arriving but "invisible"? Search `index=* host=<host>` over **All time** — wrong timestamp (future/past) or wrong index; check `_indextime` vs `_time`:
+   ```spl
+   index=app_prod host=web01 | eval lag=_indextime-_time | stats avg(lag) max(lag) by sourcetype
+   ```
+6. Index doesn't exist on indexers → events dropped (warning in splunkd.log; or sent to `lastChanceIndex` if set).
+7. File input: permissions (UF user can't read file), file rotated, CRC check skipping ("seekptr checksum" messages) → `crcSalt` / `initCrcLength`.
+8. Blocked queues downstream (next scenario).
+
+### Scenario: "Indexing is slow / queues blocked"
+```spl
+index=_internal source=*metrics.log group=queue
+| eval pct=round(current_size_kb/max_size_kb*100)
+| timechart span=5m max(pct) by name
+```
+- Look at the **furthest downstream** blocked queue — blocking propagates upstream. `indexQueue` full → disk I/O / storage issue. `typingQueue` → heavy regex transforms. `aggQueue` → timestamp/line-merge work (fix props!). `parsingQueue` → line breaking.
+- Fixes: fix props (explicit `LINE_BREAKER`, `SHOULD_LINEMERGE=false`, `TIME_FORMAT`), add indexers, faster disks (hot/warm on SSD), `parallelIngestionPipelines`, check network.
+
+### Scenario: "Searches are slow / scheduled searches are skipped"
+```spl
+index=_internal sourcetype=scheduler status=skipped
+| stats count by savedsearch_name, reason, app
+```
+- Causes: too many concurrent scheduled searches (limit derived from CPU cores via `limits.conf`: `base_max_searches` + `max_searches_per_cpu` × cores; scheduler gets a % of that), everyone scheduling at `*/5` minute 0.
+- Fixes: spread cron schedules, use schedule windows / `schedule_priority`, add SH capacity, accelerate (data model / report acceleration, summary indexing), teach users to use `tstats`, specify `index=`/`sourcetype=`, narrow time ranges, avoid `*` leading wildcards, `transaction`, `join` where `stats` works.
+- Search anti-patterns an admin should police: all-time real-time searches, `index=*`, huge `join`s, dashboards with many independent searches instead of base/post-process searches.
+
+### Other useful SPL for admins
+```spl
+| rest /services/data/indexes | table title currentDBSizeMB maxTotalDataSizeMB frozenTimePeriodInSecs
+| rest /services/deployment/server/clients | table hostname lastPhoneHomeTime
+| metadata type=sourcetypes index=app_prod
+index=_internal sourcetype=splunkd log_level=ERROR | stats count by component
+index=_audit action=search info=completed | stats count avg(total_run_time) by user
+index=_internal sourcetype=splunkd component=DateParserVerbose   # timestamp problems
+index=_internal sourcetype=splunkd component=LineBreakingProcessor # truncation/line-break problems
+```
+
+---
+
+## 10. Knowledge objects & performance features (admin view)
+
+- **Knowledge objects**: saved searches, alerts, reports, dashboards, field extractions, lookups, event types, tags, macros, data models, workflow actions.
+- **Lookups**: CSV, KV store, external/scripted; automatic lookups via `props.conf LOOKUP-`.
+- **KV store**: MongoDB-based, on SHs, port 8191. Backup with `splunk backup kvstore`. Check `| rest /services/kvstore/status`.
+- **CIM (Common Information Model)** & **data models**: normalise field names across sources; required by Enterprise Security. Data model acceleration builds tsidx summaries → `| tstats` searches are extremely fast.
+- **Summary indexing / report acceleration**: pre-compute for heavy recurring reports.
+- **Apps & add-ons**: App = UI/knowledge; TA (Technology Add-on) = inputs + props/transforms for a technology. Know which parts of a TA go on which tier (inputs → forwarder/HF; index-time props → HF/indexers; search-time props → SH). Many TAs are installed on all three.
+
+---
+
+## 11. Upgrades, backup & DR
+
+**Upgrade order (distributed/clustered)** — check the version compatibility matrix first, read release notes, test in non-prod:
+1. License manager, Monitoring Console, deployment server (management components).
+2. Cluster manager (enable maintenance mode).
+3. Search heads / SHC (deployer first, then members, rolling upgrade).
+4. Indexer peers (rolling / searchable rolling upgrade).
+5. Heavy forwarders, then universal forwarders (UFs can generally be older than indexers — within compatibility).
+
+Rule of thumb: management components ≥ search tier ≥ indexing tier ≥ forwarders in version.
+
+**Backup**
+- `$SPLUNK_HOME/etc` (config, apps, users) — critical and small; keep it in Git too.
+- KV store (`splunk backup kvstore`).
+- Index data: in a cluster, RF gives resilience (not a backup against deletion/corruption); warm/cold buckets can be snapshotted. SmartStore relies on object-store durability/versioning.
+- Frozen archive (`coldToFrozenDir`) for compliance retention.
+
+**DR**: multisite indexer cluster across DCs/AZs, SHC spread across sites, standby CM, forwarders with multiple indexer targets/indexer discovery.
+
+---
+
+## 12. Interview Q&A
+
+### 1. Walk me through what happens from a log line being written to it being searchable.
+The UF monitoring the file reads new data (tracking its position in the fishbucket), tags it with host/source/sourcetype/index, and sends it in blocks over TCP 9997 (optionally TLS + indexer acknowledgement) load-balanced across indexers. The first full Splunk instance (HF or indexer) parses it: breaks the stream into events using `LINE_BREAKER`, merges lines if configured, extracts the timestamp into `_time`, and applies index-time transforms (masking, routing, filtering to nullQueue). The indexer then writes the compressed raw data and tsidx files into a hot bucket of the target index and, in a cluster, streams copies to peers per RF/SF. At search time, the SH dispatches the search to indexers, which use tsidx and bloom filters to find matching events in relevant buckets by time range, apply search-time extractions, and return partial results that the SH merges.
+
+### 2. What's the difference between a universal and heavy forwarder? When would you use an HF?
+UF is a lightweight agent that forwards unparsed data with minimal resources; it's the default on endpoints. HF is a full Splunk Enterprise instance that parses data. Use an HF when you need to filter/mask/route **before** data leaves a network segment, for modular/API inputs (cloud add-ons, DB Connect), as an intermediate aggregation point for isolated networks, or for syslog aggregation. Downside: more resources, and it moves parsing (so props must live there).
+
+### 3. How would you reduce license usage without losing valuable data?
+First measure: license usage by index, sourcetype and host to find top consumers and spikes. Then work with owners: drop low-value events (DEBUG, health checks) with nullQueue transforms or ingest actions on the parsing tier; trim verbose fields (SEDCMD) or unnecessary JSON attributes; convert numeric telemetry to metrics indexes; route bulk/low-value data to cheaper storage (e.g. ingest actions to S3) instead of indexing; fix duplicate ingestion (same file from two inputs, overlapping add-ons). Put governance in place: onboarding requires volume estimates and an owner, and alerts on sudden volume spikes. *(This is my strongest area — use a real example from my governance work.)*
+
+### 4. Events have the wrong timestamp. How do you troubleshoot and fix it?
+Confirm with `_indextime - _time` lag and search over all time for events landing in the future/past. Check `_internal` `DateParserVerbose` warnings. Look at the raw event and the sourcetype's props via `btool --debug` on the **parsing tier** (HF if one is in the path). Set explicit `TIME_PREFIX`, `TIME_FORMAT`, `MAX_TIMESTAMP_LOOKAHEAD`, and `TZ` if the source doesn't log a timezone. Test in a dev instance with sample data, deploy, and note that already-indexed events won't change — re-ingest if the data matters.
+
+### 5. Explain RF and SF. What happens when an indexer in a cluster goes down?
+RF = copies of the data; SF = searchable copies. With RF=3/SF=2, the cluster tolerates 2 peer losses without data loss. When a peer goes down, the CM notices missing heartbeats, promotes other searchable copies to primary so search continues (possibly with briefly incomplete results), then runs bucket fix-up to re-create copies on remaining peers until RF/SF are met again. For planned work you'd use maintenance mode and `splunk offline` to avoid unnecessary fix-up.
+
+### 6. How do you push config to indexers in a cluster vs forwarders vs a search head cluster?
+Indexers: via the cluster manager's `manager-apps` and `splunk apply cluster-bundle`. Forwarders: deployment server with server classes. SHC: deployer's `shcluster/apps` and `splunk apply shcluster-bundle`. Never mix them up (e.g. DS managing peers) and never hand-edit members. Ideally all of these source from Git with CI validation (btool check, AppInspect).
+
+### 7. Where do props.conf settings need to go?
+Depends on the phase. Index-time (line breaking, timestamps, TRANSFORMS, SEDCMD) → the first full instance in the path: HF or indexers. Search-time (EXTRACT, REPORT, KV_MODE, FIELDALIAS, LOOKUP) → search heads. `INDEXED_EXTRACTIONS` for structured files and `EVENT_BREAKER` → the UF. Often the simplest safe approach is to deploy the same TA everywhere and let each tier use what applies.
+
+### 8. How do you control who can see which data?
+Put data with different audiences into different indexes. Create roles with `srchIndexesAllowed` per index, inherit from `user`, map roles to LDAP/SAML groups so access is managed through the IdP and joiner/mover/leaver processes. Use `srchFilter` only for finer restrictions (less robust than index separation). Audit access with `_audit`. For PII, mask at index time so it never lands in the index at all.
+
+### 9. Users complain that dashboards are slow. What do you do?
+Check the Monitoring Console for search head/indexer load and skipped searches. Use the Job Inspector on the dashboard's searches to see where time goes (e.g. `command.search.rawdata` → reading lots of raw events). Typical fixes: add `index=`/`sourcetype=` filters and shorter time ranges, use base searches with post-processing, replace raw searches with `tstats` on accelerated data models, schedule the heavy part as a report and have the dashboard load results, and fix search-time extraction inefficiencies. Platform-side: spread scheduled searches, adjust quotas, add capacity if genuinely saturated.
+
+### 10. How would you design retention for an index holding security logs that must be kept for 1 year searchable and 7 years archived?
+`frozenTimePeriodInSecs = 31536000` with `maxTotalDataSizeMB` sized with headroom (so size doesn't freeze data earlier than a year — monitor this), hot/warm on fast storage, cold on cheaper storage, and `coldToFrozenDir` (or SmartStore/object store lifecycle) for the 7-year archive. Document restore procedure (thaw → `splunk rebuild`). Remember retention is bucket-based, so data may live slightly longer than the policy.
+
+### 11. What would you check first on your first week as a Splunk admin?
+Inventory: architecture diagram, versions, license vs actual usage, index list with retention and size, forwarder count and versions, which forwarders haven't phoned home. Health: Monitoring Console, blocked queues, skipped searches, disk usage, cluster status (RF/SF met?), expiring certificates. Governance: who has `admin`/`can_delete`, config in Git or not, onboarding process. Then prioritise risks.
+
+### 12. What is the fishbucket?
+An internal index (`_thefishbucket`) the forwarder uses to track which files it has read and how far (via a CRC of the file's first bytes plus seek pointer). It prevents re-ingesting data after restarts. Log rotation with identical headers can confuse it → use `crcSalt` or `initCrcLength`. `splunk cmd btprobe` can inspect/reset entries.
+
+### 13. Syslog: send straight to indexers?
+Preferably not. UDP is lossy, and restarting an indexer drops data. Better: dedicated syslog servers (syslog-ng/rsyslog) writing to disk with a UF monitoring those files, or SC4S sending to HEC. Gives buffering, sourcetype-by-host/port routing, and decoupled restarts.
+
+### 14. Tell me about a time you had to govern data quality / ingestion. *(behavioural — prepare with STAR)*
+> Situation: … Task: … Action: (standards for sourcetype/index naming, onboarding checklist, reviewing requests, spotting a noisy source) … Result: (license saved %, fewer broken dashboards, faster onboarding) …
+> Close with: "As an admin I'd automate that governance — Git-managed apps, CI checks with btool, alerts on silent sources and volume spikes."
+
+---
+
+## 13. Quick reference
+
+**Default ports**
+| Port | Use |
+|---|---|
+| 8000 | Splunk Web |
+| 8089 | splunkd management / REST API (DS, CM, license, SHC all talk over this) |
+| 9997 | Forwarder → indexer receiving (convention) |
+| 8088 | HEC |
+| 8080 | Index replication between peers (convention, configurable) |
+| 8191 | KV store |
+| 514 | Syslog (should land on a syslog server, not Splunk) |
+
+**CLI**
+```bash
+splunk start|stop|restart|status
+splunk btool <conf> list [stanza] --debug
+splunk btool check
+splunk list forward-server | monitor | inputstatus
+splunk add forward-server <host>:9997
+splunk enable listen 9997
+splunk reload deploy-server
+splunk apply cluster-bundle ; splunk show cluster-bundle-status
+splunk enable|disable maintenance-mode
+splunk rolling-restart cluster-peers [-searchable true]
+splunk show cluster-status --verbose
+splunk offline [--enforce-counts]
+splunk apply shcluster-bundle -target https://<member>:8089
+splunk show shcluster-status
+splunk backup kvstore
+splunk diag
+splunk rebuild <bucket_dir>          # after thawing
+```
+
+**Key internal logs/sourcetypes**: `splunkd` (errors), `splunkd_access`, `scheduler`, `metrics.log` (group=queue, per_sourcetype_thruput, tcpin_connections), `license_usage.log`, `_audit`.
+
+---
+
+## 14. Hands-on lab plan (do this before the interview)
+
+The biggest gap is hands-on admin; a weekend lab closes most of it and gives concrete stories.
+
+1. **Single instance** via Docker (`splunk/splunk` image) or tarball. Splunk Enterprise trial = 60 days, 500 MB/day (can also request a free **developer license**).
+2. Add a **UF** container; configure `outputs.conf` → 9997 and a monitor input. Deliberately break it (wrong port, missing index) and fix it using `_internal`.
+3. Onboard a messy multi-line log: write props from scratch (magic 6/8), verify with `btool` and `_indextime - _time`.
+4. Filter DEBUG to nullQueue, mask a fake card number with SEDCMD, route an event to a different index. Compare license usage before/after.
+5. Create indexes with short retention; watch buckets roll (`| dbinspect index=...`).
+6. Roles: create a role restricted to one index, test as that user.
+7. Deployment server: move UF config into a deployment app + server class.
+8. **Mini cluster** (docker-compose / `splunk/splunk` supports `SPLUNK_ROLE`s): 1 CM + 3 peers + 1 SH. Push an `indexes.conf` bundle, kill a peer, watch fix-up in the CM UI, enable maintenance mode, rolling restart.
+9. Monitoring Console: set up distributed mode, look at the indexing/search dashboards.
+10. Free training: Splunk's free eLearning (*Intro to Splunk*, *Using Fields*, etc.) and the docs: *Distributed Deployment Manual*, *Managing Indexers and Clusters*, *Getting Data In*, *Securing Splunk*. Related certs: **Splunk Core Certified Power User** → **Splunk Enterprise Certified Admin**.
+
+---
+
+## 15. Questions to ask them
+- Which Splunk Enterprise version, and any plans to move to Splunk Cloud? Daily ingest volume and license model (ingest vs workload)?
+- Deployment topology: clustered? multisite? SmartStore?
+- How is config managed — Git/CI, or hand-edited? How are new data sources requested and onboarded?
+- Is Enterprise Security / ITSI / Observability in scope?
+- Biggest current pain: license, performance, data quality, or platform stability?
+- Size of the Splunk team and split between platform admin vs content/use-case engineering?
+
+---
+
+## 16. Splunk Cloud (reference only — target company runs Splunk Enterprise)
+
+| | Splunk Enterprise | Splunk Cloud Platform |
+|---|---|---|
+| Infra | You run it (on-prem/IaaS) | Splunk runs indexers/SHs |
+| Access | Full CLI, conf files, OS | No backend/CLI; UI + **Admin Config Service (ACS)** API/CLI for indexes, HEC tokens, IP allowlists, apps |
+| Apps | Anything | Must pass **AppInspect** vetting |
+| Role | `admin` | `sc_admin` |
+| You still own | Everything | Forwarders, HFs/IDM inputs, data onboarding, props, roles, knowledge objects, search governance, license/SVC usage |
+
+Much of the Splunk Cloud admin job is exactly what I've done: data onboarding quality, access, and usage governance — the infra side is Splunk's responsibility.
+
+**Cloud-only items moved here from the sections above:**
+- **Data pipeline (§3):** *Edge Processor* / *Ingest Processor* — SPL2-based pipelines that run outside/before the indexers.
+- **Getting data in (§4):** API/modular inputs can run on the *Inputs Data Manager (IDM)* instead of your own HF.
+- **Licensing (§7):** workload-based pricing is measured in *SVCs* (Splunk Virtual Compute) rather than vCPUs.
+- **Roles (§8):** customers get `sc_admin` instead of the full `admin` role.
+- **Q&A #10 (retention):** long-term archive uses *DDAA* (Dynamic Data Active Archive, Splunk-managed) or *DDSS* (Dynamic Data Self Storage, your own S3/Blob bucket) instead of `coldToFrozenDir`.
+- **Certification:** **Splunk Cloud Certified Admin**.
