@@ -156,7 +156,7 @@ Indexing   ← indexer
 | **Input** | Read data, attach `host`, `source`, `sourcetype`, `index`; character set | `inputs.conf`, `CHARSET` | UF / first Splunk instance |
 | **Parsing** | Break stream into lines/events | `LINE_BREAKER`, `TRUNCATE` | First *full* instance: HF or indexer |
 | **Merging** | Merge lines into multi-line events; extract timestamp | `SHOULD_LINEMERGE`, `BREAK_ONLY_BEFORE`, `TIME_PREFIX`, `TIME_FORMAT`, `MAX_TIMESTAMP_LOOKAHEAD`, `TZ` | HF / indexer |
-| **Typing** | Regex transforms: mask, route, filter, index-time fields | `SEDCMD`, `TRANSFORMS-*` | HF / indexer |
+| **Typing** | Regex transforms: mask, route, filter, index-time fields. E.g. dropping/modifying events | `SEDCMD`, `TRANSFORMS-*` | HF / indexer |
 | **Indexing** | Write raw data (compressed journal) + tsidx files into buckets | `indexes.conf` | Indexer |
 | **Search time** | Field extraction and enrichment when searching | `EXTRACT-`, `REPORT-`, `KV_MODE`, `FIELDALIAS-`, `EVAL-`, `LOOKUP-`, tags, eventtypes | Search head |
 
@@ -172,15 +172,37 @@ Indexing   ← indexer
 [acme:app:json]
 SHOULD_LINEMERGE = false
 LINE_BREAKER = ([\r\n]+)
+# Max bytes per line. Anything longer is cut
+# off (and a warning is logged in _internal).
+# Default 10000; 0 = unlimited (risky).
 TRUNCATE = 10000
-TIME_PREFIX = "timestamp":"
+# Regex for the text just BEFORE the timestamp.
+# Splunk starts reading the timestamp right
+# after this match, instead of guessing.
+TIME_PREFIX = "timestamp":''
 TIME_FORMAT = %Y-%m-%dT%H:%M:%S.%3N%z
 MAX_TIMESTAMP_LOOKAHEAD = 30
 # optional but good practice
-EVENT_BREAKER_ENABLE = true        # on UF, for clean load balancing
+# on UF, for clean load balancing:
+EVENT_BREAKER_ENABLE = true
 EVENT_BREAKER = ([\r\n]+)
-KV_MODE = json                     # search time, on SH
+# search time, on SH:
+KV_MODE = json
 ```
+
+> ⚠️ Comments in `.conf` files must be on their own line. A `#` after a value becomes part of the value.
+
+**What "line merging" means:** Splunk builds events in two steps.
+1. **Line breaking:** `LINE_BREAKER` (a regex) splits the incoming stream into chunks, which are normally lines.
+2. **Line merging:** if `SHOULD_LINEMERGE = true` (the default), Splunk then glues consecutive lines back together into one multi-line event, such as a Java stack trace. By default it starts a new event at any line that contains a date (`BREAK_ONLY_BEFORE_DATE`). You can change that with rules like `BREAK_ONLY_BEFORE` or `MUST_BREAK_AFTER`.
+
+Step 2 runs rules on every line, which is slow, and it is a common reason events get glued together or split wrongly. The best practice is to set `SHOULD_LINEMERGE = false` and make `LINE_BREAKER` produce whole events in one step. For a multi-line log where each event starts with a date:
+```ini
+SHOULD_LINEMERGE = false
+# break only where the next line starts with a date
+LINE_BREAKER = ([\r\n]+)(?=\d{4}-\d{2}-\d{2})
+```
+Only the text in the first capture group is thrown away (here, the newlines). The lookahead keeps the date in the next event.
 
 Why it matters: without explicit settings, Splunk *guesses* line-merging and timestamps, which is CPU-expensive and error-prone (events glued together, wrong `_time`, data "missing" because it's timestamped in the future/past).
 
@@ -199,18 +221,53 @@ DEST_KEY = queue
 FORMAT = nullQueue
 ```
 
-**Keep only certain events** (send everything to null, then route matches back to indexQueue — order matters):
+#### How nullQueue filtering actually works
+
+- **`nullQueue`** is Splunk's "trash bin": a special queue that throws away whatever reaches it. Data dropped there is never indexed, so it **doesn't count against the license**.
+- **`indexQueue`** is the normal route. It's the last queue in the pipeline (see §3), and data that reaches it gets written to disk.
+- **Each event carries a routing label.** The label is a metadata key called `queue`, and it defaults to `indexQueue`.
+- **A transform only changes the label; it doesn't move the event.**
+  - `DEST_KEY = queue` means "the thing I'm changing is the routing label".
+  - `FORMAT = nullQueue` is the new value.
+  - `REGEX` decides whether the transform applies to this event. If the regex doesn't match, the label is left as it is.
+- **Transforms run in the order listed**, and each one can overwrite the label set by an earlier one.
+- **Only after all transforms have run** does Splunk read the final label and send the event there.
+
+So nothing is "rescued" from the nullQueue. The event never went there. The first transform set its label to `nullQueue`, and a later one changed it back to `indexQueue` before Splunk acted on it.
+
+**Keep only certain events** (label everything as trash, then relabel the ones you want to keep; order matters):
 ```ini
+# props.conf
+[acme:app]
 TRANSFORMS-filter = setnull, keep_errors
+
+# transforms.conf
+# Step 1: REGEX "." matches any event,
+# so every event is labelled nullQueue.
 [setnull]
 REGEX = .
 DEST_KEY = queue
 FORMAT = nullQueue
+
+# Step 2: events containing ERROR or WARN
+# are relabelled indexQueue (kept).
 [keep_errors]
 REGEX = ERROR|WARN
 DEST_KEY = queue
 FORMAT = indexQueue
 ```
+
+Walking three events through it:
+
+| Event | After `setnull` | After `keep_errors` | Result |
+|---|---|---|---|
+| `... ERROR db timeout` | nullQueue | indexQueue (regex matched) | **Indexed** |
+| `... WARN retrying` | nullQueue | indexQueue (regex matched) | **Indexed** |
+| `... INFO request ok` | nullQueue | nullQueue (no match, label unchanged) | **Dropped** |
+
+If you reverse the order (`keep_errors, setnull`), `setnull` runs last and overwrites every label with nullQueue, so **everything is dropped**. That's why order matters.
+
+Compare with the "drop DEBUG" recipe above. It only sets the label on matching events, so everything else keeps the default `indexQueue`. Use a **denylist** ("drop X") when most data is useful, and an **allowlist** ("keep only Y", this recipe) when most data is noise.
 
 **Route to a different index:**
 ```ini
@@ -233,7 +290,66 @@ SEDCMD-mask_card = s/\d{12}(\d{4})/XXXXXXXXXXXX\1/g
 
 ## 4. Getting data in & forwarder management
 
+UF is typically for VMs or bare metal servers. Containers typically is geared towards HECs.
+
+### The flow at a glance
+The DS tells the UF what to do. The UF's `inputs.conf` says what to read, its `outputs.conf` says where to send it, and the indexer listens on 9997 and indexes the data.
+
+```
+                 ┌─────────────────────────────────────────────┐
+                 │  DEPLOYMENT SERVER (DS)  :8089              │
+                 │  etc/deployment-apps/                       │
+                 │   ├─ org_uf_outputs   (outputs.conf)        │
+                 │   └─ acme_web_inputs  (inputs.conf)         │
+                 │  serverclass.conf: which hosts → which apps │
+                 └───────────────────┬─────────────────────────┘
+                                     │ ② UF phones home (phoneHomeIntervalInSecs)
+                                     │    downloads apps → restartSplunkd = true
+                                     ▼
+ ① One-time setup on the host:
+   install UF (/opt/splunkforwarder)
+   splunk set deploy-poll ds:8089 ──────────────►  (the UF is now a deployment client)
+
+ ┌──────────────────────────────────────────────────────────────────┐
+ │  UNIVERSAL FORWARDER (on the log-source host)                    │
+ │                                                                  │
+ │  ③ inputs.conf: WHAT to collect                                  │
+ │     monitor:///var/log/app/app.log  index=app_prod  st=acme:app  │
+ │     (the fishbucket tracks read position; crcSalt for rotation)  │
+ │                         │                                        │
+ │                         ▼                                        │
+ │  ④ outputs.conf: WHERE to send it                                │
+ │     [tcpout:primary_indexers]                                    │
+ │     server = idx1,idx2,idx3:9997  (or indexer discovery via CM)  │
+ │     autoLBFrequency = 30   useACK = true                         │
+ └─────────────────────────┬────────────────────────────────────────┘
+                           │ ⑤ load-balanced over TCP :9997
+                           │    (the indexer ACKs, so no data is lost)
+            ┌──────────────┼──────────────┐
+            ▼              ▼              ▼
+     ┌───────────┐  ┌───────────┐  ┌───────────┐
+     │   idx1    │  │   idx2    │  │   idx3    │   ⑥ inputs.conf on the indexer:
+     │ :9997     │  │ :9997     │  │ :9997     │      [splunktcp://9997]
+     └─────┬─────┘  └─────┬─────┘  └─────┬─────┘      (no outputs.conf needed)
+           └──────────────┼──────────────┘
+                          ▼
+            ⑦ parse → index → stored in index=app_prod
+                          │
+                          ▼
+                 searchable from the search head
+
+
+ OTHER WAYS IN (they skip the UF monitor path):
+   Syslog devices ──► syslog-ng/rsyslog writes files ──► UF ──► indexers
+   Syslog devices ──► SC4S ──► HEC ──► indexers
+   Apps / scripts ──► HEC (token, behind a load balancer) ──► indexers
+   Cloud APIs (AWS/Azure/O365) ──► TA on a Heavy Forwarder ──► indexers
+   K8s containers (stdout) ──► OTel Collector DaemonSet (1 per node) ──► HEC ──► indexers
+```
+
 ### UF basics
+All of these run **on the forwarder host** (the machine whose logs you're collecting), using the UF's own CLI: `$SPLUNK_HOME/bin/splunk`, where `SPLUNK_HOME` is usually `/opt/splunkforwarder`. They write to the UF's local config (`etc/system/local/outputs.conf`, `inputs.conf`, `deploymentclient.conf`). `add forward-server` names the indexer to send to, and `set deploy-poll` names the deployment server to check in with. Both commands point *outward* from the UF. Once the UF is managed by a deployment server, push inputs/outputs as DS apps instead of running CLI commands on each host.
+
 ```bash
 # install then:
 splunk add forward-server idx1.example.com:9997
@@ -247,18 +363,36 @@ splunk set deploy-poll ds.example.com:8089
 On indexers: enable receiving on 9997 (`[splunktcp://9997]` or `splunk enable listen 9997`).
 
 ### outputs.conf essentials
+This lives **on the forwarder** (the sending side). Any Splunk instance that forwards data has one, including UFs, heavy forwarders, and search heads/CM/DS that forward their own `_internal` logs to the indexers. The indexers don't need an outputs.conf to receive; they need an `inputs.conf` `[splunktcp://9997]` stanza. On UFs it's usually pushed as a DS app (e.g. `org_all_forwarder_outputs`), not edited by hand.
+
 ```ini
 [tcpout]
 defaultGroup = primary_indexers
 
 [tcpout:primary_indexers]
 server = idx1:9997, idx2:9997, idx3:9997
-useACK = true                  # indexer acknowledgement -> no data loss on failure
-autoLBFrequency = 30           # auto load balancing between indexers
+# indexer acknowledgement -> no data loss on failure
+useACK = true
+# auto load balancing between indexers
+autoLBFrequency = 30
 ```
 With an indexer cluster, prefer **indexer discovery** (forwarders ask the CM for the peer list) so you don't hard-code indexers.
 
 ### Deployment server
+**The problem:** you have hundreds or thousands of UFs, and you don't want to log into each one to edit `inputs.conf`/`outputs.conf`. Instead, you package config as **apps** on a central deployment server (DS). Each UF (a *deployment client*, pointed there by `set deploy-poll`) regularly **phones home** and downloads whatever apps it's supposed to have.
+
+**serverclass.conf is the mapping:** *which hosts* get *which apps*. A **server class** is a named group of clients.
+- `[serverClass:linux_web]` defines a group called `linux_web`.
+- `whitelist.0 = web-*.example.com` means clients whose hostname matches `web-*` are in the group (you can add `whitelist.1`, `blacklist.0`, etc.).
+- `machineTypesFilter = linux-x86_64` narrows it further to Linux 64-bit hosts only, so a Windows box named `web-01` wouldn't match.
+- `[serverClass:linux_web:app:org_uf_outputs]` says members of `linux_web` get the app `org_uf_outputs`, a folder in `etc/deployment-apps/` that holds the `outputs.conf` (where to send data).
+- `[serverClass:linux_web:app:acme_web_inputs]` says they also get `acme_web_inputs`, which holds the `inputs.conf` (which web logs to monitor).
+- `restartSplunkd = true` restarts the UF after it receives or updates the app. `.conf` changes on a UF only take effect after a restart.
+
+**Net effect:** every Linux web server automatically sends its web logs to the indexers. A new `web-42` host just needs the UF installed and pointed at the DS, and it picks up both apps on its own. To change what's monitored, edit the app once on the DS and run `splunk reload deploy-server`.
+
+**Design pattern:** keep apps small and single-purpose (one for outputs, one per data source) so you can mix and match them across server classes. For example, every server class gets `org_uf_outputs`, but only web servers get `acme_web_inputs`.
+
 ```ini
 # serverclass.conf on DS
 [serverClass:linux_web]
@@ -282,6 +416,23 @@ restartSplunkd = true
 - Syslog: best practice is **not** to send syslog directly to indexers (restarts lose UDP data). Use syslog-ng/rsyslog writing to files + UF, or **SC4S** (Splunk Connect for Syslog → HEC).
 - HEC: token-based, `[http://token_name]`, optional indexer acknowledgement, put behind a load balancer.
 - Add-ons (TAs) from Splunkbase for AWS, Azure, O365 etc., typically on an HF.
+
+### Where does the collector run? VMs vs containers
+> **VMs / bare-metal servers → one UF per host. Containers → do NOT put a UF in every container; run one collector per node.**
+
+| Environment | Typical approach |
+|---|---|
+| **VMs / bare-metal app servers** | Install a **UF on each host**, managed by the **DS**. It monitors log files (`[monitor://...]`) and sends to indexers on :9997. This is the flow diagram above. |
+| **Kubernetes** | **Splunk OpenTelemetry Collector** as a **DaemonSet** (one pod per node, and the successor to Splunk Connect for Kubernetes). It reads `/var/log/containers/*.log`, adds k8s metadata (namespace, pod, container), and sends to **HEC**. |
+| **Plain Docker hosts** | The Docker **`splunk` logging driver** (stdout/stderr → HEC), *or* a **UF on the Docker host** monitoring `/var/lib/docker/containers/*/*.log`. |
+| **ECS / Fargate** | **FireLens** (Fluent Bit sidecar) → HEC, or CloudWatch Logs → Firehose → HEC. |
+| **Serverless / managed cloud services** | HEC directly, or a TA pulling from cloud APIs (e.g. Splunk Add-on for AWS: CloudTrail/CloudWatch via S3/SQS). |
+
+**Why not a UF inside each container?** It makes every image bigger, runs an extra process per container, and ties forwarder config to each image. Containers are also short-lived, so you'd end up with lots of short-lived forwarders. The container pattern is for apps to log to **stdout/stderr** (12-factor style), with **one agent per node** collecting everything.
+
+**Exception, the sidecar:** a legacy app that can only write to files *inside* the container gets a sidecar UF or collector in the same pod, reading a shared volume.
+
+**Interview line:** *"On VMs we deploy a UF on each server, managed via the deployment server. In containers we don't bake a forwarder into images. We run a node-level collector as a DaemonSet, like the Splunk OTel Collector, that picks up container stdout and sends to HEC with k8s metadata added. We only use sidecars for legacy apps that log to files."*
 
 ### Onboarding process (a great answer for "how would you onboard a new source?")
 1. Requirements: owner, use case, volume/day, retention, sensitivity (PII?), who needs access.
@@ -325,10 +476,13 @@ thawed   thawedPath, then splunk rebuild
 [app_prod]
 homePath   = volume:hot/app_prod/db
 coldPath   = volume:cold/app_prod/colddb
-thawedPath = $SPLUNK_DB/app_prod/thaweddb       # cannot use a volume
-frozenTimePeriodInSecs = 7776000                 # 90 days
+# thawedPath cannot use a volume
+thawedPath = $SPLUNK_DB/app_prod/thaweddb
+# 90 days
+frozenTimePeriodInSecs = 7776000
 maxTotalDataSizeMB = 200000
-repFactor = auto                                 # REQUIRED for it to be replicated in a cluster
+# REQUIRED for it to be replicated in a cluster
+repFactor = auto
 
 [volume:hot]
 path = /splunk/hot
