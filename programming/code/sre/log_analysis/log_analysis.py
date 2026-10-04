@@ -9,12 +9,20 @@ from collections import Counter, defaultdict
 
 # nginx "combined" format with request time (seconds) appended, e.g.
 # 10.0.0.1 - - [01/Oct/2026:10:00:01 +0000] "GET /api/users?id=1 HTTP/1.1" 200 512 0.120
+#
+# One field per line; adjacent string literals are concatenated, so the
+# trailing space inside each quote is the literal separator in the log line.
 LOG_PATTERN = re.compile(
-    r'(?P<ip>\S+) \S+ \S+ '
-    r'\[(?P<ts>[^\]]+)\] '
-    r'"(?P<method>\S+) (?P<path>\S+) [^"]*" '
-    r'(?P<status>\d{3}) \S+ '
-    r'(?P<latency>[\d.]+)'
+    r'(?P<ip>[0-9a-fA-F.:]+) '    # 10.0.0.1   (IPv4 digits/dots, or IPv6 hex/colons)
+    r'- '                         # -          (identity: nginx always writes "-")
+    r'[\w.@-]+ '                  # -          (remote user, "-" if none: unused)
+    r'\[(?P<ts>[^\]]+)\] '        # [01/Oct/2026:10:00:01 +0000]
+    r'"(?P<method>[A-Z]+) '       # "GET
+    r'(?P<path>[^ "]+) '          # /api/users?id=1
+    r'HTTP/[0-9.]+" '             # HTTP/1.1"  (protocol: unused)
+    r'(?P<status>[0-9]{3}) '      # 200
+    r'[0-9]+ '                    # 512        (response bytes: unused)
+    r'(?P<latency>[0-9]+\.[0-9]+)'  # 0.120    (request time in seconds)
 )
 
 # sample log lives next to this script so it works from any working directory
@@ -62,7 +70,7 @@ def percentile(values, pct):
 # with no argument it returns every item.
 endpoint_counts = Counter()  # endpoint -> requests
 ip_counts = Counter()  # ip -> requests
-minute_totals = Counter()  # minute -> requests
+minute_request_num = Counter()  # minute -> requests
 minute_errors = Counter()  # minute -> 5xx responses
 # minute -> [latency]. Exact percentiles need every sample, so this is the one
 # aggregate that still grows with the line count (one float per request). If
@@ -75,7 +83,7 @@ def record_entry(entry):
     """Fold one parsed line into the running aggregates."""
     endpoint_counts[entry["endpoint"]] += 1
     ip_counts[entry["ip"]] += 1
-    minute_totals[entry["minute"]] += 1
+    minute_request_num[entry["minute"]] += 1
     if entry["status"] >= 500:  # 4xx is the client's fault, not ours
         minute_errors[entry["minute"]] += 1
     minute_latencies[entry["minute"]].append(entry["latency"])
@@ -84,7 +92,7 @@ def record_entry(entry):
 def error_rate_per_minute():
     """Return {minute: (total requests, error rate as a percentage)}."""
     result = {}
-    for minute, total in minute_totals.items():
+    for minute, total in minute_request_num.items():
         errors = minute_errors[minute]
         error_rate = errors / total * 100
         result[minute] = (total, error_rate)
