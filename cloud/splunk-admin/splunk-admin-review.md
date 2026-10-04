@@ -678,53 +678,6 @@ Rule of thumb: management components ≥ search tier ≥ indexing tier ≥ forwa
 
 ---
 
-## 12. Interview Q&A
-
-### 1. Walk me through what happens from a log line being written to it being searchable.
-The UF monitoring the file reads new data (tracking its position in the fishbucket), tags it with host/source/sourcetype/index, and sends it in blocks over TCP 9997 (optionally TLS + indexer acknowledgement) load-balanced across indexers. The first full Splunk instance (HF or indexer) parses it: breaks the stream into events using `LINE_BREAKER`, merges lines if configured, extracts the timestamp into `_time`, and applies index-time transforms (masking, routing, filtering to nullQueue). The indexer then writes the compressed raw data and tsidx files into a hot bucket of the target index and, in a cluster, streams copies to peers per RF/SF. At search time, the SH dispatches the search to indexers, which use tsidx and bloom filters to find matching events in relevant buckets by time range, apply search-time extractions, and return partial results that the SH merges.
-
-### 2. What's the difference between a universal and heavy forwarder? When would you use an HF?
-UF is a lightweight agent that forwards unparsed data with minimal resources; it's the default on endpoints. HF is a full Splunk Enterprise instance that parses data. Use an HF when you need to filter/mask/route **before** data leaves a network segment, for modular/API inputs (cloud add-ons, DB Connect), as an intermediate aggregation point for isolated networks, or for syslog aggregation. Downside: more resources, and it moves parsing (so props must live there).
-
-### 3. How would you reduce license usage without losing valuable data?
-First measure: license usage by index, sourcetype and host to find top consumers and spikes. Then work with owners: drop low-value events (DEBUG, health checks) with nullQueue transforms or ingest actions on the parsing tier; trim verbose fields (SEDCMD) or unnecessary JSON attributes; convert numeric telemetry to metrics indexes; route bulk/low-value data to cheaper storage (e.g. ingest actions to S3) instead of indexing; fix duplicate ingestion (same file from two inputs, overlapping add-ons). Put governance in place: onboarding requires volume estimates and an owner, and alerts on sudden volume spikes. *(This is my strongest area — use a real example from my governance work.)*
-
-### 4. Events have the wrong timestamp. How do you troubleshoot and fix it?
-Confirm with `_indextime - _time` lag and search over all time for events landing in the future/past. Check `_internal` `DateParserVerbose` warnings. Look at the raw event and the sourcetype's props via `btool --debug` on the **parsing tier** (HF if one is in the path). Set explicit `TIME_PREFIX`, `TIME_FORMAT`, `MAX_TIMESTAMP_LOOKAHEAD`, and `TZ` if the source doesn't log a timezone. Test in a dev instance with sample data, deploy, and note that already-indexed events won't change — re-ingest if the data matters.
-
-### 5. Explain RF and SF. What happens when an indexer in a cluster goes down?
-RF = copies of the data; SF = searchable copies. With RF=3/SF=2, the cluster tolerates 2 peer losses without data loss. When a peer goes down, the CM notices missing heartbeats, promotes other searchable copies to primary so search continues (possibly with briefly incomplete results), then runs bucket fix-up to re-create copies on remaining peers until RF/SF are met again. For planned work you'd use maintenance mode and `splunk offline` to avoid unnecessary fix-up.
-
-### 6. How do you push config to indexers in a cluster vs forwarders vs a search head cluster?
-Indexers: via the cluster manager's `manager-apps` and `splunk apply cluster-bundle`. Forwarders: deployment server with server classes. SHC: deployer's `shcluster/apps` and `splunk apply shcluster-bundle`. Never mix them up (e.g. DS managing peers) and never hand-edit members. Ideally all of these source from Git with CI validation (btool check, AppInspect).
-
-### 7. Where do props.conf settings need to go?
-Depends on the phase. Index-time (line breaking, timestamps, TRANSFORMS, SEDCMD) → the first full instance in the path: HF or indexers. Search-time (EXTRACT, REPORT, KV_MODE, FIELDALIAS, LOOKUP) → search heads. `INDEXED_EXTRACTIONS` for structured files and `EVENT_BREAKER` → the UF. Often the simplest safe approach is to deploy the same TA everywhere and let each tier use what applies.
-
-### 8. How do you control who can see which data?
-Put data with different audiences into different indexes. Create roles with `srchIndexesAllowed` per index, inherit from `user`, map roles to LDAP/SAML groups so access is managed through the IdP and joiner/mover/leaver processes. Use `srchFilter` only for finer restrictions (less robust than index separation). Audit access with `_audit`. For PII, mask at index time so it never lands in the index at all.
-
-### 9. Users complain that dashboards are slow. What do you do?
-Check the Monitoring Console for search head/indexer load and skipped searches. Use the Job Inspector on the dashboard's searches to see where time goes (e.g. `command.search.rawdata` → reading lots of raw events). Typical fixes: add `index=`/`sourcetype=` filters and shorter time ranges, use base searches with post-processing, replace raw searches with `tstats` on accelerated data models, schedule the heavy part as a report and have the dashboard load results, and fix search-time extraction inefficiencies. Platform-side: spread scheduled searches, adjust quotas, add capacity if genuinely saturated.
-
-### 10. How would you design retention for an index holding security logs that must be kept for 1 year searchable and 7 years archived?
-`frozenTimePeriodInSecs = 31536000` with `maxTotalDataSizeMB` sized with headroom (so size doesn't freeze data earlier than a year — monitor this), hot/warm on fast storage, cold on cheaper storage, and `coldToFrozenDir` (or SmartStore/object store lifecycle) for the 7-year archive. Document restore procedure (thaw → `splunk rebuild`). Remember retention is bucket-based, so data may live slightly longer than the policy.
-
-### 11. What would you check first on your first week as a Splunk admin?
-Inventory: architecture diagram, versions, license vs actual usage, index list with retention and size, forwarder count and versions, which forwarders haven't phoned home. Health: Monitoring Console, blocked queues, skipped searches, disk usage, cluster status (RF/SF met?), expiring certificates. Governance: who has `admin`/`can_delete`, config in Git or not, onboarding process. Then prioritise risks.
-
-### 12. What is the fishbucket?
-An internal index (`_thefishbucket`) the forwarder uses to track which files it has read and how far (via a CRC of the file's first bytes plus seek pointer). It prevents re-ingesting data after restarts. Log rotation with identical headers can confuse it → use `crcSalt` or `initCrcLength`. `splunk cmd btprobe` can inspect/reset entries.
-
-### 13. Syslog: send straight to indexers?
-Preferably not. UDP is lossy, and restarting an indexer drops data. Better: dedicated syslog servers (syslog-ng/rsyslog) writing to disk with a UF monitoring those files, or SC4S sending to HEC. Gives buffering, sourcetype-by-host/port routing, and decoupled restarts.
-
-### 14. Tell me about a time you had to govern data quality / ingestion. *(behavioural — prepare with STAR)*
-> Situation: … Task: … Action: (standards for sourcetype/index naming, onboarding checklist, reviewing requests, spotting a noisy source) … Result: (license saved %, fewer broken dashboards, faster onboarding) …
-> Close with: "As an admin I'd automate that governance — Git-managed apps, CI checks with btool, alerts on silent sources and volume spikes."
-
----
-
 ## 13. Quick reference
 
 **Default ports**
