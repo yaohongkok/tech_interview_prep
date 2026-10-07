@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python Coding Cheat Sheet</title>
+<style>
+  /* One A4 landscape page. To fit more, lower --fs; to add content, add a <section>. */
+  @page { size: A4 landscape; margin: 5mm; }
+  :root { --fs: 7pt; --ink: #16181d; --muted: #6b7280; --accent: #1d4ed8; --rule: #c7ccd6; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0 auto; padding: 5mm; width: 297mm; background: #fff; color: var(--ink);
+    font: var(--fs)/1.47 "DejaVu Sans Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1.2pt solid var(--ink); padding-bottom: 1pt; margin-bottom: 3pt;
+  }
+  header h1 { font-size: 9.5pt; margin: 0; letter-spacing: .02em; }
+  header span { color: var(--muted); }
+  main { column-count: 4; column-gap: 3mm; column-rule: .5pt solid var(--rule); }
+  section { break-inside: avoid; margin: 0 0 3pt; }
+  h2 {
+    font-size: 7pt; margin: 0 0 1pt; padding: .5pt 3pt; color: #fff; background: var(--accent);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  pre { margin: 0; font: inherit; white-space: pre; overflow: hidden; }
+  .c { color: var(--muted); }
+  b { color: var(--accent); font-weight: 700; }
+  @media print { body { padding: 0; width: auto; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Python Coding Cheat Sheet</h1>
+</header>
+<main>
+
+<section>
+<h2>Syntax &amp; idioms</h2>
+<pre>
+def f(a, *args, k=1, **kw): ...
+def f(x, acc=None): ...  # never acc=[]
+sorted(a, key=lambda p: (-p[1], p[0]))
+a.sort(reverse=True)  # in place, stable, None
+x = a if cond else b
+for i, a_i in enumerate(a, 1): 
+for a_i, b_i in zip(a, b):   # stops @ shorter
+a, b = b, a                     # swap
+first, *mid, last = seq         # star unpack
+if (n := len(s)) &gt; 3:     # walrus
+for ...: ... else: ...  # else = no break
+a[i:j:k]  a[::-1]  a[-k:]  # never IndexError
+[x*x for x in a if x % 2]
+{k: v for k, v in pairs}   
+{x for x in a}
+[[0]*C for _ in range(R)]  # NOT [[0]*C]*R
+sum(x &gt; 0 for x in a)  # count matches
+any(gen);  all(gen);  max(a, key=f, default=0)
+float('inf');  -math.inf
+q, r = divmod(a, b)
+-7 // 2 == -4; int(-7 / 2) == -3 
+-7 % 3 == 2  # sign of divisor
+ord('a') == 97;  chr(97) == 'a'
+x &amp; 1;   x &gt;&gt; 1;   x ^ y;   1 &lt;&lt; k
+x &amp; (x-1)  # drop low bit   
+x &amp; -x  # low bit
+x.bit_length(); bin(5) == '0b101'
+int('101', 2) == 5;  int('ff', 16) == 255
+
+</pre>
+</section>
+
+<section>
+<h2>Strings (immutable)</h2>
+<pre>
+s.split();  s.split(',', 1);  ' '.join(parts)
+s.strip();  s.lstrip('0');  s.rstrip('\n')
+s.find(t)   # -1 if absent
+s.index(t)  # ValueError if absent
+s.startswith(('a', 'b'));  s.endswith(x)
+s.isalnum();  s.isalpha();  s.isdigit();  s.lower()
+s.replace(a, b);  s.count(t);  s.zfill(5)
+''.join(sorted(s))              # anagram key
+out.append(ch); ''.join(out)  # build via list
+f'{x:.2f} {n:05d} {n:,} {n:b} {s:&gt;8} {x!r}'
+</pre>
+</section>
+
+<section>
+<h2>list / dict / set</h2>
+<pre>
+a.append(x); a.pop()             # O(1)
+a.pop(0); a.insert(0, x); x in a  # O(n)
+a.extend(b);  a.index(x);  a.remove(x)
+copy.deepcopy(a)
+list(zip(*m))                   # transpose
+[list(r) for r in zip(*m[::-1])]  # rotate cw
+d.get(k, 0);   d.pop(k, None);   k in d
+d.setdefault(k, []).append(v)
+for k, v in d.items(): ...  # insertion order
+max(d, key=d.get)  # key of max value
+sorted(d.items(), key=lambda kv: -kv[1])
+d1 | d2   # merge, right wins
+a &amp; b; a - b; a ^ b; a &lt;= b  # subset
+s.add(x);  s.discard(x)  # no error if absent
+tuple(lst);  frozenset(s)  # hashable keys
+</pre>
+</section>
+
+<section>
+<h2>collections</h2>
+<pre>
+<b>deque</b>  # O(1) both ends, O(n) middle
+dq = deque(it, maxlen=k)  # full: drops far end
+dq.append(x); dq.appendleft(x)
+dq.pop(); dq.popleft(); dq[0]; dq[-1]
+dq.extend(it); dq.extendleft(it); dq.rotate(k)
+<b>Counter</b>  # dict subclass, missing key -&gt; 0
+c = Counter(s);  c[x] += 1
+c.most_common(k)  # [(elem, cnt), ...]
+c.update(it); c.subtract(it);  c.total()
+c1 + c2;  c1 - c2  # drops &lt;= 0
+c1 == c2;   +c    # drops &lt;= 0
+list(c.elements()); # list repr of c   
+<b>defaultdict</b>
+g = defaultdict(list);  g[u].append(v)
+defaultdict(int);  defaultdict(set)
+defaultdict(lambda: math.inf)
+<b>OrderedDict</b>  # LRU cache building block
+od.move_to_end(k)       # mark most recent
+od.popitem(last=False)  # evict oldest (FIFO)
+</pre>
+</section>
+
+<section>
+<h2>heapq (min-heap on a list)</h2>
+<pre>
+heapify(lst)  # O(n), in place
+heappush(h, (prio, i, item))  # i breaks ties
+heappop(h)   h[0]  # peek
+heappush(h, -x)  # max-heap: negate
+heappushpop(h, x);  heapreplace(h, x)
+nlargest(k, a, key=f);  nsmallest(k, a)
+heapq.merge(*sorted_lists)  # lazy k-way merge
+</pre>
+</section>
+
+<section>
+<h2>bisect (sorted list)</h2>
+<pre>
+bisect_left(a, x)    # first i with a[i] &gt;= x
+bisect_right(a, x)   # first i with a[i] &gt;  x
+insort(a, x)  # O(n) insert, keeps sorted
+bisect_left(a, x, key=f)        # 3.10+
+</pre>
+</section>
+
+<section>
+<h2>itertools</h2>
+<pre>
+permutations(a, r);  combinations(a, r)
+product(a, b);  product('01', repeat=n)
+accumulate(a, initial=0)        # prefix sums
+accumulate(a, max)              # running max
+groupby(s)  # consecutive runs; sort first!
+[(k, len(list(g))) for k, g in groupby(s)]
+chain(a, b);  chain.from_iterable(lists)
+pairwise(a)  # (a0,a1),(a1,a2)
+zip_longest(a, b, fillvalue=0)
+islice(it, start, stop);  count(1);  cycle(a)
+</pre>
+</section>
+
+<section>
+<h2>functools</h2>
+<pre>
+@cache  # memoise; args must be hashable
+@lru_cache(maxsize=128);   f.cache_clear()
+reduce(lambda acc, x: acc * x, a, 1)
+sorted(a, key=cmp_to_key(cmp))
+                  # cmp(x, y) &lt; 0: x first
+partial(f, 1, k=2)
+</pre>
+</section>
+
+<section>
+<h2>urllib.parse</h2>
+<pre>
+u = urlparse(
+ 'https://u:p@H.com:8443/a/b?x=1&amp;x=2&amp;y=#frag')
+u.scheme 'https';   u.netloc 'u:p@H.com:8443'
+u.hostname 'h.com'; u.port 8443;  u.path '/a/b'
+u.query 'x=1&amp;...';  u.fragment 'frag'
+u.username 'u';  u.password 'p'
+u._replace(query='', fragment='').geturl()
+parse_qs(u.query)         # {'x': ['1', '2']}
+parse_qs(q, keep_blank_values=True)  # keeps y
+parse_qsl(u.query)  # [('x','1'),('x','2')]
+urlencode({'q': 'a b', 't': [1,2]}, doseq=True)
+                          # 'q=a+b&amp;t=1&amp;t=2'
+quote('a b/c')            # 'a%20b/c'
+quote('a b/c', safe='')   # 'a%20b%2Fc'
+quote_plus('a b&amp;c')       # 'a+b%26c'
+unquote('a%20b');  unquote_plus('a+b')  # 'a b'
+urljoin('http://h/a', 'c')  # http://h/c
+urljoin('http://h/a/', 'c')  # http://h/a/c
+</pre>
+</section>
+
+<section>
+<h2>urllib.request / urllib.error</h2>
+<pre>
+with urlopen(url, timeout=5) as r:  # GET
+    r.status;  r.headers['Content-Type']
+    data = json.load(r)  # or r.read().decode
+req = Request(url, method='POST',
+    data=json.dumps(body).encode(),  # bytes
+    headers={...})
+with urlopen(req, timeout=5) as r:
+  print(r.read().decode())
+from urllib.error 
+  import HTTPError, URLError,
+    TimeoutError, URLError
+e.code; e.reason; e.read()
+</pre>
+</section>
+
+<section>
+<h2>Classes, generators, errors</h2>
+<pre>
+class Job: 
+def __lt__(self, o): return self.v &lt; o.v # heap
+def __eq__ + def __hash__   # custom dict key
+def __repr__(self): return f'N({self.v})'
+def gen(): yield x; 
+next(it, default)   # no StopIteration
+try: ...
+except (KeyError, ValueError) as e: ...
+else: ...       # no exception
+finally: ...    # always
+raise ValueError('msg')
+with open(p) as f:
+    for line in f: line.rstrip('\n')
+</pre>
+</section>
+
+<section>
+<h2>re / time / concurrency</h2>
+<pre>
+re.findall(r'\d+', s);   re.split(r'[,; ]+', s)
+p = re.compile(r'\d+');  m = p.match(s); 
+m = re.match(r'(\w+)=(\d+)', s);  m.group(1)
+re.sub(r'\s+', ' ', s);  re.fullmatch(pat, s)
+time.monotonic()  # durations; time.time()=wall
+datetime.now(timezone.utc).isoformat()
+(t2 - t1).total_seconds()
+lock = threading.Lock()
+with lock: ...            # guard shared state
+with ThreadPoolExecutor(max_workers=8) as ex:
+    for r in ex.map(fetch, urls): ... # ordered
+    futs = [ex.submit(fetch, u) for u in urls]
+    for fu in as_completed(futs): fu.result()
+</pre>
+</section>
+
+</main>
+<script>
+  // Grey out trailing "# comments" so the code stands out.
+  document.querySelectorAll('pre').forEach(p => {
+    p.innerHTML = p.innerHTML.replace(/(^|\s)(#(?: .*)?)$/gm, '$1<span class="c">$2</span>');
+  });
+</script>
+</body>
+</html>
