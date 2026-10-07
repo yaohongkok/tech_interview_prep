@@ -11,62 +11,138 @@
 # be extensible to report the failure in other ways 
 # (e.g., sending an email, logging to a file, etc.).
 
-import argparse
+import json
 import time
-import urllib.error
-import urllib.request
+from pathlib import Path
+from typing import Any, Callable, Iterable
+from urllib.error import URLError, HTTPError
+from urllib.request import urlopen
 from concurrent.futures import ThreadPoolExecutor
 
-DEFAULT_URLS = [
-    "https://www.google.com",
-    "https://www.github.com",
-    "https://httpbin.org/status/500",
-    "http://localhost:9",  # nothing listens here: connection refused
-]
+HcParam = dict[str, Any]        # timeout, retries, backoff, interval, rounds, print_every
+Monitor = dict[str, Any]        # url plus its timeout, retries and backoff
+Result = dict[str, Any]         # url, ok, status, elapsed, attempts, error
+Reporter = Callable[[list[Result]], None]
+
+# Used for any key missing from the config file's "hc_param" section.
+DEFAULT_HC_PARAM: HcParam = {
+    "timeout": 3.0,     # seconds per attempt
+    "retries": 2,       # retries after the first attempt
+    "backoff": 0.5,     # seconds before the first retry, doubled each retry
+    "interval": 10.0,   # seconds between rounds
+    "rounds": 0,        # stop after N rounds (0 = forever)
+    "print_every": 1,   # print only every Nth successful check per URL (failures always print)
+}
+
+# hc_param keys that a "monitor" entry may override for its own URL
+URL_PARAMS: tuple[str, ...] = ("timeout", "retries", "backoff")
+
+CONFIG_PATH: Path = Path(__file__).with_name("config.json")
 
 
-def check_url(url, timeout, retries, backoff):
-    """Try a URL up to 1 + retries times; return a result dict.
+def reject_unknown_keys(keys: Iterable[str], allowed: Iterable[str], where: str | Path) -> None:
+    unknown: set[str] = set(keys) - set(allowed)
+    if unknown:
+        # a typo like "retires" would otherwise be silently ignored
+        raise ValueError(f"unknown key(s) in {where}: {', '.join(sorted(unknown))}")
+
+
+def validate_hc_param(overrides: dict[str, Any], where: str) -> None:
+    """Raise ValueError if the config file's "hc_param" section is invalid."""
+    reject_unknown_keys(overrides, DEFAULT_HC_PARAM, where)
+    if overrides.get("print_every", DEFAULT_HC_PARAM["print_every"]) < 1:
+        raise ValueError("print_every must be >= 1")
+
+
+def validate_monitors(entries: Any, path: Path) -> None:
+    """Raise ValueError if the config file's "monitor" section is invalid."""
+    if not isinstance(entries, list) or not entries:
+        raise ValueError(f'{path} must have a "monitor" list with at least 1 URL')
+
+    for i, entry in enumerate(entries):
+        where: str = f"{path} monitor[{i}]"
+        if not isinstance(entry, dict) or not entry.get("url"):
+            raise ValueError(f'{where} must be an object with a "url"')
+        reject_unknown_keys(entry, ("url", *URL_PARAMS), where)
+
+
+def validate_config(raw: dict[str, Any], path: Path) -> None:
+    """Raise ValueError if raw, the parsed config file at path, is invalid."""
+    reject_unknown_keys(raw, ("hc_param", "monitor"), path)
+    validate_hc_param(raw.get("hc_param", {}), f"{path} hc_param")
+    validate_monitors(raw.get("monitor"), path)
+
+
+def load_config(path: Path = CONFIG_PATH) -> tuple[HcParam, list[Monitor]]:
+    """Return (hc_param, monitors) read from the JSON file at path.
+
+    hc_param is DEFAULT_HC_PARAM overridden by the file's "hc_param" section.
+    monitors has one dict per "monitor" entry: its url plus timeout, retries
+    and backoff, each taken from the entry if set there, else from hc_param.
+    """
+    with open(path) as f:
+        raw: dict[str, Any] = json.load(f)
+    validate_config(raw, path)
+
+    hc_param: HcParam = {**DEFAULT_HC_PARAM, **raw.get("hc_param", {})}
+
+    monitors: list[Monitor] = []
+    for entry in raw["monitor"]:
+        monitor: Monitor = {"url": entry["url"]}
+        for key in URL_PARAMS:
+            monitor[key] = entry.get(key, hc_param[key])
+        monitors.append(monitor)
+    return hc_param, monitors
+
+
+def check_url(monitor: Monitor) -> Result:
+    """Try the monitor's URL up to 1 + retries times; return a result dict.
 
     The wait before retry n is backoff * 2**(n-1): backoff, 2x, 4x, ...
     """
-    error = None
+    url: str = monitor["url"]
+    timeout: float = monitor["timeout"]
+    retries: int = monitor["retries"]
+    backoff: float = monitor["backoff"]
+
+    error: str | None = None
     for attempt in range(retries + 1):
         if attempt > 0:
             time.sleep(backoff * 2 ** (attempt - 1))
         # perf_counter is monotonic, so a system clock change can't skew the timing
-        start = time.perf_counter()
+        start: float = time.perf_counter()
         try:
-            with urllib.request.urlopen(url, timeout=timeout) as response:
-                status = response.status
-            elapsed = time.perf_counter() - start
+            with urlopen(url, timeout=timeout) as response:
+                status: int = response.status
+            elapsed: float = time.perf_counter() - start
             return {"url": url, "ok": True, "status": status,
                     "elapsed": elapsed, "attempts": attempt + 1, "error": None}
-        except urllib.error.HTTPError as e:
+        except HTTPError as httpErr:
             # the server answered, but with 4xx/5xx. Only 5xx and 429 are worth
             # retrying: any other 4xx will fail the same way every time.
-            error = f"HTTP {e.code}"
-            if e.code < 500 and e.code != 429:
+            error = f"HTTP {httpErr.code}"
+            if httpErr.code < 500 and httpErr.code != 429:
                 break
-        except (urllib.error.URLError, OSError) as e:
+        except URLError as urlErr:
             # DNS failure, connection refused, timeout (TimeoutError is an OSError)
-            error = str(getattr(e, "reason", e))
+            error = str(getattr(urlErr, "reason", urlErr))
     return {"url": url, "ok": False, "status": None,
             "elapsed": None, "attempts": attempt + 1, "error": error}
 
 
-def check_all(urls, timeout, retries, backoff):
-    """Check every URL concurrently; results come back in the same order as urls.
+def check_all(monitors: list[Monitor]) -> list[Result]:
+    """Check every monitor's URL concurrently; results come back in the same order as monitors.
+
+    Each monitor carries its own timeout, retries and backoff (see load_config).
 
     Threads suit this because the work is I/O-bound: a thread blocked on the
     network releases the GIL, so the others keep running.
     """
-    check_url_lambda = lambda url: check_url(url, timeout, retries, backoff)
-    with ThreadPoolExecutor(max_workers=len(urls)) as pool:
-        return list(pool.map(check_url_lambda, urls))
+    with ThreadPoolExecutor(max_workers=len(monitors)) as pool:
+        return list(pool.map(check_url, monitors))
 
 
-def print_status(hc_results, ok_counts, print_every=1):
+def print_status(hc_results: list[Result], ok_counts: dict[str, int], print_every: int = 1) -> None:
     """Print every failure, but only every print_every-th success per URL.
 
     ok_counts maps url -> successes seen so far; the caller keeps it between
@@ -86,17 +162,16 @@ def print_status(hc_results, ok_counts, print_every=1):
 # A reporter is any function that takes the list of failed results. To report
 # another way (email, log file, pager), write a function with the same
 # signature and add it to REPORTERS: nothing else has to change.
-def print_reporter(failures):
+def print_reporter(failures: list[Result]) -> None:
     print(f"{len(failures)} URL(s) failed:")
     for r in failures:
         print(f"  {r['url']}  ({r['error']} after {r['attempts']} attempts)")
 
 
-REPORTERS = [print_reporter]
+REPORTERS: list[Reporter] = [print_reporter]
 
-
-def report_failures(results, reporters=REPORTERS):
-    failures = [r for r in results if not r["ok"]]
+def report_failures(results: list[Result], reporters: list[Reporter] = REPORTERS) -> None:
+    failures: list[Result] = [r for r in results if not r["ok"]]
     if not failures:
         return
     for reporter in reporters:
@@ -107,33 +182,23 @@ def report_failures(results, reporters=REPORTERS):
             print(f"reporter {reporter.__name__} failed: {e}")
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Poll a list of URLs and report failures.")
-    parser.add_argument("urls", nargs="*", default=DEFAULT_URLS)
-    parser.add_argument("--timeout", type=float, default=3.0, help="seconds per attempt")
-    parser.add_argument("--retries", type=int, default=2, help="retries after the first attempt")
-    parser.add_argument("--backoff", type=float, default=0.5,
-                        help="seconds before the first retry, doubled each retry")
-    parser.add_argument("--interval", type=float, default=10.0, help="seconds between rounds")
-    parser.add_argument("--rounds", type=int, default=0, help="stop after N rounds (0 = forever)")
-    parser.add_argument("--print-every", type=int, default=1, metavar="N",
-                        help="print only every Nth successful check per URL (failures always print)")
-    args = parser.parse_args()
-    if args.print_every < 1:
-        parser.error("--print-every must be >= 1")
+def main() -> None:
+    config, monitors = load_config()
 
-    completed = 0
-    ok_counts = {}
+    completed: int = 0
+    ok_counts: dict[str, int] = {}
     try:
         while True:
-            print(f"[{time.strftime('%H:%M:%S')}] checking {len(args.urls)} URL(s)")
-            results = check_all(args.urls, args.timeout, args.retries, args.backoff)
-            print_status(results, ok_counts, args.print_every)
+            print(f"[{time.strftime('%H:%M:%S')}] checking {len(monitors)} URL(s)")
+            results: list[Result] = check_all(monitors)
+
+            print_status(results, ok_counts, config["print_every"])
             report_failures(results)
+            
             completed += 1
-            if args.rounds and completed >= args.rounds:
+            if config["rounds"] and completed >= config["rounds"]:
                 break
-            time.sleep(args.interval)
+            time.sleep(config["interval"])
     except KeyboardInterrupt:
         print("\nstopped")
 

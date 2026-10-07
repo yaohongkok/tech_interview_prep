@@ -1,0 +1,27 @@
+{
+    "hc_param": {
+        "timeout": 3.0,
+        "retries": 2,
+        "backoff": 0.5,
+        "interval": 10.0,
+        "rounds": 0,
+        "print_every": 1
+    },
+    "monitor": [
+        {
+            "url": "https://www.google.com", 
+            "timeout": 3.0, 
+            "retries": 2, 
+            "backoff": 0.5
+        },
+        {
+            "url": "https://www.github.com"
+        },
+        {
+            "url": "https://httpbin.org/status/500"
+        },
+        {
+            "url": "http://localhost:9"
+        }
+    ]
+}
