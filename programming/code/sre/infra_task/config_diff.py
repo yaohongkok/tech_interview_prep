@@ -24,6 +24,7 @@ def _flatten(value: Any, path: str) -> dict[str, Any]:
     if not isinstance(value, dict) or not value:
         return {path: value}
 
+    # To flatten added or removed dicts values
     leaves: dict[str, Any] = {}
     for key, child in value.items():
         leaves.update(_flatten(child, f"{path}.{key}"))
