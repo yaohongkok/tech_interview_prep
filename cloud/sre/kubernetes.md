@@ -88,8 +88,11 @@ WORKER NODE ▼
             │  readiness passes, Pod condition Ready=True
             ▼
 ┌────────────────────────────┐
-│ 5. EndpointSlice controller│  sees Ready Pod       → adds pod IP to the Service's EndpointSlice
-│    kube-proxy (every node) │  sees EndpointSlice   → updates iptables / IPVS / nftables rules
+| (Control plane)            |
+│ 5. EndpointSlice controller│  sees Ready Pod → adds pod IP to the Service's EndpointSlice 
+|                            |                   (both Service & Endpoint slices lives in etcd)
+| (Every node)
+│    kube-proxy              │  sees EndpointSlice → updates iptables / IPVS / nftables rules
 └────────────────────────────┘
             │
             ▼
