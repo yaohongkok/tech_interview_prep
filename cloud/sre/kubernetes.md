@@ -129,6 +129,33 @@ WORKER NODE ▼
 
 Because endpoint removal and SIGTERM race, the app can stop while load balancers still send traffic. Fix: a short `preStop` sleep (5 to 15s), an app that drains in-flight requests on SIGTERM, and an ALB deregistration delay shorter than the grace period.
 
+**Example**
+
+```yaml
+# Deployment excerpt: rollout, probes, graceful shutdown
+spec:
+  strategy:
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+  template:
+    spec:
+      terminationGracePeriodSeconds: 45
+      containers:
+      - name: app
+        startupProbe:   {httpGet: {path: /healthz, port: 8080}, periodSeconds: 2, failureThreshold: 30}
+        readinessProbe: {httpGet: {path: /ready,   port: 8080}, periodSeconds: 5}
+        livenessProbe:  {httpGet: {path: /healthz, port: 8080}, periodSeconds: 10}
+        lifecycle:
+          preStop: {sleep: {seconds: 10}}     # older clusters: exec ["sleep", "10"]
+```
+
+```bash
+kubectl rollout status deploy/<d>                      # blocks until done or failed (good CI gate)
+kubectl rollout undo deploy/<d> --to-revision=<n>
+kubectl get rs -l app=<a>                              # old vs new ReplicaSet during a rollout
+kubectl get pods -l app=<a> -o wide -w                 # watch pods cycle
+kubectl scale sts/<s> --replicas=3                     # PVCs of removed pods stay behind
+```
+
 ---
 
 ### 3. Configuration and Storage
@@ -136,6 +163,25 @@ Because endpoint removal and SIGTERM race, the app can stop while load balancers
 - **ConfigMap / Secret** as env vars or mounted files. Mounted files update in place (with a delay); env vars need a pod restart. Neither triggers a rollout by itself.
 - **Secrets are base64, not encrypted.** Protect with RBAC, encryption at rest (KMS envelope encryption on EKS), and ideally keep the source of truth outside the cluster (see 7).
 - **Storage:** `StorageClass` → `PersistentVolumeClaim` → `PersistentVolume`, provisioned by a CSI driver. The one gotcha to remember: an EBS volume is **bound to one AZ**, so its pod can only schedule there (use `volumeBindingMode: WaitForFirstConsumer`). Details: [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/), [EKS storage](https://docs.aws.amazon.com/eks/latest/userguide/storage.html).
+
+**Example**
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata: {name: gp3}
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer    # provision in the AZ the pod lands in
+allowVolumeExpansion: true
+parameters: {type: gp3, encrypted: "true"}
+```
+
+```bash
+kubectl create configmap app-config --from-file=config.yaml --dry-run=client -o yaml | kubectl apply -f -
+kubectl rollout restart deploy/<d>                                   # pick up changed env-var config
+kubectl get secret <s> -o jsonpath='{.data.password}' | base64 -d    # base64 is not encryption
+kubectl get sc,pvc,pv                                                # PVC Pending? describe it for the reason
+```
 
 ---
 
@@ -176,6 +222,38 @@ Because endpoint removal and SIGTERM race, the app can stop while load balancers
 | Nodes | Karpenter | Provisions right-sized EC2 directly from pending pod requirements (`NodePool`, `EC2NodeClass`). Faster, consolidates underused nodes, handles Spot well. |
 
 Both node autoscalers act on **pending pods**, which are driven by requests. Wrong requests mean wrong scaling.
+
+**Example**
+
+```yaml
+# Pod template excerpt: sizing and zone spread
+containers:
+- name: app
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits:   {memory: 512Mi}              # memory request = limit, no CPU limit
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector: {matchLabels: {app: api}}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: {name: api}
+spec:
+  maxUnavailable: 1
+  selector: {matchLabels: {app: api}}
+```
+
+```bash
+kubectl top pod -A --sort-by=memory
+kubectl describe node <n> | grep -A8 "Allocated resources"    # requests vs capacity
+kubectl get pod <p> -o jsonpath='{.status.qosClass}'
+kubectl describe quota -n <ns>                                # used vs hard
+kubectl get hpa,pdb -A                                        # PDB with ALLOWED DISRUPTIONS 0 blocks drains
+kubectl taint nodes <n> dedicated=tenant-a:NoSchedule
+```
 
 ---
 
@@ -230,6 +308,38 @@ EKS defaults to the **AWS VPC CNI** (pods get real VPC IPs, no overlay). The com
 **Request path, internet to pod (EKS, ALB, ip mode):**
 Route 53 → ALB (TLS terminate, listener rules) → pod IP in the VPC → container. In instance mode: ALB → NodePort → kube-proxy DNAT → pod.
 
+**Example**
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip          # straight to pod IPs
+    alb.ingress.kubernetes.io/group.name: shared       # share one ALB
+spec:
+  ingressClassName: alb
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend: {service: {name: api, port: {number: 80}}}
+```
+
+```bash
+kubectl get endpointslices -l kubernetes.io/service-name=<svc>    # empty = selector or readiness problem
+kubectl run tmp --rm -it --image=nicolaka/netshoot -- bash        # then: nslookup <svc>.<ns>, curl -v
+kubectl exec <p> -- cat /etc/resolv.conf                          # search domains and ndots
+kubectl port-forward svc/<svc> 8080:80                            # bypass ingress to isolate the layer
+kubectl describe ingress <i>                                      # events from the LB controller
+kubectl -n kube-system logs ds/aws-node -c aws-node               # VPC CNI IP assignment errors
+kubectl -n kube-system set env ds/aws-node ENABLE_PREFIX_DELEGATION=true
+```
+
 ---
 
 ### 6. EKS Specifics
@@ -252,6 +362,18 @@ Route 53 → ALB (TLS terminate, listener rules) → pod IP in the VPC → conta
 - Kubelet may be older than the API server (skew policy), never newer.
 - Standard support per version is about 14 months; extended support costs significantly more. Falling behind is a real cost issue.
 - Alternative for risky jumps: **blue/green clusters**, shifting traffic by DNS weight. Easier when everything is in GitOps.
+
+**Example**
+
+```bash
+aws eks update-kubeconfig --name <cluster> --region <region>      # writes a context that calls `aws eks get-token`
+kubectl config get-contexts && kubectl config use-context <ctx>
+aws eks list-access-entries --cluster-name <cluster>              # who can get in
+aws eks list-insights --cluster-name <cluster>                    # upgrade readiness, deprecated API usage
+aws eks describe-addon-versions --addon-name vpc-cni --kubernetes-version <ver>
+kubectl get nodes -L topology.kubernetes.io/zone,karpenter.sh/nodepool    # VERSION column = kubelet skew
+kubectl cordon <node> && kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
+```
 
 ---
 
@@ -301,6 +423,41 @@ Debugging IRSA: check the SA annotation, check `AWS_ROLE_ARN` and `AWS_WEB_IDENT
 Plus: KMS envelope encryption for etcd, tight RBAC on `secrets`, rotation, and never putting secrets in Helm values in plain text.
 
 **Supply chain and runtime:** scan and sign images, run minimal images with a read-only root filesystem, and add runtime detection. See [EKS best practices: image security](https://docs.aws.amazon.com/eks/latest/best-practices/image-security.html), [cosign](https://docs.sigstore.dev/cosign/signing/overview/), [Falco](https://falco.org/docs/).
+
+**Example**
+
+```yaml
+# Tenant namespace baseline: IRSA ServiceAccount, default-deny, DNS allowed
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: api
+  namespace: tenant-a
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<account>:role/tenant-a-api
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: default-deny-allow-dns, namespace: tenant-a}
+spec:
+  podSelector: {}                          # every pod in the namespace
+  policyTypes: [Ingress, Egress]
+  egress:
+  - to:
+    - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+```
+
+```bash
+kubectl create rolebinding tenant-a-edit --clusterrole=edit --group=tenant-a-devs -n tenant-a
+kubectl auth can-i get secrets -n tenant-a --as system:serviceaccount:tenant-a:api
+kubectl label ns tenant-a pod-security.kubernetes.io/enforce=restricted
+kubectl label --dry-run=server --overwrite ns --all pod-security.kubernetes.io/enforce=baseline   # preview violations
+kubectl exec <p> -- env | grep AWS_                               # IRSA env vars injected?
+kubectl get networkpolicy -n tenant-a
+```
 
 ---
 
