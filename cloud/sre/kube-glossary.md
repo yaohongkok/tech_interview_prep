@@ -99,6 +99,9 @@ Quick reference for the terms used in [kubernetes.md](kubernetes.md). Acronyms a
 
 | Term | What it is |
 |------|-----------|
+| CRD (CustomResourceDefinition) | Registers a new resource type with the API server, so you can create and `kubectl get` your own objects (custom resources) like built-in ones. On its own it only stores data. |
+| Controller | A loop that watches objects and keeps changing the real state until it matches the desired state (reconciliation). Built-in ones run in `kube-controller-manager`; custom ones run as pods. |
+| Operator | A CRD plus a custom controller that encodes the operational knowledge for one application (install, upgrade, backup, failover). Example: the Prometheus Operator. |
 | Helm | Package manager for Kubernetes. A chart is a templated bundle of manifests; a release is an installed instance. |
 | Kustomize | Template-free way to customise YAML with bases and overlays. Built into `kubectl`. |
 | Crossplane | Manages cloud infrastructure as Kubernetes custom resources. XRDs (Composite Resource Definitions) define your own APIs and Compositions map them to real resources. |

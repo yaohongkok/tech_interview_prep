@@ -290,6 +290,8 @@ EKS defaults to the **AWS VPC CNI** (pods get real VPC IPs, no overlay). The com
 **AWS VPC CNI details (very likely to come up)**
 
 - Each node attaches ENIs and assigns secondary IPs to pods. **Max pods per node is bounded by ENIs × IPs per ENI** for the instance type.
+  - Formula: `ENIs × (IPs per ENI − 1) + 2`. Each ENI's primary IP is not handed to pods, and the `+2` covers the host-network pods (`aws-node`, `kube-proxy`).
+  - Example, `m5.large` (3 ENIs, 10 IPs each): `3 × (10 − 1) + 2 =29` *pods*. With *prefix delegation* the same node goes to the 110 pod cap.
 - **IP exhaustion** is the classic failure: pods stuck in `ContainerCreating` with "failed to assign an IP address". The warm pool (`WARM_ENI_TARGET`, `WARM_IP_TARGET`) also hoards IPs.
 - Fixes: **prefix delegation** (assign /28 prefixes per ENI slot, far higher pod density), **custom networking** (pods use a separate secondary CIDR, often 100.64.0.0/10), bigger subnets, or IPv6 clusters.
 - **Security groups for pods**: a pod gets its own branch ENI and SG. Useful for locking down RDS access per workload.
@@ -356,7 +358,7 @@ kubectl -n kube-system set env ds/aws-node ENABLE_PREFIX_DELEGATION=true
 2. Upgrade a non-prod cluster first and let it soak.
 3. Control plane first, **one minor version at a time**. It cannot be downgraded.
 4. Add-ons (CNI, CoreDNS, kube-proxy, CSI) to compatible versions.
-5. Data plane: roll node groups, or let Karpenter replace nodes by drift. PDBs and topology spread keep services up during drains.
+5. Data plane: roll node groups, or let Karpenter replace nodes by drift. Pod Disruption Budgets (PDB) and topology spread keep services up during drains.
 6. Verify: node versions, pending pods, error rates, SLO burn.
 
 - Kubelet may be older than the API server (skew policy), never newer.
@@ -404,6 +406,7 @@ Debugging IRSA: check the SA annotation, check `AWS_ROLE_ARN` and `AWS_WEB_IDENT
 - Needs a CNI that enforces it (VPC CNI has built-in support; Calico and Cilium too).
 - Standard baseline: default-deny ingress and egress per namespace, then explicit allows. **Remember to allow DNS egress** to kube-system, or everything breaks.
 - L3/L4 only. L7 rules need Cilium or a service mesh.
+- **When to use:** multi-tenant clusters (stop tenant A reaching tenant B's pods), limiting blast radius of a compromised pod (only the API tier can reach the database), locking down egress to stop data exfiltration, and meeting compliance segmentation (PCI, SOC 2). It controls **who a pod can talk to**.
 
 **Pod Security Standards (PSS)**
 
@@ -411,6 +414,7 @@ Debugging IRSA: check the SA annotation, check `AWS_ROLE_ARN` and `AWS_WEB_IDENT
 - Enforced by **Pod Security Admission** through namespace labels: `pod-security.kubernetes.io/enforce|audit|warn: <level>`. PodSecurityPolicy was removed in 1.25.
 - For anything finer-grained (allowed registries, required labels, mutating defaults): **Kyverno**, **OPA Gatekeeper**, or built-in `ValidatingAdmissionPolicy` (CEL).
 - Roll out with `warn` and `audit` first, then `enforce`.
+- **When to use:** any shared cluster where teams deploy their own workloads, to stop container escape to the node (privileged, `hostPath`, `hostNetwork`, running as root). `restricted` for tenant/app namespaces, `baseline` where an app cannot meet it yet, `privileged` only for system namespaces (CNI, CSI, monitoring agents). It controls **what a pod can do on the node**.
 
 **Secrets management**
 
@@ -490,6 +494,7 @@ Moved to [helm.md](helm.md).
 
 **Operator = CRD + controller.** A `CustomResourceDefinition` extends the API with a new kind; a controller reconciles instances of it. It encodes operational knowledge (provision, upgrade, backup, failover) as code.
 
+- **Why use Operator:** built-in controllers only keep pods running. An operator automates app-specific day-2 work (config reloads, failover, backups, upgrades) continuously, and lets teams self-serve through CRDs.
 - Built with **controller-runtime / Kubebuilder / Operator SDK** (Go), or `kopf` (Python).
 - Reconcile loops must be **idempotent** and level-based: read desired state, read actual, act, requeue.
 - **Finalizers** block deletion until cleanup is done. A namespace or resource stuck in `Terminating` almost always means a finalizer whose controller is gone.
@@ -502,7 +507,9 @@ Moved to [helm.md](helm.md).
 **Crossplane and KubeVela** (JD preferred, overview only)
 
 - **[Crossplane](https://docs.crossplane.io/latest/):** manages cloud infrastructure through Kubernetes CRDs. You define your own platform API (an XRD such as `PostgresInstance`) and a Composition maps it to real AWS resources. Versus Terraform: continuous drift correction and no state file, but harder to debug.
+  - **Why use Crossplane:** app teams self-serve infrastructure (a database, a bucket, a queue) with the same `kubectl` / GitOps workflow they use for workloads, without learning Terraform or holding cloud credentials. The platform team bakes guardrails (encryption, sizing, networking, tagging) into the Composition once, and manual console changes get reverted automatically.
 - **[KubeVela](https://kubevela.io/docs/)** (implements [OAM](https://oam.dev/)): developers write one `Application` made of Components and Traits; platform engineers define what those expand to. A small app-centric API instead of raw YAML.
+  - **Why use KubeVela:** developers should not need to hand-write a Deployment, Service, Ingress, HPA (Horizontal Pod Autoscaler) and PDB to ship one service. They describe the app ("this image, this port, autoscale, expose on this host") and the platform team's definitions generate the correct resources, so standards are enforced in one place and can change without touching every app repo. It also adds multi-cluster and multi-environment delivery workflows on top.
 
 > **How to frame both:** they are platform-engineering tools for building an internal "paved road". If you have not used them, say so and connect them to what you know: Crossplane ≈ Terraform as a reconciling controller, KubeVela ≈ a higher-level abstraction over what you would otherwise template with Helm.
 
@@ -574,8 +581,8 @@ Checklist for a production-ready service on Kubernetes:
 | CNI / IP exhaustion | New pods cannot start; scale-out fails exactly when needed. |
 | Admission webhook down with `Fail` policy | Pod creation blocked cluster-wide. |
 | AZ outage | Survive only if replicas, nodes and volumes were spread; EBS-backed pods in that AZ are stuck. |
-| Bad rollout pushed everywhere | Argument for progressive, cell-by-cell delivery. |
-| Certificate expiry | Webhooks, ingress TLS, kubelet certs. |
+| Bad rollout pushed everywhere | Every cluster/region breaks at once, so there is no healthy cell to fail over to; rollback is the only recovery. The argument for progressive, cell-by-cell delivery. |
+| Certificate expiry | Sudden hard failure with `x509` errors. Kubelet/API server certs: nodes go `NotReady` and `kubectl` fails, though running pods keep serving. Webhook certs: matching API requests are rejected. Ingress TLS: clients get handshake errors. |
 
 ---
 
