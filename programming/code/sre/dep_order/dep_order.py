@@ -28,7 +28,8 @@ def _create_intermediate_data_struct(
     # Each "service requires dep" is an edge dep -> service, so it adds 1 to
     # the service's in-degree.
     for service, requires in deps.items():
-        # dedupe (keeping order) so a dependency listed twice is counted once
+        # dedupe (keeping order) so a dependency listed 
+        # twice is counted once
         unique_requires = list(dict.fromkeys(requires))
         in_degree[service] = len(unique_requires)
         for dep in unique_requires:
@@ -103,9 +104,7 @@ def get_start_order(deps: dict[str, list[str]]) -> list[str]:
 if __name__ == "__main__":
     services = {
         "web": ["api", "cache"],
-        "api": ["db", "cache"],
-        "cache": [],
-        "db": [],
+        "api": ["db", "cache"]
     }
     print(can_start_all(services))    # True
     print(get_start_order(services))  # ['cache', 'db', 'api', 'web']

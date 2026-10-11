@@ -115,7 +115,9 @@ def _load(path: str) -> dict[str, Any]:
 if __name__ == "__main__":
     # usage: python config_diff.py expected.json actual.json
     if len(sys.argv) == 3:
-        drift = diff_configs(_load(sys.argv[1]), _load(sys.argv[2]))
+        expected = _load(sys.argv[1])
+        actual = _load(sys.argv[2])
+        drift = diff_configs(expected, actual)
         print(format_diff(drift))
         # non-zero exit on drift, so this can gate a pipeline (like `diff`)
         sys.exit(1 if any(drift.values()) else 0)

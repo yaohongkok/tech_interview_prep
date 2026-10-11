@@ -55,7 +55,19 @@ def _iter_volumes(client: Any, **retry: Any) -> Iterator[dict[str, Any]]:
             return
 
 
-def find_waste(
+def _is_unattached(volume: dict[str, Any]) -> bool:
+    """True if the volume is not attached to any instance."""
+    return volume.get("State") == "available"
+
+
+def _missing_tags(volume: dict[str, Any], required: Iterable[str]) -> list[str]:
+    """Return the required tag keys the volume lacks, in `required` order."""
+    # "Tags" is absent (not an empty list) on a volume with no tags
+    present = {tag["Key"] for tag in volume.get("Tags", [])}
+    return [key for key in required if key not in present]
+
+
+def find_problematic_volumes(
     client: Any, required_tags: Iterable[str], **retry: Any
 ) -> dict[str, Any]:
     """Report unattached and badly tagged EBS volumes. O(volumes) time.
@@ -80,14 +92,12 @@ def find_waste(
         report["scanned"] += 1
         volume_id = volume["VolumeId"]
 
-        if volume.get("State") == "available":
+        if _is_unattached(volume):
             size = volume.get("Size", 0)
             report["unattached"].append({"VolumeId": volume_id, "SizeGiB": size})
             report["unattached_gib"] += size
 
-        # "Tags" is absent (not an empty list) on a volume with no tags
-        present = {tag["Key"] for tag in volume.get("Tags", [])}
-        missing = [key for key in required if key not in present]
+        missing = _missing_tags(volume, required)
         if missing:
             report["untagged"].append({"VolumeId": volume_id, "MissingTags": missing})
 
@@ -112,7 +122,9 @@ def format_report(report: dict[str, Any]) -> str:
 
 
 if __name__ == "__main__":
-    print(format_report(find_waste(FakeEC2Client(), ["Owner", "Env"])))
+    prob_vol: dict[str, Any] = find_problematic_volumes(FakeEC2Client(), ["Owner", "Env"])
+    print(format_report(prob_vol))
+
     # Scanned 5 volumes.
     # Unattached: 2 (550 GiB)
     #   vol-02: 500 GiB

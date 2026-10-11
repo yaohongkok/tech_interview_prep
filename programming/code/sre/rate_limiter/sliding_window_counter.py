@@ -43,7 +43,8 @@ class SlidingWindowCounter:
 
         # Assumes the previous window's requests were evenly spread. If they
         # were bunched at the end, this under-counts and over-admits.
-        est_req_count = self.prev_req_count * (1 - elapsed) + self.curr_req_count
+        est_req_count = self.prev_req_count * (1 - elapsed) \
+                            + self.curr_req_count
 
         if est_req_count < self.limit:
             self.curr_req_count += 1
