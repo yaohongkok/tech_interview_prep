@@ -60,7 +60,7 @@ Companion to [kubernetes.md](kubernetes.md). "Section N" in the answer outlines 
     - kube-proxy on every node programs iptables or IPVS (eBPF with Cilium) to DNAT the ClusterIP to a pod IP.
         - **Pod IP:** a real address on the pod's network interface, routable across the cluster. Ephemeral: it changes whenever the pod is replaced.
         - **ClusterIP:** a virtual IP from the Service CIDR, stable for the life of the Service. No interface owns it.
-    - Balancing is L4 and per connection, so long-lived connections (gRPC, HTTP/2) do not rebalance. Fix with an L7 proxy or mesh, or a headless Service with client-side balancing.
+    - Balancing via kube-proxy is L4 and per connection, so long-lived connections (gRPC, HTTP/2) do not rebalance. Fix with an L7 proxy (ALB with IP target) or mesh (Istio), or a headless Service with client-side balancing.
     - Types: ClusterIP, NodePort, LoadBalancer; headless returns pod IPs directly.
 
     </details>
