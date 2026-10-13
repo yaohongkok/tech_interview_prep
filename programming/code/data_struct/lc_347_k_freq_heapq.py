@@ -1,16 +1,19 @@
 # 347. Top K Frequent Elements (using heapq)
 
+# Key Tricks:
+# 1. Use a min heap to keep track of the k largest elements
+# 2. When you pop the min heap, it is always the smallest element in the heap
+
+
 import heapq
+from collections import defaultdict
 
 class Solution:
     def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        numCounter = {}
+        numCounter = defaultdict(int)
 
         for n in nums:
-            if n not in numCounter:
-                numCounter[n] = 1
-            else:
-                numCounter[n] += 1
+            numCounter[n] += 1
         
         heapList = []
 

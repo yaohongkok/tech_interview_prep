@@ -1,9 +1,14 @@
-package meetings
+/*
+Key Trick: Create a map of hourly meeting counts and
+then find the maximum overlap in the map. This will give us
+the minimum number of rooms required to attend all meetings.
+*/
 
+package meetings
 
 func MinMeetingRooms(start []int, end []int) int {
 
-	meetingCountMap := createMeetingCountMap()
+	hourlyMeetingCountMap := createMeetingCountMap()
 
 	for i := 0; i < len(start); i++ {
 		isMeetingCrossDay := end[i] < start[i]
@@ -15,35 +20,34 @@ func MinMeetingRooms(start []int, end []int) int {
 		}
 
 		for j := start[i]; j < currentEnd; j++ {
-			meetingCountMap[j]++
+			hourlyMeetingCountMap[j]++
 		}
 
 		// Meeting could be cross day
 		if isMeetingCrossDay {
 			for j := 0; j < end[i]; j++ {
-				meetingCountMap[j]++
+				hourlyMeetingCountMap[j]++
 			}
 		}
 	}
 
+	return findMaxOverlap(hourlyMeetingCountMap)
 
-	return findMaxOverlap(meetingCountMap)
-	
 }
 
 func createMeetingCountMap() map[int]int {
-	meetingCountMap := make(map[int]int)
+	hourlyMeetingCountMap := make(map[int]int)
 
 	for i := 0; i < 24; i++ {
-		meetingCountMap[i] = 0
+		hourlyMeetingCountMap[i] = 0
 	}
 
-	return meetingCountMap
+	return hourlyMeetingCountMap
 }
 
-func findMaxOverlap(meetingCountMap map[int]int) int {
+func findMaxOverlap(hourlyMeetingCountMap map[int]int) int {
 	maxOverlap := 0
-	for _, count := range meetingCountMap {
+	for _, count := range hourlyMeetingCountMap {
 		if count > maxOverlap {
 			maxOverlap = count
 		}
@@ -51,7 +55,6 @@ func findMaxOverlap(meetingCountMap map[int]int) int {
 
 	return maxOverlap
 }
-
 
 /*
 
