@@ -1,4 +1,7 @@
-// go run max_subarray.go 
+// go run max_subarray.go
+
+// Key Trick: Kadane algo
+//   curMaxSum = max(curMaxSum + nums[i], nums[i])
 
 package main
 
@@ -6,30 +9,28 @@ import (
 	"fmt"
 )
 
-
 func maxSubArray(nums []int) int {
-    if(len(nums) == 1) {
-        return nums[0]
-    }
+	if len(nums) == 1 {
+		return nums[0]
+	}
 
-    maxSum := nums[0]
+	maxSum := nums[0]
 
-    curMaxSum := 0
+	curMaxSum := 0
 
-    for i:=0; i<len(nums); i++ {
-        curMaxSum = max(curMaxSum + nums[i], nums[i])
+	for i := 0; i < len(nums); i++ {
+		curMaxSum = max(curMaxSum+nums[i], nums[i])
 
-        maxSum = max(maxSum, curMaxSum)
-    }
-    
-    return maxSum
+		maxSum = max(maxSum, curMaxSum)
+	}
+
+	return maxSum
 }
-
 
 /*
 Given an integer array nums, find the subarray with the largest sum, and return its sum.
 
- 
+
 
 Example 1:
 
@@ -84,7 +85,7 @@ func main() {
 	}
 
 	fmt.Println("--- Running Max Subarray Tests ---")
-	
+
 	passed := 0
 	for _, tc := range tests {
 		result := maxSubArray(tc.input)
@@ -98,4 +99,3 @@ func main() {
 
 	fmt.Printf("Result: %d/%d tests passed.\n", passed, len(tests))
 }
-

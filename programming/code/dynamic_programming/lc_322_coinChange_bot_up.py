@@ -1,3 +1,5 @@
+# Leet Code 322 - Coin Change
+
 # You are given coins of different denominations and a total amount of money amount. 
 # Write a function to compute the fewest number of coins that you need to make up that amount. 
 # If that amount of money cannot be made up by any combination of the coins, return -1.
@@ -33,9 +35,9 @@ class Solution(object):
             remainder = amount - i*coins[len(coins)-1]
             
             if(newNumCoins<=minNumCoins):
-				someNumCoins = self.helper(coins[0:len(coins)-1],remainder,newNumCoins,minNumCoins)
+                someNumCoins = self.helper(coins[0:len(coins)-1],remainder,newNumCoins,minNumCoins)
             else:
-				break
+                break
             
             #>=0 because -1 means it is not a possible solution
             if(someNumCoins<minNumCoins and someNumCoins>=0):

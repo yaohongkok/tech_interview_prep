@@ -1,3 +1,5 @@
+// Leet Code #3
+
 // go run longest_unique_substr.go
 
 /*
@@ -36,9 +38,7 @@ func lengthOfLongestSubstring(s string) int {
 
 		// Calculate length and update maximum
 		currentWindowLen := rightIdx - leftIdx + 1
-		if currentWindowLen > longestLen {
-			longestLen = currentWindowLen
-		}
+		longestLen = max(longestLen, currentWindowLen)
 	}
 
 	return longestLen
