@@ -51,7 +51,7 @@ That sentence is literally the equation.
 ### 2.1 General Form (deterministic, the one used in coding interviews)
 
 $$
-\boxed{V(s) = \underset{a \in A(s)}{\text{opt}} \Big[\, r(s, a) \;\oplus\; V\big(f(s, a)\big) \,\Big]}
+\boxed{V(s) = \underset{a \in A(s)}{\text{opt}} \Big[ r(s, a) \oplus V\big(f(s, a)\big) \Big]}
 \qquad\text{with}\qquad V(s_{\text{base}}) = \text{known}
 $$
 
@@ -164,7 +164,7 @@ $$
 > Houses in a row with `nums[i]` money. Can't rob two adjacent houses. Max money?
 
 $$
-V(i) = \max\Big(\underbrace{V(i-1)}_{\text{skip house } i},\;\; \underbrace{\text{nums}[i] + V(i-2)}_{\text{rob house } i}\Big), \qquad V(-1) = V(-2) = 0
+V(i) = \max\Big(\underbrace{ V(i-1) }_{\text{skip house } i}, \underbrace{ \text{nums}[i] + V(i-2) }_{\text{rob house } i}\Big), \qquad V(-1) = V(-2) = 0
 $$
 
 | Term | Here |
@@ -195,7 +195,7 @@ return prev1
 > Min number of coins to make `amount`. Infinite supply of each coin.
 
 $$
-V(x) = \min_{c \,\in\, \text{coins},\; c \le x} \Big[\, 1 + V(x - c) \,\Big], \qquad V(0) = 0,\;\; V(x<0) = +\infty
+V(x) = \min_{c \,\in\, \text{coins},\; c \le x} \Big[ 1 + V(x - c) \Big], \qquad V(0) = 0,\;\; V(x<0) = +\infty
 $$
 
 | Term | Here |

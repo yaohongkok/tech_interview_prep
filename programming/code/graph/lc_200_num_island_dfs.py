@@ -1,3 +1,10 @@
+# Leet Code 200 - Num Island
+
+# Key Trick
+# - Count island as soon as encounter 1
+# - Perform DFS
+# - Reuse grid to marked visited by setting to 0
+
 class Solution:
     def numIslands(self, grid):
         m = len(grid)

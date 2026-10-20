@@ -17,11 +17,13 @@ class Solution:
         lft = 0
         rgt = len(nums) - 1
 
-        # nums is not rotated
-        if nums[lft] <= nums[rgt]:
-            return lft
-
         while lft <= rgt:
+            # nums is not rotated
+            # Should be in loop because splitting
+            # can help reach this state faster
+            if nums[lft] <= nums[rgt]:
+                return lft
+
             mid = (lft + rgt)//2
             #print(f"{lo}, {mid}, {hi}")
             #print(f"{nums[lo]}, {nums[mid]}, {nums[hi]}")
@@ -34,12 +36,7 @@ class Solution:
             elif nums[mid-1] > nums[mid] and nums[mid+1] >= nums[mid]:
                 return mid
             elif nums[mid] >= nums[lft]:
-                # if nums[lo] is the lowest, then lo is the rotated index
-                if nums[mid] < nums[rgt]:
-                    return lft
-                # Rotated index is on the right half
-                elif nums[mid] >= nums[rgt]:
-                    lft = mid + 1
+                lft = mid + 1
             # Rotated index is on the left half
             elif nums[mid] < nums[lft]:
                 rgt = mid - 1
@@ -49,7 +46,7 @@ class Solution:
 
     def search(self, nums: list[int], target: int) -> int:
         rot_idx = self.find_rotation_idx(nums)
-        print(f"rot_idx: {rot_idx}")
+        #print(f"rot_idx: {rot_idx}")
 
         if len(nums) == 1:
             return 0 if nums[0] == target else -1
@@ -72,5 +69,3 @@ class Solution:
             return insert_idx + offset
         else:
             return -1
-        
-
