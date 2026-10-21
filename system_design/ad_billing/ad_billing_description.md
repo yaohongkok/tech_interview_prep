@@ -112,7 +112,9 @@ GET  /v1/billing/statements?advertiser_id=&month=                     (invoice)
 
 ## 4. High-Level Architecture (OVERVIEW §0 step 4)
 
-See [ad_billing_arch.puml](ad_billing_arch.puml) for the architecture diagram.
+![Ad billing high-level architecture](ad_billing_arch.png)
+
+Source: [ad_billing_arch.puml](ad_billing_arch.puml).
 
 **Design choice: Lambda architecture (stream + batch) over pure streaming (Kappa).**
 - *Requirement:* real-time dashboards **and** invoice-grade accuracy, with fraud decisions that may come hours later.
