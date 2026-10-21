@@ -1,0 +1,85 @@
+@startuml
+!theme plain
+title Ad Click / Impression Billing — High-Level Architecture
+
+skinparam componentStyle rectangle
+skinparam wrap true
+skinparam maxMessageSize 100
+skinparam nodesep 45
+skinparam ranksep 55
+skinparam component {
+  BackgroundColor White
+  BorderColor #444444
+}
+skinparam package {
+  BackgroundColor #F7F7F7
+  BorderColor #999999
+}
+skinparam arrow {
+  Color #222222
+}
+
+[Ad Server] as AdServer
+[Browser / App] as Client
+
+package "Ingestion" {
+  [NLB] as NLB
+  [Event Collectors\n(stateless, Go)] as Collectors
+  database "Local disk spool" as Spool
+  queue "Kafka\nraw-impressions · raw-clicks" as RawKafka
+}
+
+note right of Collectors
+  validate HMAC
+  rate-limit
+  enrich
+end note
+
+note right of RawKafka
+  key = impression_id
+  RF = 3
+  7d retention
+end note
+
+package "FAST PATH (seconds, approximate)" {
+  [Flink streaming job\n—\n1. dedup by event_id (keyed state)\n2. rule-based invalid-traffic filter\n3. click↔impression join\n4. 1-min tumbling windows by ad_id\n   (event time + watermarks)] as Flink
+  database "OLAP (Pinot)\ndashboards" as Pinot
+  database "Redis spend counters" as Redis
+  queue "provisional-spend topic" as ProvSpend
+}
+
+package "SLOW PATH (daily, exact)" {
+  [Kafka Connect] as Connect
+  database "S3 (Parquet)" as S3
+  [Spark daily billing job\n—\nexact dedup · ML fraud ·\nlate events · price × count] as Spark
+}
+
+package "Billing" {
+  [Reconciliation + Billing Svc] as BillingSvc
+  database "Postgres ledger\n(double-entry, idempotent)" as Ledger
+  [Invoice] as Invoice
+}
+
+AdServer --> Client : signed token\n(impression_id, price, HMAC)
+Client --> NLB : /imp and /click\n(retries on failure)
+NLB --> Collectors
+Collectors --> RawKafka : produce (acks=all)\nthen ack client
+Collectors ..> Spool : if Kafka unavailable
+Spool ..> RawKafka : replay
+
+RawKafka --> Flink
+Flink --> Pinot
+Flink --> Redis
+Flink --> ProvSpend
+Redis ..> AdServer : budget check
+
+RawKafka --> Connect
+Connect --> S3
+S3 --> Spark
+Spark --> BillingSvc
+
+ProvSpend --> BillingSvc : compare
+BillingSvc --> Ledger
+Ledger --> Invoice
+
+@enduml
